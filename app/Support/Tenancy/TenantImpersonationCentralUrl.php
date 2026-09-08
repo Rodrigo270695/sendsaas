@@ -18,7 +18,12 @@ final class TenantImpersonationCentralUrl
         return rtrim($centralOrigin, '/').'/login';
     }
 
-    public static function fallbackLoginUrl(Request $request): string
+    public static function returnUrl(string $centralOrigin, string $token): string
+    {
+        return rtrim($centralOrigin, '/').'/impersonate/return?token='.rawurlencode($token);
+    }
+
+    public static function fallbackOrigin(Request $request): string
     {
         $scheme = $request->getScheme();
         $appUrl = rtrim((string) config('app.url'), '/');
@@ -34,6 +39,11 @@ final class TenantImpersonationCentralUrl
                 : $host;
         }
 
-        return $scheme.'://'.$authority.'/login';
+        return $scheme.'://'.$authority;
+    }
+
+    public static function fallbackLoginUrl(Request $request): string
+    {
+        return self::fallbackOrigin($request).'/login';
     }
 }

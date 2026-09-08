@@ -46,6 +46,10 @@ class MatchUserTenant
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        if ($hostTenantId !== null && $userTenantId === null) {
+            return redirect()->route('login');
+        }
+
         abort(403, $this->buildMessage($hostTenantId, $userTenantId));
     }
 

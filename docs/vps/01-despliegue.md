@@ -58,7 +58,7 @@ server {
 }
 ```
 
-Cookie de sesión: `SESSION_DOMAIN=.sendsaas.orvae.pe` (el punto inicial comparte login entre central y subdominios cuando toque).
+Cookie de sesión: `SESSION_DOMAIN=null` (una cookie por host, igual que VetSaaS). Así **Abrir subdominio** muestra el login de la empresa y **Salir de soporte** no tumba la sesión del panel central.
 
 ---
 

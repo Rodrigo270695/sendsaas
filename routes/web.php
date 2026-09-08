@@ -15,6 +15,10 @@ Route::get('impersonate/accept', [TenantImpersonationController::class, 'accept'
     ->middleware('throttle:12,1')
     ->name('impersonate.accept');
 
+Route::get('impersonate/return', [TenantImpersonationController::class, 'returnToCentral'])
+    ->middleware('throttle:12,1')
+    ->name('impersonate.return');
+
 Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () {
     Route::post('impersonate/leave', [TenantImpersonationController::class, 'leave'])
         ->name('impersonate.leave');

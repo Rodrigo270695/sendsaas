@@ -26,7 +26,7 @@ class DemoTenantsSeeder extends Seeder
                 'email_admin' => self::EMAIL,
                 'plan_id' => $planId,
                 'estado' => 'active',
-                'trial_ends_at' => now()->addDays(30),
+                'trial_ends_at' => null,
                 'timezone' => 'America/Lima',
                 'locale' => 'es_PE',
             ],

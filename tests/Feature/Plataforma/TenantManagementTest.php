@@ -63,6 +63,7 @@ test('demo seeder creates the demo tenant and admin', function () {
     expect($tenant)->not->toBeNull()
         ->and($tenant->email_admin)->toBe(DemoTenantsSeeder::EMAIL)
         ->and($tenant->estado)->toBe('active')
+        ->and($tenant->trial_ends_at)->toBeNull()
         ->and($tenant->schema_name)->toBe('od_demo')
         ->and($user)->not->toBeNull()
         ->and((string) $user->tenant_id)->toBe((string) $tenant->id)
@@ -193,4 +194,46 @@ test('cannot impersonate a suspended tenant', function () {
         ->post(route('plataforma.tenants.impersonate', $tenant))
         ->assertRedirect(route('plataforma.tenants.index'))
         ->assertSessionHasErrors('tenant');
+});
+
+test('opening a tenant host as superadmin without support mode goes to login', function () {
+    Tenant::factory()->create([
+        'slug' => 'acme',
+        'estado' => 'active',
+    ]);
+
+    $this->actingAs(superadmin())
+        ->get('http://acme.sendsaas.test/dashboard')
+        ->assertRedirect(route('login'));
+
+    $this->assertGuest();
+});
+
+test('leaving support returns the superadmin to the central tenants list', function () {
+    $tenant = Tenant::factory()->create([
+        'slug' => 'acme',
+        'estado' => 'active',
+    ]);
+    $admin = superadmin();
+
+    $response = $this->actingAs($admin)
+        ->withSession([
+            'tenant_impersonation' => [
+                'tenant_id' => (string) $tenant->id,
+                'tenant_label' => 'Acme',
+                'central_origin' => 'http://sendsaas.test',
+            ],
+        ])
+        ->post('http://acme.sendsaas.test/impersonate/leave');
+
+    $response->assertRedirect();
+    $location = (string) $response->headers->get('Location');
+    expect($location)->toContain('sendsaas.test/impersonate/return?token=');
+
+    parse_str((string) parse_url($location, PHP_URL_QUERY), $query);
+
+    $this->get('http://sendsaas.test/impersonate/return?token='.($query['token'] ?? ''))
+        ->assertRedirect(route('plataforma.tenants.index'));
+
+    $this->assertAuthenticatedAs($admin);
 });

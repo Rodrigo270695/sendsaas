@@ -124,9 +124,21 @@ class TenantImpersonationController extends Controller
             ? trim($imp['central_origin'])
             : '';
 
-        $loginUrl = $centralOrigin !== ''
-            ? TenantImpersonationCentralUrl::loginUrl($centralOrigin)
-            : TenantImpersonationCentralUrl::fallbackLoginUrl($request);
+        $returnToken = Str::random(64);
+        Cache::put(
+            self::CACHE_PREFIX.'return:'.$returnToken,
+            [
+                'superadmin_id' => (string) $user->id,
+            ],
+            now()->addSeconds(self::CACHE_TTL_SECONDS),
+        );
+
+        $returnUrl = $centralOrigin !== ''
+            ? TenantImpersonationCentralUrl::returnUrl($centralOrigin, $returnToken)
+            : TenantImpersonationCentralUrl::returnUrl(
+                TenantImpersonationCentralUrl::fallbackOrigin($request),
+                $returnToken,
+            );
 
         $session->forget('tenant_impersonation');
 
@@ -134,6 +146,40 @@ class TenantImpersonationController extends Controller
         $session->invalidate();
         $session->regenerateToken();
 
-        return Inertia::location($loginUrl);
+        return Inertia::location($returnUrl);
+    }
+
+    public function returnToCentral(Request $request): RedirectResponse
+    {
+        $token = (string) $request->query('token', '');
+        if ($token === '' || strlen($token) < 32) {
+            abort(404);
+        }
+
+        if (app(TenantManager::class)->check()) {
+            abort(404);
+        }
+
+        /** @var array{superadmin_id?: string}|null $payload */
+        $payload = Cache::pull(self::CACHE_PREFIX.'return:'.$token);
+
+        if (! is_array($payload) || empty($payload['superadmin_id'])) {
+            return redirect()->route('login')->with('error', 'La sesión de soporte expiró. Entra de nuevo.');
+        }
+
+        /** @var User|null $superadmin */
+        $superadmin = User::query()->whereKey($payload['superadmin_id'])->first();
+
+        if ($superadmin === null || ! $superadmin->isPlatformSuperadmin()) {
+            abort(403);
+        }
+
+        Auth::guard('web')->login($superadmin);
+        $request->session()->regenerate();
+        $request->session()->forget('tenant_impersonation');
+
+        return redirect()
+            ->route('plataforma.tenants.index')
+            ->with('success', 'Saliste del modo soporte.');
     }
 }
