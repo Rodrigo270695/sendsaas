@@ -31,7 +31,8 @@
         "summary_error": "{{count}} con error",
         "summary_skipped": "{{count}} omitidos",
         "row_label": "Fila {{row}}: {{nombre}}",
-        "error_generic": "No se pudo importar el archivo. Inténtalo de nuevo."
+        "error_generic": "No se pudo importar el archivo. Inténtalo de nuevo.",
+        "error_download": "No se pudo descargar la plantilla. Inténtalo de nuevo."
     },
     "stats": {
         "total": "Total",

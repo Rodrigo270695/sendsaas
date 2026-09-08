@@ -1,5 +1,6 @@
 export { DataPagination, type DataPaginationProps } from './data-pagination';
 export { BulkImportModal, type BulkImportModalProps } from './bulk-import-modal';
+export { XlsxDownloadButton } from './xlsx-download-button';
 export {
     BulkAction,
     BulkActionBar,

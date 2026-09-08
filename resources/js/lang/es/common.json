@@ -32,7 +32,8 @@
         "delete_success": "Registro eliminado correctamente.",
         "delete_error": "No se pudo eliminar el registro.",
         "copied": "Copiado al portapapeles",
-        "copy_error": "No se pudo copiar al portapapeles"
+        "copy_error": "No se pudo copiar al portapapeles",
+        "export_error": "No se pudo descargar el Excel."
     },
     "table": {
         "showing": "Mostrando",

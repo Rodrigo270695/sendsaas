@@ -19,6 +19,7 @@ import {
     DataToolbar,
     EmptyState,
     PageHeader,
+    XlsxDownloadButton,
 } from '@/components/data-page';
 import type { DataTableColumn } from '@/components/data-page';
 import { PlanLimitCreateButton } from '@/components/plan-limit-create-button';
@@ -262,21 +263,18 @@ export default function Index({
                     action={
                         <div className="flex flex-row items-center gap-2">
                             {canExport ? (
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    className="cursor-pointer gap-2"
+                                <XlsxDownloadButton
+                                    href={exportUrl}
+                                    filename="contactos.xlsx"
                                 >
-                                    <a href={exportUrl} download="contactos.xlsx">
-                                        <Download
-                                            className="size-4"
-                                            strokeWidth={2.5}
-                                        />
-                                        <span className="hidden sm:inline">
-                                            {t('common:actions.export_xlsx')}
-                                        </span>
-                                    </a>
-                                </Button>
+                                    <Download
+                                        className="size-4"
+                                        strokeWidth={2.5}
+                                    />
+                                    <span className="hidden sm:inline">
+                                        {t('common:actions.export_xlsx')}
+                                    </span>
+                                </XlsxDownloadButton>
                             ) : null}
                             {canCreate ? (
                                 <Button
@@ -411,6 +409,7 @@ export default function Index({
                 }}
                 translationNs="contactos"
                 templateUrl="/contactos/plantilla"
+                templateFilename="plantilla-contactos.xlsx"
                 importUrl="/contactos/import"
                 reloadOnly={['contacts', 'stats', 'plan_limits']}
             />

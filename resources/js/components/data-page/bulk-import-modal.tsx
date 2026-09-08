@@ -17,6 +17,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { downloadXlsx } from '@/lib/download-file';
 import { cn } from '@/lib/utils';
 
 type ImportRowResult = {
@@ -41,6 +42,8 @@ export type BulkImportModalProps = {
     /** Namespace i18n con claves `import.*`. */
     translationNs: string;
     templateUrl: string;
+    /** Nombre del archivo si el servidor no envía Content-Disposition. */
+    templateFilename?: string;
     importUrl: string;
     /** Props Inertia a recargar tras import exitoso. */
     reloadOnly: string[];
@@ -57,6 +60,7 @@ export function BulkImportModal({
     onOpenChange,
     translationNs,
     templateUrl,
+    templateFilename = 'plantilla-contactos.xlsx',
     importUrl,
     reloadOnly,
 }: BulkImportModalProps) {
@@ -64,11 +68,15 @@ export function BulkImportModal({
     const inputRef = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
+    const [downloading, setDownloading] = useState(false);
+    const [downloadError, setDownloadError] = useState<string | null>(null);
     const [result, setResult] = useState<ImportResult | null>(null);
 
     const reset = useCallback(() => {
         setFile(null);
         setUploading(false);
+        setDownloading(false);
+        setDownloadError(null);
         setResult(null);
         if (inputRef.current) {
             inputRef.current.value = '';
@@ -154,6 +162,23 @@ export function BulkImportModal({
         }
     };
 
+    const handleDownloadTemplate = async () => {
+        if (downloading) {
+            return;
+        }
+
+        setDownloading(true);
+        setDownloadError(null);
+
+        try {
+            await downloadXlsx(templateUrl, templateFilename);
+        } catch {
+            setDownloadError(t('import.error_download'));
+        } finally {
+            setDownloading(false);
+        }
+    };
+
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogContent className="flex max-h-[90vh] max-w-[calc(100%-1rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl">
@@ -183,12 +208,27 @@ export function BulkImportModal({
                             <li>• {t('import.required_hint')}</li>
                         </ul>
 
-                        <Button asChild variant="outline" className="mt-auto w-full cursor-pointer gap-2">
-                            <a href={templateUrl} download>
-                                <Download className="size-4" strokeWidth={2.25} />
+                        <div className="mt-auto flex flex-col gap-2">
+                            {downloadError ? (
+                                <p className="rounded-md border border-destructive/30 bg-destructive/10 px-2.5 py-2 text-xs text-destructive">
+                                    {downloadError}
+                                </p>
+                            ) : null}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full cursor-pointer gap-2"
+                                disabled={downloading}
+                                onClick={() => void handleDownloadTemplate()}
+                            >
+                                {downloading ? (
+                                    <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                                ) : (
+                                    <Download className="size-4" strokeWidth={2.25} />
+                                )}
                                 {t('import.download_template')}
-                            </a>
-                        </Button>
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="flex min-h-0 flex-col gap-4 p-6">

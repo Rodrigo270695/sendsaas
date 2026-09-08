@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Support;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Throwable;
 
 /**
@@ -21,6 +22,10 @@ final class XlsxDownload
      */
     public static function from(callable $writer, string $filename): BinaryFileResponse
     {
+        if (\function_exists('ini_set')) {
+            @ini_set('zlib.output_compression', '0');
+        }
+
         $base = tempnam(sys_get_temp_dir(), 'sendsaas-xlsx-');
         if ($base === false) {
             abort(500, 'No se pudo crear el archivo temporal de Excel.');
@@ -47,10 +52,35 @@ final class XlsxDownload
             abort(500, 'El Excel quedó vacío.');
         }
 
-        return response()->download($path, $filename, [
+        $safeName = basename(str_replace(['"', "\r", "\n"], '', $filename));
+
+        $response = response()->download($path, $safeName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Cache-Control' => 'no-store, no-cache, must-revalidate',
+            'Content-Transfer-Encoding' => 'binary',
+            'Cache-Control' => 'private, no-store, no-cache, must-revalidate, no-transform',
             'Pragma' => 'no-cache',
-        ])->deleteFileAfterSend();
+            'Expires' => '0',
+            'Content-Encoding' => 'identity',
+            'X-Accel-Buffering' => 'no',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+
+        $response->headers->set('Content-Length', (string) filesize($path));
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $safeName,
+            $safeName,
+        );
+
+        // deleteFileAfterSend() corre antes de fastcgi_finish_request: nginx
+        // puede cortar el body y Chrome muestra "El sitio no se encontraba disponible".
+        $response->deleteFileAfterSend(false);
+        register_shutdown_function(static function () use ($path): void {
+            if (is_file($path)) {
+                @unlink($path);
+            }
+        });
+
+        return $response;
     }
 }

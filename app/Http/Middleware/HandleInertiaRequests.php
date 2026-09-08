@@ -9,6 +9,9 @@ use App\Tenancy\TenantManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -84,6 +87,42 @@ class HandleInertiaRequests extends Middleware
                 ];
             },
         ];
+    }
+
+    /**
+     * BinaryFileResponse::getContent() es false: Inertia lo trata como
+     * vacío y hace Redirect::back() (HTML). El navegador guarda `plantilla.htm`.
+     */
+    public function onEmptyResponse(Request $request, Response $response): Response
+    {
+        if ($this->isBinaryDownload($response)) {
+            return $response;
+        }
+
+        return parent::onEmptyResponse($request, $response);
+    }
+
+    public function onVersionChange(Request $request, Response $response): Response
+    {
+        if ($this->isBinaryDownload($response)) {
+            return $response;
+        }
+
+        return parent::onVersionChange($request, $response);
+    }
+
+    private function isBinaryDownload(Response $response): bool
+    {
+        if ($response instanceof BinaryFileResponse || $response instanceof StreamedResponse) {
+            return true;
+        }
+
+        $disposition = (string) $response->headers->get('Content-Disposition', '');
+        $type = (string) $response->headers->get('Content-Type', '');
+
+        return str_starts_with($disposition, 'attachment')
+            || str_contains($type, 'spreadsheetml')
+            || str_contains($type, 'application/pdf');
     }
 
     /**

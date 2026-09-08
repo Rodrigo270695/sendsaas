@@ -32,7 +32,8 @@
         "delete_success": "Record deleted successfully.",
         "delete_error": "Could not delete the record.",
         "copied": "Copied to clipboard",
-        "copy_error": "Could not copy to clipboard"
+        "copy_error": "Could not copy to clipboard",
+        "export_error": "Could not download the Excel file."
     },
     "table": {
         "showing": "Showing",

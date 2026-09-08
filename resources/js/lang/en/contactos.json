@@ -31,7 +31,8 @@
         "summary_error": "{{count}} with errors",
         "summary_skipped": "{{count}} skipped",
         "row_label": "Row {{row}}: {{nombre}}",
-        "error_generic": "Could not import the file. Try again."
+        "error_generic": "Could not import the file. Try again.",
+        "error_download": "Could not download the template. Try again."
     },
     "stats": {
         "total": "Total",

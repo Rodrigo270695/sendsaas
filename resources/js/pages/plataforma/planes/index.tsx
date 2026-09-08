@@ -26,6 +26,7 @@ import {
     FilterChips,
     PageHeader,
     StatBadge,
+    XlsxDownloadButton,
 } from '@/components/data-page';
 import type { DataTableColumn, FilterChip } from '@/components/data-page';
 import { Button } from '@/components/ui/button';
@@ -459,21 +460,18 @@ export default function Index({
                     action={
                         <div className="flex flex-row items-center gap-2">
                             {canExport && (
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    className="cursor-pointer gap-2"
+                                <XlsxDownloadButton
+                                    href={exportUrl}
+                                    filename="planes.xlsx"
                                 >
-                                    <a href={exportUrl} download="planes.xlsx">
-                                        <Download
-                                            className="size-4"
-                                            strokeWidth={2.5}
-                                        />
-                                        <span className="hidden sm:inline">
-                                            {t('common:actions.export_xlsx')}
-                                        </span>
-                                    </a>
-                                </Button>
+                                    <Download
+                                        className="size-4"
+                                        strokeWidth={2.5}
+                                    />
+                                    <span className="hidden sm:inline">
+                                        {t('common:actions.export_xlsx')}
+                                    </span>
+                                </XlsxDownloadButton>
                             )}
                             <Can permission="plataforma-planes.create">
                                 <Button

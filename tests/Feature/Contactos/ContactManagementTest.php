@@ -208,10 +208,28 @@ test('creating over the plan contact limit fails', function () {
 });
 
 test('tenant admin can download the import template', function () {
-    $this->actingAs(contactosAdmin())
+    $response = $this->actingAs(contactosAdmin())
         ->get('http://demo.sendsaas.test/contactos/plantilla')
         ->assertOk()
-        ->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        ->assertDownload('plantilla-contactos.xlsx');
+
+    $path = $response->getFile()->getPathname();
+    expect(is_file($path))->toBeTrue()
+        ->and($response->headers->get('content-type'))->toContain('spreadsheetml.sheet')
+        ->and(substr((string) file_get_contents($path), 0, 2))->toBe('PK');
+});
+
+test('inertia headers do not turn the template into html', function () {
+    $response = $this->actingAs(contactosAdmin())
+        ->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => 'stale-asset-version',
+        ])
+        ->get('http://demo.sendsaas.test/contactos/plantilla')
+        ->assertOk()
+        ->assertDownload('plantilla-contactos.xlsx');
+
+    expect(substr((string) file_get_contents($response->getFile()->getPathname()), 0, 2))->toBe('PK');
 });
 
 test('whatsapp phone normalizes 9 digit peruvian mobiles', function () {
