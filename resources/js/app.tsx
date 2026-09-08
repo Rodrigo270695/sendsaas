@@ -9,7 +9,7 @@ import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { capturePwaInstallPrompt } from '@/lib/pwa-install';
 
-const appName = import.meta.env.VITE_APP_NAME || 'OmniDesk';
+const appName = import.meta.env.VITE_APP_NAME || 'SendSaaS';
 
 capturePwaInstallPrompt();
 
@@ -17,8 +17,6 @@ void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
-            case name === 'welcome':
-                return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):

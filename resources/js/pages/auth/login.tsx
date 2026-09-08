@@ -115,6 +115,6 @@ export default function Login({ status, canResetPassword }: Props) {
 }
 
 Login.layout = {
-    title: 'login.title',
-    description: 'login.description',
+    title: 'SendSaaS.',
+    description: 'login.platform_description',
 };

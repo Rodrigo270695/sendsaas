@@ -1,9 +1,9 @@
 {
     "id": "/",
-    "name": "OmniDesk",
-    "short_name": "OmniDesk",
+    "name": "SendSaaS",
+    "short_name": "SendSaaS",
     "description": "Bandeja WhatsApp multi-tenant para empresas",
-    "start_url": "/",
+    "start_url": "/login",
     "scope": "/",
     "display": "standalone",
     "display_override": ["standalone", "minimal-ui", "browser"],

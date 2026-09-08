@@ -7,13 +7,11 @@ import commonEn from '@/lang/en/common.json';
 import dashboardEn from '@/lang/en/dashboard.json';
 import navEn from '@/lang/en/nav.json';
 import settingsEn from '@/lang/en/settings.json';
-import welcomeEn from '@/lang/en/welcome.json';
 import authEs from '@/lang/es/auth.json';
 import commonEs from '@/lang/es/common.json';
 import dashboardEs from '@/lang/es/dashboard.json';
 import navEs from '@/lang/es/nav.json';
 import settingsEs from '@/lang/es/settings.json';
-import welcomeEs from '@/lang/es/welcome.json';
 
 export const SUPPORTED_LOCALES = ['es', 'en'] as const;
 
@@ -21,7 +19,7 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 export const DEFAULT_LOCALE: SupportedLocale = 'es';
 
-export const LOCALE_STORAGE_KEY = 'omnidesk.locale';
+export const LOCALE_STORAGE_KEY = 'sendsaas.locale';
 
 const namespaces = [
     'common',
@@ -29,7 +27,6 @@ const namespaces = [
     'auth',
     'settings',
     'dashboard',
-    'welcome',
 ] as const;
 
 i18n.use(LanguageDetector)
@@ -42,7 +39,6 @@ i18n.use(LanguageDetector)
                 auth: authEs,
                 settings: settingsEs,
                 dashboard: dashboardEs,
-                welcome: welcomeEs,
             },
             en: {
                 common: commonEn,
@@ -50,7 +46,6 @@ i18n.use(LanguageDetector)
                 auth: authEn,
                 settings: settingsEn,
                 dashboard: dashboardEn,
-                welcome: welcomeEn,
             },
         },
         fallbackLng: DEFAULT_LOCALE,

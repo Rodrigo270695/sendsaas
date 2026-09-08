@@ -11,12 +11,14 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     const { t } = useTranslation('auth');
+    const isI18nKey = (value: string): boolean =>
+        /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]+)+$/i.test(value);
 
     return (
         <AuthLayoutTemplate
-            title={title.includes('.') ? t(title) : title}
+            title={isI18nKey(title) ? t(title) : title}
             description={
-                description.includes('.') ? t(description) : description
+                isI18nKey(description) ? t(description) : description
             }
         >
             {children}

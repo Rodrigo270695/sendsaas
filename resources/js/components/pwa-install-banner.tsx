@@ -11,7 +11,7 @@ import {
     subscribePwaInstallPrompt,
 } from '@/lib/pwa-install';
 
-const DISMISS_KEY = 'omnidesk-pwa-install-dismiss-until';
+const DISMISS_KEY = 'sendsaas-pwa-install-dismiss-until';
 const DISMISS_MS = 7 * 24 * 60 * 60 * 1000;
 const BRAND = '#AB3C3D';
 const BRAND_HOVER = '#8C2F30';
@@ -69,7 +69,7 @@ type BeforeInstallPromptEvent = Event & {
     userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 };
 
-const appLabel = import.meta.env.VITE_APP_NAME || 'OmniDesk';
+const appLabel = import.meta.env.VITE_APP_NAME || 'SendSaaS';
 
 export default function PwaInstallBanner() {
     const [pathname, setPathname] = useState(() =>

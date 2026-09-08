@@ -1,7 +1,7 @@
 /**
- * Service Worker OmniDesk — caché de estáticos + base para push.
+ * Service Worker SendSaaS — caché de estáticos + base para push.
  */
-const STATIC_CACHE = 'omnidesk-static-v1';
+const STATIC_CACHE = 'sendsaas-static-v1';
 const NETWORK_ONLY_PREFIXES = ['/login', '/register', '/dashboard'];
 
 self.addEventListener('install', () => {
@@ -91,7 +91,7 @@ self.addEventListener('push', (event) => {
         payload = { body: event.data ? event.data.text() : '' };
     }
 
-    const title = payload.title || 'OmniDesk';
+    const title = payload.title || 'SendSaaS';
     const options = {
         body: payload.body || '',
         icon: '/icons/pwa/icon-192.png',
