@@ -1,0 +1,112 @@
+{
+    "sesiones": {
+        "title": "Sesiones WhatsApp",
+        "description": "Números de WhatsApp conectados a la empresa. El cupo lo define el plan contratado: al alcanzar el máximo, no se puede abrir otra sesión.",
+        "plan_limit": {
+            "max_whatsapp_sessions": "Alcanzaste el límite de sesiones de WhatsApp de tu plan. Actualiza el plan para agregar más."
+        },
+        "quota": {
+            "title": "Cupo del plan",
+            "used_of": "{{used}} de {{limit}} sesiones en uso",
+            "unlimited": "Sesiones ilimitadas · {{used}} en uso",
+            "remaining_one": "Queda 1 cupo libre",
+            "remaining_other": "Quedan {{count}} cupos libres",
+            "reached": "No puedes crear otra sesión hasta actualizar el plan o liberar un cupo."
+        },
+        "actions": {
+            "new": "Nueva sesión",
+            "new_short": "Nueva",
+            "create_first": "Crear primera sesión"
+        },
+        "stats": {
+            "total": "Total",
+            "connected": "Conectadas",
+            "pending": "Pendientes",
+            "disconnected": "Desconectadas",
+            "filters": "Filtros",
+            "matches": "Coincidencias"
+        },
+        "search_placeholder": "Buscar por canal, sesión o número...",
+        "filter_label": "Filtrar por estado",
+        "filters": {
+            "all": "Todos los estados",
+            "connected": "Conectadas",
+            "pending": "Pendientes",
+            "disconnected": "Desconectadas"
+        },
+        "columns": {
+            "canal": "Canal",
+            "numero": "Número",
+            "sede": "Sede",
+            "estado": "Estado",
+            "acciones": "Acciones"
+        },
+        "row": {
+            "no_phone": "Sin número",
+            "no_sede": "Sin sede asignada",
+            "copy_name": "Copiar sesión",
+            "actions_for": "Acciones para {{name}}",
+            "status": {
+                "created": "Registrada",
+                "initializing": "Inicializando",
+                "qr_ready": "QR listo",
+                "authenticating": "Autenticando",
+                "ready": "Conectada",
+                "disconnected": "Desconectada",
+                "failed": "Con error"
+            }
+        },
+        "empty": {
+            "no_records_title": "Aún no hay sesiones",
+            "no_records_description": "Crea la primera sesión de WhatsApp. Si tu plan solo admite una, el botón se bloqueará al crearla.",
+            "no_results_title": "Sin resultados",
+            "no_results_description": "Ninguna sesión coincide con los filtros actuales."
+        },
+        "aria": {
+            "results_count_one": "{{count}} sesión encontrada",
+            "results_count_other": "{{count}} sesiones encontradas"
+        },
+        "form": {
+            "title_create": "Nueva sesión",
+            "title_edit": "Editar sesión",
+            "description_create": "Registra un canal de WhatsApp. La conexión OpenWA se completará en un paso posterior.",
+            "description_edit": "Actualiza el nombre visible y la sede asociada.",
+            "submit_create": "Crear sesión",
+            "submit_edit": "Guardar cambios",
+            "section_basic": "Canal",
+            "section_basic_hint_create": "Identifica esta sesión. El identificador interno se genera con el slug de la empresa.",
+            "section_basic_hint_edit": "El identificador interno no cambia. Puedes ajustar el alias y la sede.",
+            "fields": {
+                "alias": "Nombre del canal",
+                "alias_placeholder": "Ej. WhatsApp principal",
+                "sede": "Sede (opcional)",
+                "sede_none": "Sin sede",
+                "sede_hint": "En planes con más de una sesión puedes asociar cada número a una sucursal.",
+                "auto_reconnect": "Reconectar automáticamente",
+                "auto_reconnect_hint": "Si se cae la sesión, el conector intentará volver a levantarla."
+            }
+        },
+        "delete": {
+            "title": "Eliminar sesión",
+            "description": "Vas a eliminar el canal <strong>{{name}}</strong>. Quedará un cupo libre en tu plan. Esta acción no se puede deshacer desde aquí.",
+            "confirm": "Sí, eliminar sesión",
+            "loading": "Eliminando..."
+        },
+        "toast": {
+            "name_copied": "Identificador copiado",
+            "load_error": "No se pudo cargar la lista de sesiones."
+        }
+    },
+    "envios": {
+        "title": "Envíos programados",
+        "description": "Cola de mensajes que salen por WhatsApp: campañas, recordatorios y envíos diferidos.",
+        "empty_title": "La cola de envíos llega en el siguiente bloque",
+        "empty_description": "Cuando conectes una sesión y programes campañas, aquí verás el estado de cada mensaje (en espera, enviado o fallido)."
+    },
+    "historial": {
+        "title": "Historial de envíos",
+        "description": "Consulta lo ya despachado: fechas, destinatarios y resultado de cada mensaje.",
+        "empty_title": "Todavía no hay historial",
+        "empty_description": "El registro de envíos aparecerá aquí cuando la cola empiece a despachar mensajes."
+    }
+}

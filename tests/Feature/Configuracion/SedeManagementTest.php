@@ -140,6 +140,29 @@ test('geo endpoints return cascaded catalog', function () {
         ->assertJsonFragment(['name' => 'CHICLAYO']);
 });
 
+test('creating a second sede on a one-slot plan fails with plan_limit', function () {
+    $distrito = $this->seedGeoCatalog();
+    $admin = demoAdmin();
+
+    Sede::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'codigo' => 'SEDE-001',
+        'nombre' => 'Primera',
+    ]);
+
+    $this->actingAs($admin)
+        ->from('http://demo.sendsaas.test/configuracion/sedes')
+        ->post('http://demo.sendsaas.test/configuracion/sedes', [
+            'nombre' => 'Segunda sede',
+            'distrito_id' => $distrito->id,
+            'activa' => true,
+        ])
+        ->assertRedirect()
+        ->assertSessionHasErrors('plan_limit');
+
+    expect(Sede::query()->where('tenant_id', $admin->tenant_id)->count())->toBe(1);
+});
+
 test('tenant admin can export sedes as xlsx', function () {
     $admin = demoAdmin();
     Sede::factory()->create([

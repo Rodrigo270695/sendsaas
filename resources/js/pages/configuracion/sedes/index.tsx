@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Can } from '@/components/can';
+import { PlanLimitCreateButton } from '@/components/plan-limit-create-button';
 import {
     BulkAction,
     BulkActionBar,
@@ -29,6 +29,7 @@ import type { DataTableColumn, FilterChip } from '@/components/data-page';
 import { Button } from '@/components/ui/button';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
 import { usePermission } from '@/hooks/use-permission';
+import { usePlanLimitReached } from '@/hooks/use-plan-limits';
 import { useRowSelection } from '@/hooks/use-row-selection';
 import AppLayout from '@/layouts/app-layout';
 import sedes from '@/routes/configuracion/sedes';
@@ -71,6 +72,7 @@ export default function Index({
     const { t } = useTranslation(['sedes', 'common']);
     const { can } = usePermission();
     const canCreate = can('sedes.create');
+    const sedesLimitReached = usePlanLimitReached('max_sedes');
     const canUpdate = can('sedes.update');
     const canDelete = can('sedes.delete');
     const canExport = can('sedes.export');
@@ -111,7 +113,12 @@ export default function Index({
 
     const [modal, setModal] = useState<ModalState>({ type: 'idle' });
     const closeModal = useCallback(() => setModal({ type: 'idle' }), []);
-    const openCreate = useCallback(() => setModal({ type: 'create' }), []);
+    const openCreate = useCallback(() => {
+        if (sedesLimitReached) {
+            return;
+        }
+        setModal({ type: 'create' });
+    }, [sedesLimitReached]);
     const openEdit = useCallback(
         (sede: Sede) => setModal({ type: 'edit', sede }),
         [],
@@ -319,24 +326,20 @@ export default function Index({
                                     </a>
                                 </Button>
                             )}
-                            <Can permission="sedes.create">
-                                <Button
-                                    type="button"
-                                    onClick={openCreate}
-                                    className="cursor-pointer gap-2"
-                                >
-                                    <Plus
-                                        className="size-4"
-                                        strokeWidth={2.5}
-                                    />
-                                    <span className="hidden sm:inline">
-                                        {t('sedes:actions.new')}
-                                    </span>
-                                    <span className="sm:hidden">
-                                        {t('sedes:actions.new_short')}
-                                    </span>
-                                </Button>
-                            </Can>
+                            <PlanLimitCreateButton
+                                permission="sedes.create"
+                                reached={sedesLimitReached}
+                                tooltip={t('sedes:plan_limit.max_sedes')}
+                                onClick={openCreate}
+                            >
+                                <Plus className="size-4" strokeWidth={2.5} />
+                                <span className="hidden sm:inline">
+                                    {t('sedes:actions.new')}
+                                </span>
+                                <span className="sm:hidden">
+                                    {t('sedes:actions.new_short')}
+                                </span>
+                            </PlanLimitCreateButton>
                         </div>
                     }
                 />
@@ -397,7 +400,9 @@ export default function Index({
                                     : t('sedes:empty.no_records_description')
                             }
                             action={
-                                activeFiltersCount === 0 && canCreate ? (
+                                activeFiltersCount === 0 &&
+                                canCreate &&
+                                !sedesLimitReached ? (
                                     <Button
                                         type="button"
                                         onClick={openCreate}

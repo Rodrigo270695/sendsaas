@@ -2,6 +2,7 @@
     "section": "Platform",
     "groups": {
         "bandeja": "Inbox",
+        "comunicaciones": "Communications",
         "contactos": "Contacts",
         "campanas": "Campaigns",
         "reportes": "Reports",
@@ -14,6 +15,9 @@
     "items": {
         "dashboard": "Dashboard",
         "conversaciones": "Conversations",
+        "sesiones_whatsapp": "WhatsApp sessions",
+        "envios_programados": "Scheduled sends",
+        "historial_envios": "Send history",
         "contactos": "Contacts",
         "campanas": "Campaigns",
         "automatizaciones": "Automations",

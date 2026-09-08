@@ -7,6 +7,7 @@ use App\Http\Controllers\SedeController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantImpersonationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WhatsappSessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/manifest.webmanifest', '/manifest.json', 301);
@@ -59,6 +60,20 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         Route::middleware('permission:usuarios.bulk-delete')->delete('usuarios/bulk', [UserController::class, 'bulkDestroy'])->name('usuarios.bulk-destroy');
         Route::middleware('permission:usuarios.update')->put('usuarios/{user}', [UserController::class, 'update'])->name('usuarios.update');
         Route::middleware('permission:usuarios.delete')->delete('usuarios/{user}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+    });
+
+    Route::prefix('comunicaciones')->name('comunicaciones.')->group(function () {
+        Route::middleware('permission:whatsapp.view')->get('sesiones', [WhatsappSessionController::class, 'index'])->name('sesiones.index');
+        Route::middleware('permission:whatsapp.connect')->post('sesiones', [WhatsappSessionController::class, 'store'])->name('sesiones.store');
+        Route::middleware('permission:whatsapp.update')->put('sesiones/{whatsappSession}', [WhatsappSessionController::class, 'update'])->name('sesiones.update');
+        Route::middleware('permission:whatsapp.delete')->delete('sesiones/{whatsappSession}', [WhatsappSessionController::class, 'destroy'])->name('sesiones.destroy');
+
+        Route::middleware('permission:comunicaciones.envios.view')->group(function () {
+            Route::inertia('envios', 'comunicaciones/envios/index')->name('envios.index');
+        });
+        Route::middleware('permission:comunicaciones.historial.view')->group(function () {
+            Route::inertia('historial', 'comunicaciones/historial/index')->name('historial.index');
+        });
     });
 
     Route::prefix('plataforma')->name('plataforma.')->middleware('tenant.central')->group(function () {

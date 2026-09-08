@@ -5,6 +5,12 @@ declare(strict_types=1);
 namespace App\Support\Plan;
 
 use App\Models\Plan;
+use App\Models\Sede;
+use App\Models\Tenant;
+use App\Models\TenantWhatsappSession;
+use App\Models\User;
+use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 /**
  * Cupos de un plan. -1 en valor_int = ilimitado.
@@ -99,5 +105,70 @@ final class PlanLimits
             'limit' => $limit ?? 0,
             'plan' => $plan?->nombre ?? __('plan.limits.unknown_plan'),
         ]);
+    }
+
+    /**
+     * Consumo vs límite para Inertia (botones deshabilitados, barra de cupo).
+     *
+     * @return array<string, array{limit: int|null, used: int, remaining: int|null, reached: bool, unlimited: bool}>|null
+     */
+    public static function snapshot(?Tenant $tenant = null): ?array
+    {
+        $tenant ??= current_tenant();
+
+        if ($tenant === null) {
+            return null;
+        }
+
+        try {
+            $tenant->loadMissing('plan');
+            $plan = $tenant->plan;
+            $out = [];
+
+            foreach (self::INT_LIMIT_FEATURES as $feature) {
+                $limit = self::intLimit($plan, $feature);
+                $used = self::currentCount($tenant, $feature);
+                $unlimited = $limit === null;
+
+                $out[$feature] = [
+                    'limit' => $limit,
+                    'used' => $used,
+                    'remaining' => $unlimited ? null : max(0, $limit - $used),
+                    'reached' => ! $unlimited && $used >= $limit,
+                    'unlimited' => $unlimited,
+                ];
+            }
+
+            return $out;
+        } catch (Throwable $e) {
+            report($e);
+
+            return null;
+        }
+    }
+
+    public static function currentCount(Tenant $tenant, string $feature): int
+    {
+        return match ($feature) {
+            'max_sedes' => self::countIfTableExists('sedes', fn () => Sede::query()->where('tenant_id', $tenant->id)->count()),
+            'max_usuarios' => User::query()->where('tenant_id', $tenant->id)->count(),
+            'max_whatsapp_sessions' => self::countIfTableExists(
+                'tenant_whatsapp_sessions',
+                fn () => TenantWhatsappSession::query()->where('tenant_id', $tenant->id)->count(),
+            ),
+            default => 0,
+        };
+    }
+
+    /**
+     * @param  callable(): int  $count
+     */
+    private static function countIfTableExists(string $table, callable $count): int
+    {
+        if (! Schema::hasTable($table)) {
+            return 0;
+        }
+
+        return $count();
     }
 }

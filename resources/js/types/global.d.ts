@@ -1,4 +1,5 @@
 import type { Auth } from '@/types/auth';
+import type { PlanLimitsSnapshot } from '@/types/plan-limits';
 import type { TenancyShared, TenantImpersonationShared } from '@/types/tenancy';
 import type { TenantShared } from '@/types/tenant';
 import type { FlashToast } from '@/types/ui';
@@ -20,6 +21,7 @@ declare module '@inertiajs/core' {
             auth: Auth;
             locale: string;
             contact_whatsapp: string;
+            plan_limits: PlanLimitsSnapshot | null;
             timezone: string;
             sidebarOpen: boolean;
             flash: FlashToast | null;

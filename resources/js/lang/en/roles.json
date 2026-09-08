@@ -145,8 +145,10 @@
         "series": "Series",
         "notas-baja": "Credit notes",
         "resumenes": "Summaries",
-        "comunicaciones-cola": "Outbox queue",
-        "comunicaciones-historico": "Message history",
+        "comunicaciones-cola": "Scheduled sends",
+        "comunicaciones-historico": "Send history",
+        "comunicaciones": "Communications",
+        "whatsapp": "WhatsApp sessions",
         "clinicas-asesoradas": "Advised clinics",
         "plantillas": "Templates",
         "snapshots": "Snapshots",
@@ -189,6 +191,7 @@
         "suspend": "Suspend",
         "resume": "Resume",
         "impersonate": "Impersonate",
+        "connect": "Connect",
         "whatsapp-restart": "Restart WhatsApp",
         "whatsapp-stop": "Stop WhatsApp"
     }

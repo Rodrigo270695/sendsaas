@@ -68,6 +68,14 @@ class Tenant extends Model
     }
 
     /**
+     * @return HasMany<TenantWhatsappSession, $this>
+     */
+    public function whatsappSessions(): HasMany
+    {
+        return $this->hasMany(TenantWhatsappSession::class);
+    }
+
+    /**
      * @return BelongsTo<Plan, $this>
      */
     public function plan(): BelongsTo

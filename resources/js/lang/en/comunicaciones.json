@@ -1,0 +1,112 @@
+{
+    "sesiones": {
+        "title": "WhatsApp sessions",
+        "description": "WhatsApp numbers connected to the company. Your plan sets the quota: once you hit the max, you cannot open another session.",
+        "plan_limit": {
+            "max_whatsapp_sessions": "You reached your plan's WhatsApp session limit. Upgrade your plan to add more."
+        },
+        "quota": {
+            "title": "Plan quota",
+            "used_of": "{{used}} of {{limit}} sessions in use",
+            "unlimited": "Unlimited sessions · {{used}} in use",
+            "remaining_one": "1 slot left",
+            "remaining_other": "{{count}} slots left",
+            "reached": "You cannot create another session until you upgrade the plan or free a slot."
+        },
+        "actions": {
+            "new": "New session",
+            "new_short": "New",
+            "create_first": "Create first session"
+        },
+        "stats": {
+            "total": "Total",
+            "connected": "Connected",
+            "pending": "Pending",
+            "disconnected": "Disconnected",
+            "filters": "Filters",
+            "matches": "Matches"
+        },
+        "search_placeholder": "Search by channel, session or number...",
+        "filter_label": "Filter by status",
+        "filters": {
+            "all": "All statuses",
+            "connected": "Connected",
+            "pending": "Pending",
+            "disconnected": "Disconnected"
+        },
+        "columns": {
+            "canal": "Channel",
+            "numero": "Number",
+            "sede": "Location",
+            "estado": "Status",
+            "acciones": "Actions"
+        },
+        "row": {
+            "no_phone": "No number",
+            "no_sede": "No location assigned",
+            "copy_name": "Copy session id",
+            "actions_for": "Actions for {{name}}",
+            "status": {
+                "created": "Registered",
+                "initializing": "Initializing",
+                "qr_ready": "QR ready",
+                "authenticating": "Authenticating",
+                "ready": "Connected",
+                "disconnected": "Disconnected",
+                "failed": "Failed"
+            }
+        },
+        "empty": {
+            "no_records_title": "No sessions yet",
+            "no_records_description": "Create the first WhatsApp session. If your plan allows only one, the button locks after you create it.",
+            "no_results_title": "No results",
+            "no_results_description": "No session matches the current filters."
+        },
+        "aria": {
+            "results_count_one": "{{count}} session found",
+            "results_count_other": "{{count}} sessions found"
+        },
+        "form": {
+            "title_create": "New session",
+            "title_edit": "Edit session",
+            "description_create": "Register a WhatsApp channel. OpenWA pairing will come in a later step.",
+            "description_edit": "Update the display name and linked location.",
+            "submit_create": "Create session",
+            "submit_edit": "Save changes",
+            "section_basic": "Channel",
+            "section_basic_hint_create": "Identify this session. The internal id is generated from the company slug.",
+            "section_basic_hint_edit": "The internal id does not change. You can adjust the alias and location.",
+            "fields": {
+                "alias": "Channel name",
+                "alias_placeholder": "E.g. Main WhatsApp",
+                "sede": "Location (optional)",
+                "sede_none": "No location",
+                "sede_hint": "On plans with more than one session you can link each number to a branch.",
+                "auto_reconnect": "Reconnect automatically",
+                "auto_reconnect_hint": "If the session drops, the connector will try to bring it back."
+            }
+        },
+        "delete": {
+            "title": "Delete session",
+            "description": "You are about to delete channel <strong>{{name}}</strong>. One plan slot will become free. This cannot be undone from here.",
+            "confirm": "Yes, delete session",
+            "loading": "Deleting..."
+        },
+        "toast": {
+            "name_copied": "Session id copied",
+            "load_error": "Could not load the session list."
+        }
+    },
+    "envios": {
+        "title": "Scheduled sends",
+        "description": "Outbound WhatsApp queue: campaigns, reminders and delayed messages.",
+        "empty_title": "The send queue arrives in the next block",
+        "empty_description": "Once you connect a session and schedule campaigns, you will see each message status here (queued, sent or failed)."
+    },
+    "historial": {
+        "title": "Send history",
+        "description": "Review what already went out: dates, recipients and delivery result.",
+        "empty_title": "No history yet",
+        "empty_description": "The send log will appear here when the queue starts dispatching messages."
+    }
+}

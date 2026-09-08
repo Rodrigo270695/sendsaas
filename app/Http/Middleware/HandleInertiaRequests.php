@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Support\Plan\PlanLimits;
 use App\Support\Tenancy\DemoTenant;
 use App\Tenancy\TenantManager;
 use Illuminate\Http\Request;
@@ -57,6 +58,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'locale' => $request->getLocale(),
             'contact_whatsapp' => (string) config('app.contact_whatsapp', '51976809804'),
+            'plan_limits' => fn () => $request->user() ? PlanLimits::snapshot() : null,
             'timezone' => config('app.timezone'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => function () use ($request) {

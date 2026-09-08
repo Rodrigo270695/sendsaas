@@ -145,8 +145,10 @@
         "series": "Series",
         "notas-baja": "Notas de baja",
         "resumenes": "Resúmenes",
-        "comunicaciones-cola": "Cola saliente",
-        "comunicaciones-historico": "Histórico de mensajes",
+        "comunicaciones-cola": "Envíos programados",
+        "comunicaciones-historico": "Historial de envíos",
+        "comunicaciones": "Comunicaciones",
+        "whatsapp": "Sesiones WhatsApp",
         "clinicas-asesoradas": "Clínicas asesoradas",
         "plantillas": "Plantillas",
         "snapshots": "Snapshots",
@@ -189,6 +191,7 @@
         "suspend": "Suspender",
         "resume": "Reactivar",
         "impersonate": "Suplantar",
+        "connect": "Conectar",
         "whatsapp-restart": "Reiniciar WhatsApp",
         "whatsapp-stop": "Detener WhatsApp"
     }
