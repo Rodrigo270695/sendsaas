@@ -40,8 +40,8 @@ export default function AuthGreeting({
         <header className="mb-8 space-y-3 text-center sm:mb-10">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/60 px-2.5 py-1 text-[0.7rem] font-medium tracking-wider text-muted-foreground uppercase backdrop-blur">
                 <span className="relative flex size-1.5">
-                    <span className="absolute inline-flex size-1.5 animate-ping rounded-full bg-emerald-500/60" />
-                    <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+                    <span className="absolute inline-flex size-1.5 animate-ping rounded-full bg-success/60" />
+                    <span className="relative inline-flex size-1.5 rounded-full bg-success" />
                 </span>
                 Sistema operativo
             </span>
