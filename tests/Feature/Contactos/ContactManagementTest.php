@@ -92,6 +92,47 @@ test('tenant admin can create a contact and normalizes peruvian phone', function
         ->and($contact->name)->toBe('Ana Pérez');
 });
 
+test('tenant admin can update a contact', function () {
+    $admin = contactosAdmin();
+    $contact = Contact::factory()->create([
+        'name' => 'Ana Pérez',
+        'phone' => '51987654321',
+        'email' => 'ana@demo.pe',
+    ]);
+
+    $this->actingAs($admin)
+        ->from('http://demo.sendsaas.test/contactos')
+        ->put('http://demo.sendsaas.test/contactos/'.$contact->id, [
+            'name' => 'Ana Actualizada',
+            'phone' => '987654321',
+            'email' => 'ana.nueva@demo.pe',
+            'notes' => 'Cliente VIP',
+            'sede_id' => null,
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    $contact->refresh();
+    expect($contact->name)->toBe('Ana Actualizada')
+        ->and($contact->phone)->toBe('51987654321')
+        ->and($contact->email)->toBe('ana.nueva@demo.pe')
+        ->and($contact->notes)->toBe('Cliente VIP')
+        ->and($contact->updated_by_id)->toBe($admin->id);
+});
+
+test('tenant admin can delete a contact', function () {
+    $contact = Contact::factory()->create(['phone' => '51911122233']);
+
+    $this->actingAs(contactosAdmin())
+        ->from('http://demo.sendsaas.test/contactos')
+        ->delete('http://demo.sendsaas.test/contactos/'.$contact->id)
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    expect(Contact::query()->find($contact->id))->toBeNull()
+        ->and(Contact::withTrashed()->find($contact->id))->not->toBeNull();
+});
+
 test('duplicate phone is rejected', function () {
     $admin = contactosAdmin();
     Contact::factory()->create(['phone' => '51987654321', 'name' => 'Ana']);
