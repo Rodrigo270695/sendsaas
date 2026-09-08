@@ -15,6 +15,9 @@ return [
 
     'name' => env('APP_NAME', 'SendSaaS'),
 
+    'platform_superadmin_name' => env('PLATFORM_SUPERADMIN_NAME', 'Super administrador'),
+    'platform_superadmin_email' => env('PLATFORM_SUPERADMIN_EMAIL', 'superadmin@sendsaas.pe'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

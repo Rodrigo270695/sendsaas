@@ -6,6 +6,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Crea (o re-sincroniza) el rol `superadmin` y el usuario de plataforma.
@@ -19,6 +20,10 @@ class SuperadminSeeder extends Seeder
     {
         $email = (string) env('PLATFORM_SUPERADMIN_EMAIL', self::EMAIL);
         $password = (string) env('PLATFORM_SUPERADMIN_PASSWORD', 'password');
+        $displayName = trim((string) env('PLATFORM_SUPERADMIN_NAME', 'Super administrador'));
+        if ($displayName === '') {
+            $displayName = 'Super administrador';
+        }
 
         if ($email === '' || $password === '') {
             $this->command?->warn('SuperadminSeeder omitido: define PLATFORM_SUPERADMIN_EMAIL y PLATFORM_SUPERADMIN_PASSWORD en .env');
@@ -62,7 +67,7 @@ class SuperadminSeeder extends Seeder
             if ($user === null) {
                 $user = User::query()->create([
                     'tenant_id' => null,
-                    'name' => 'Superadmin',
+                    'name' => $displayName,
                     'email' => $email,
                     'password' => $password,
                     'email_verified_at' => now(),
@@ -73,7 +78,7 @@ class SuperadminSeeder extends Seeder
                 $user->forceFill([
                     'tenant_id' => null,
                     'email' => $email,
-                    'name' => $user->name ?: 'Superadmin',
+                    'name' => $displayName,
                     'is_active' => true,
                     'deleted_at' => null,
                     'email_verified_at' => $user->email_verified_at ?? now(),
@@ -81,6 +86,7 @@ class SuperadminSeeder extends Seeder
             }
 
             $user->syncRoles([$role]);
+            Cache::forget('sendsaas.platform_greeting_name');
         } finally {
             setPermissionsTeamId($previousTeam);
         }

@@ -11,6 +11,7 @@ declare module '@inertiajs/core' {
     export interface InertiaConfig {
         sharedPageProps: {
             name: string;
+            greeting_name: string;
             tenant: TenantShared | null;
             auth: Auth;
             locale: string;

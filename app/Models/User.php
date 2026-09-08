@@ -69,6 +69,8 @@ class User extends Authenticatable implements PasskeyUser
      * @var list<string>
      */
     protected $appends = [
+        'first_name',
+        'display_name',
         'cv_url',
         'dni_file_url',
         'firma_url',
@@ -87,6 +89,21 @@ class User extends Authenticatable implements PasskeyUser
             'last_seen_at' => 'datetime',
             'last_path_at' => 'datetime',
         ];
+    }
+
+    public function getFirstNameAttribute(): string
+    {
+        $name = trim((string) ($this->attributes['name'] ?? ''));
+        if ($name === '') {
+            return '';
+        }
+
+        return explode(' ', $name)[0];
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return trim((string) ($this->attributes['name'] ?? ''));
     }
 
     public function getCvUrlAttribute(): ?string

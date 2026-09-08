@@ -2,6 +2,8 @@ export type User = {
     id: string;
     tenant_id?: string | null;
     name: string;
+    first_name?: string;
+    display_name?: string;
     email: string;
     phone?: string | null;
     is_active?: boolean;

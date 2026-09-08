@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -38,6 +40,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'greeting_name' => $this->greetingName($request),
             'tenant' => null,
             'auth' => [
                 'user' => $request->user(),
@@ -48,5 +51,31 @@ class HandleInertiaRequests extends Middleware
             'timezone' => config('app.timezone'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * Login central: name del superadmin (users.name).
+     * Tenant: lo pisa el layout con nombre_comercial.
+     * Sesión iniciada: display_name del usuario (VetSaaS usa users.name, primer token en dashboard).
+     */
+    private function greetingName(Request $request): string
+    {
+        $user = $request->user();
+        if ($user instanceof User) {
+            $fromUser = $user->display_name !== '' ? $user->display_name : $user->first_name;
+
+            return $fromUser !== '' ? $fromUser : (string) config('app.name');
+        }
+
+        return Cache::remember('sendsaas.platform_greeting_name', 60, function (): string {
+            $email = trim((string) config('app.platform_superadmin_email'));
+            $fromDb = $email !== ''
+                ? User::query()->whereNull('tenant_id')->where('email', $email)->value('name')
+                : null;
+
+            $label = trim((string) ($fromDb ?: config('app.platform_superadmin_name')));
+
+            return $label !== '' ? $label : (string) config('app.name', 'SendSaaS');
+        });
     }
 }
