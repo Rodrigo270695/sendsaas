@@ -431,6 +431,12 @@ final class ContactImportService
             return 'El archivo no es un Excel válido. Vuelve a descargar la plantilla .xlsx.';
         }
 
+        if (! class_exists(IOFactory::class)) {
+            Log::error('[xlsx] falta phpoffice/phpspreadsheet en vendor');
+
+            return 'Falta el paquete Excel en el servidor. Ejecuta: composer install --no-dev -o';
+        }
+
         if ($extension !== 'xls' && ! class_exists(ZipArchive::class)) {
             report('ContactImport: falta la extensión PHP zip.');
 
