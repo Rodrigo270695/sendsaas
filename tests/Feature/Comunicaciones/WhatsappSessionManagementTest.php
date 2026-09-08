@@ -220,6 +220,54 @@ test('tenant admin can update a session alias', function () {
         ->and($session->fresh()->auto_reconnect)->toBeFalse();
 });
 
+test('tenant admin can create a session linked to a sede', function () {
+    $admin = sesionesAdmin();
+    $sede = Sede::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'codigo' => 'SEDE-001',
+        'nombre' => 'Lima',
+    ]);
+
+    $this->actingAs($admin)
+        ->from('http://demo.sendsaas.test/comunicaciones/sesiones')
+        ->post('http://demo.sendsaas.test/comunicaciones/sesiones', [
+            'alias' => 'WhatsApp Lima',
+            'sede_id' => $sede->id,
+            'auto_reconnect' => true,
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('success')
+        ->assertSessionDoesntHaveErrors();
+
+    expect(TenantWhatsappSession::query()->where('tenant_id', $admin->tenant_id)->first()?->sede_id)
+        ->toBe($sede->id);
+});
+
+test('support impersonation can create a session for the tenant', function () {
+    $admin = sesionesAdmin();
+    $superadmin = User::query()->where('email', SuperadminSeeder::EMAIL)->firstOrFail();
+
+    $this->actingAs($superadmin)
+        ->withSession([
+            'tenant_impersonation' => [
+                'tenant_id' => (string) $admin->tenant_id,
+                'tenant_label' => 'Demo',
+            ],
+        ])
+        ->from('http://demo.sendsaas.test/comunicaciones/sesiones')
+        ->post('http://demo.sendsaas.test/comunicaciones/sesiones', [
+            'alias' => 'Canal soporte',
+            'auto_reconnect' => true,
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    $session = TenantWhatsappSession::query()->where('tenant_id', $admin->tenant_id)->first();
+
+    expect($session)->not->toBeNull()
+        ->and($session->created_by_id)->toBe($superadmin->id);
+});
+
 test('scheduled sends and history pages render empty states', function () {
     $admin = sesionesAdmin();
 

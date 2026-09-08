@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Models\Sede;
 use App\Models\TenantWhatsappSession;
+use App\Rules\ExistsSedeId;
 use App\Support\Plan\PlanLimits;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class WhatsappSessionRequest extends FormRequest
 {
@@ -22,20 +21,9 @@ class WhatsappSessionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $tenantId = tenant_id();
-        $sedesTable = (new Sede)->getTable();
-
         return [
             'alias' => ['required', 'string', 'max:80'],
-            'sede_id' => [
-                'nullable',
-                'uuid',
-                Rule::exists($sedesTable, 'id')->where(
-                    fn ($query) => $tenantId === null
-                        ? $query->whereRaw('1 = 0')
-                        : $query->where('tenant_id', $tenantId)->whereNull('deleted_at'),
-                ),
-            ],
+            'sede_id' => ['nullable', 'uuid', new ExistsSedeId(tenant_id())],
             'auto_reconnect' => ['required', 'boolean'],
         ];
     }
