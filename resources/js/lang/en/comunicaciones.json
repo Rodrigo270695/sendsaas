@@ -37,6 +37,8 @@
             "no_phone": "No number",
             "no_sede": "No location assigned",
             "copy_name": "Copy session id",
+            "connect": "Connect",
+            "disconnect": "Disconnect",
             "actions_for": "Actions for {{name}}",
             "status": {
                 "created": "Registered",
@@ -61,7 +63,7 @@
         "form": {
             "title_create": "New session",
             "title_edit": "Edit session",
-            "description_create": "Register a WhatsApp channel. OpenWA pairing will come in a later step.",
+            "description_create": "Register a WhatsApp channel. Then click Connect on the row to scan the QR.",
             "description_edit": "Update the display name and linked location.",
             "submit_create": "Create session",
             "submit_edit": "Save changes",
@@ -77,6 +79,28 @@
                 "auto_reconnect": "Reconnect automatically",
                 "auto_reconnect_hint": "If the session drops, the connector will try to bring it back."
             }
+        },
+        "connect": {
+            "title": "Link WhatsApp",
+            "description": "Scan the QR to connect “{{name}}” as a linked device.",
+            "scan": "Open WhatsApp on the phone and scan this code",
+            "steps": "WhatsApp → Linked devices → Link a device.",
+            "waiting": "Waiting for the QR code…",
+            "starting": "Starting the WhatsApp session…",
+            "refresh": "Refresh QR",
+            "qr_alt": "WhatsApp QR code",
+            "qr_error": "Could not fetch the QR code.",
+            "start_error": "Could not start the session. Check the OpenWA configuration.",
+            "network_error": "Network error while requesting the QR.",
+            "not_configured": "The WhatsApp connector is not configured on the server. An admin must set OPENWA_API_URL and OPENWA_API_KEY.",
+            "ready_title": "WhatsApp connected",
+            "ready_phone": "Number {{phone}}"
+        },
+        "disconnect": {
+            "title": "Disconnect WhatsApp",
+            "description": "You are about to unlink channel <strong>{{name}}</strong>. The phone will stop sending and receiving on this channel until you scan a QR again.",
+            "confirm": "Yes, disconnect",
+            "loading": "Disconnecting..."
         },
         "delete": {
             "title": "Delete session",

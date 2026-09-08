@@ -10,6 +10,8 @@ use Database\Seeders\PermissionsSeeder;
 use Database\Seeders\PlansAndFeaturesSeeder;
 use Database\Seeders\SuperadminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
 use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
@@ -35,6 +37,7 @@ test('tenant admin can view whatsapp sessions index with plan limits', function 
             ->has('sessions.data')
             ->has('stats')
             ->has('sedes')
+            ->where('openwa.configured', false)
             ->where('plan_limits.max_whatsapp_sessions.limit', 1)
             ->where('plan_limits.max_whatsapp_sessions.used', 0)
             ->where('plan_limits.max_whatsapp_sessions.reached', false)
@@ -266,6 +269,202 @@ test('support impersonation can create a session for the tenant', function () {
 
     expect($session)->not->toBeNull()
         ->and($session->created_by_id)->toBe($superadmin->id);
+});
+
+function enableOpenWaForTests(): void
+{
+    config([
+        'openwa.enabled' => true,
+        'openwa.api_url' => 'https://wa.test',
+        'openwa.api_key' => 'test-key',
+        'openwa.reconnect_poll_seconds' => 0,
+    ]);
+}
+
+/**
+ * @param  array<string, mixed>  $session
+ */
+function fakeOpenWaSession(array $session, ?string $qrCode = 'data:image/png;base64,xx'): void
+{
+    $id = (string) $session['id'];
+
+    Http::fake(function (Request $request) use ($session, $id, $qrCode) {
+        $url = $request->url();
+        $method = $request->method();
+
+        if ($method === 'GET' && str_ends_with($url, '/api/sessions')) {
+            return Http::response([]);
+        }
+
+        if ($method === 'POST' && str_ends_with($url, '/api/sessions')) {
+            return Http::response($session, 201);
+        }
+
+        if ($method === 'POST' && str_ends_with($url, '/api/sessions/'.$id.'/start')) {
+            return Http::response([...$session, 'status' => 'qr_ready']);
+        }
+
+        if ($method === 'POST' && str_ends_with($url, '/api/sessions/'.$id.'/stop')) {
+            return Http::response(['message' => 'Session stopped']);
+        }
+
+        if ($method === 'GET' && str_ends_with($url, '/api/sessions/'.$id.'/qr')) {
+            return Http::response([
+                'qrCode' => $qrCode,
+                'status' => $session['status'] ?? 'qr_ready',
+            ]);
+        }
+
+        if ($method === 'GET' && str_ends_with($url, '/api/sessions/'.$id)) {
+            return Http::response($session);
+        }
+
+        return Http::response(['error' => 'unexpected '.$method.' '.$url], 404);
+    });
+}
+
+test('connect without openwa configured returns 503', function () {
+    $admin = sesionesAdmin();
+    $session = TenantWhatsappSession::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'openwa_session_name' => 'demo',
+        'alias' => 'Principal',
+    ]);
+
+    $this->actingAs($admin)
+        ->from('http://demo.sendsaas.test/comunicaciones/sesiones')
+        ->post('http://demo.sendsaas.test/comunicaciones/sesiones/'.$session->id.'/connect')
+        ->assertStatus(503);
+});
+
+test('qr without openwa configured returns json 503', function () {
+    $admin = sesionesAdmin();
+    $session = TenantWhatsappSession::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'openwa_session_name' => 'demo',
+        'alias' => 'Principal',
+    ]);
+
+    $this->actingAs($admin)
+        ->getJson('http://demo.sendsaas.test/comunicaciones/sesiones/'.$session->id.'/qr')
+        ->assertStatus(503)
+        ->assertJson([
+            'ready' => false,
+            'qr_code' => null,
+        ]);
+});
+
+test('connect creates the remote openwa session and stores its id', function () {
+    enableOpenWaForTests();
+    fakeOpenWaSession([
+        'id' => 'ow-1',
+        'name' => 'demo',
+        'status' => 'qr_ready',
+    ]);
+
+    $admin = sesionesAdmin();
+    $session = TenantWhatsappSession::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'openwa_session_name' => 'demo',
+        'alias' => 'Principal',
+    ]);
+
+    $this->actingAs($admin)
+        ->from('http://demo.sendsaas.test/comunicaciones/sesiones')
+        ->post('http://demo.sendsaas.test/comunicaciones/sesiones/'.$session->id.'/connect')
+        ->assertRedirect()
+        ->assertSessionHas('info');
+
+    $session->refresh();
+
+    expect($session->openwa_session_id)->toBe('ow-1')
+        ->and($session->status)->toBe('qr_ready');
+});
+
+test('qr endpoint returns the openwa qr code', function () {
+    enableOpenWaForTests();
+    fakeOpenWaSession([
+        'id' => 'ow-1',
+        'name' => 'demo',
+        'status' => 'qr_ready',
+    ], 'data:image/png;base64,qrdemo');
+
+    $admin = sesionesAdmin();
+    $session = TenantWhatsappSession::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'openwa_session_name' => 'demo',
+        'openwa_session_id' => 'ow-1',
+        'status' => 'qr_ready',
+        'alias' => 'Principal',
+    ]);
+
+    $this->actingAs($admin)
+        ->getJson('http://demo.sendsaas.test/comunicaciones/sesiones/'.$session->id.'/qr')
+        ->assertOk()
+        ->assertJson([
+            'ready' => false,
+            'qr_code' => 'data:image/png;base64,qrdemo',
+            'status' => 'qr_ready',
+        ]);
+});
+
+test('qr endpoint reports ready and stores the phone', function () {
+    enableOpenWaForTests();
+    fakeOpenWaSession([
+        'id' => 'ow-1',
+        'name' => 'demo',
+        'status' => 'ready',
+        'phone' => '51999111222',
+        'pushName' => 'Demo',
+    ]);
+
+    $admin = sesionesAdmin();
+    $session = TenantWhatsappSession::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'openwa_session_name' => 'demo',
+        'openwa_session_id' => 'ow-1',
+        'status' => 'qr_ready',
+        'alias' => 'Principal',
+    ]);
+
+    $this->actingAs($admin)
+        ->getJson('http://demo.sendsaas.test/comunicaciones/sesiones/'.$session->id.'/qr')
+        ->assertOk()
+        ->assertJson([
+            'ready' => true,
+            'phone' => '51999111222',
+            'status' => 'ready',
+            'qr_code' => null,
+        ]);
+
+    expect($session->fresh()->phone)->toBe('51999111222')
+        ->and($session->fresh()->status)->toBe('ready');
+});
+
+test('disconnect stops the remote session', function () {
+    enableOpenWaForTests();
+    fakeOpenWaSession([
+        'id' => 'ow-1',
+        'name' => 'demo',
+        'status' => 'disconnected',
+    ]);
+
+    $admin = sesionesAdmin();
+    $session = TenantWhatsappSession::factory()->ready()->create([
+        'tenant_id' => $admin->tenant_id,
+        'openwa_session_name' => 'demo',
+        'openwa_session_id' => 'ow-1',
+        'alias' => 'Principal',
+    ]);
+
+    $this->actingAs($admin)
+        ->from('http://demo.sendsaas.test/comunicaciones/sesiones')
+        ->post('http://demo.sendsaas.test/comunicaciones/sesiones/'.$session->id.'/disconnect')
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    expect($session->fresh()->status)->toBe('disconnected')
+        ->and($session->fresh()->phone)->toBeNull();
 });
 
 test('scheduled sends and history pages render empty states', function () {

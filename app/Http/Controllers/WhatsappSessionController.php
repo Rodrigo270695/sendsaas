@@ -7,7 +7,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\WhatsappSessionRequest;
 use App\Models\Sede;
 use App\Models\TenantWhatsappSession;
+use App\Services\OpenWa\OpenWaClient;
+use App\Services\OpenWa\WhatsappSessionLinker;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -84,7 +87,124 @@ class WhatsappSessionController extends Controller
                 'coincidencias' => $sessions->total(),
             ],
             'sedes' => $sedes,
+            'openwa' => [
+                'configured' => app(OpenWaClient::class)->isConfigured(),
+            ],
         ]);
+    }
+
+    public function connect(
+        TenantWhatsappSession $whatsappSession,
+        WhatsappSessionLinker $linker,
+        OpenWaClient $client,
+    ): RedirectResponse {
+        $this->assertBelongsToTenant($whatsappSession);
+        abort_unless($client->isConfigured(), 503, 'OpenWA no está configurado. Pide a soporte que revise OPENWA_API_URL y OPENWA_API_KEY.');
+
+        try {
+            $linker->ensureRemote($whatsappSession, wake: true);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->with('error', 'No se pudo iniciar la sesión de WhatsApp. '.$e->getMessage());
+        }
+
+        return back()->with('info', 'Sesión lista para vincular. Escanea el QR con el teléfono.');
+    }
+
+    public function qr(
+        TenantWhatsappSession $whatsappSession,
+        WhatsappSessionLinker $linker,
+        OpenWaClient $client,
+    ): JsonResponse {
+        $this->assertBelongsToTenant($whatsappSession);
+
+        if (! $client->isConfigured()) {
+            return response()->json([
+                'ready' => false,
+                'status' => $whatsappSession->status,
+                'qr_code' => null,
+                'error' => 'OpenWA no está configurado en el servidor. Pide a soporte que revise OPENWA_API_URL y OPENWA_API_KEY.',
+            ], 503);
+        }
+
+        try {
+            if ($whatsappSession->openwa_session_id === null || $whatsappSession->openwa_session_id === '') {
+                $whatsappSession = $linker->ensureRemote($whatsappSession, wake: true);
+            }
+
+            if (! $whatsappSession->isReady()) {
+                $remote = $client->getSession((string) $whatsappSession->openwa_session_id);
+                $status = (string) ($remote['status'] ?? $whatsappSession->status);
+                if (in_array($status, ['created', 'disconnected', 'failed'], true)) {
+                    $client->tryStartIfDown((string) $whatsappSession->openwa_session_id, $status);
+                }
+            }
+
+            $whatsappSession = $linker->refresh($whatsappSession);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'ready' => false,
+                'status' => $whatsappSession->status,
+                'qr_code' => null,
+                'error' => 'No se pudo sincronizar con OpenWA. Revisa OPENWA_API_KEY.',
+            ], 503);
+        }
+
+        if ($whatsappSession->isReady()) {
+            return response()->json([
+                'ready' => true,
+                'phone' => $whatsappSession->phone,
+                'status' => $whatsappSession->status,
+                'qr_code' => null,
+            ]);
+        }
+
+        try {
+            $qr = $client->getQrCode((string) $whatsappSession->openwa_session_id);
+            $qrCode = $qr['qrCode'] ?? null;
+
+            return response()->json([
+                'ready' => false,
+                'status' => (string) ($qr['status'] ?? $whatsappSession->status),
+                'qr_code' => is_string($qrCode) && $qrCode !== '' ? $qrCode : null,
+                'message' => filled($qrCode) ? null : 'Esperando código QR de WhatsApp…',
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            $status = (string) $whatsappSession->status;
+            $waiting = in_array($status, ['initializing', 'authenticating', 'created'], true);
+
+            return response()->json([
+                'ready' => false,
+                'status' => $status,
+                'qr_code' => null,
+                'message' => $waiting ? 'Iniciando sesión… el QR aparece en unos segundos.' : null,
+                'error' => $waiting ? null : 'No se pudo obtener el código QR.',
+            ], $waiting ? 200 : 503);
+        }
+    }
+
+    public function disconnect(
+        TenantWhatsappSession $whatsappSession,
+        WhatsappSessionLinker $linker,
+        OpenWaClient $client,
+    ): RedirectResponse {
+        $this->assertBelongsToTenant($whatsappSession);
+        abort_unless($client->isConfigured(), 503, 'OpenWA no está configurado en el servidor.');
+
+        try {
+            $linker->disconnect($whatsappSession);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->with('error', 'No se pudo desvincular WhatsApp. Intenta de nuevo.');
+        }
+
+        return back()->with('success', 'WhatsApp desvinculado. Puedes escanear un QR de nuevo cuando quieras.');
     }
 
     public function store(WhatsappSessionRequest $request): RedirectResponse

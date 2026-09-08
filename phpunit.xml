@@ -36,5 +36,7 @@
         <env name="PLATFORM_SUPERADMIN_PASSWORD" value="password"/>
         <env name="TENANT_ROOT_DOMAIN" value="sendsaas.test"/>
         <env name="TENANT_CENTRAL_DOMAINS" value="localhost,127.0.0.1,sendsaas.test"/>
+        <env name="OPENWA_ENABLED" value="false"/>
+        <env name="OPENWA_RECONNECT_POLL_SECONDS" value="0"/>
     </php>
 </phpunit>

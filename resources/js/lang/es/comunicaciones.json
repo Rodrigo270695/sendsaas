@@ -37,6 +37,8 @@
             "no_phone": "Sin número",
             "no_sede": "Sin sede asignada",
             "copy_name": "Copiar sesión",
+            "connect": "Conectar",
+            "disconnect": "Desconectar",
             "actions_for": "Acciones para {{name}}",
             "status": {
                 "created": "Registrada",
@@ -61,7 +63,7 @@
         "form": {
             "title_create": "Nueva sesión",
             "title_edit": "Editar sesión",
-            "description_create": "Registra un canal de WhatsApp. La conexión OpenWA se completará en un paso posterior.",
+            "description_create": "Registra un canal de WhatsApp. Después pulsa Conectar en la fila para escanear el QR.",
             "description_edit": "Actualiza el nombre visible y la sede asociada.",
             "submit_create": "Crear sesión",
             "submit_edit": "Guardar cambios",
@@ -77,6 +79,28 @@
                 "auto_reconnect": "Reconectar automáticamente",
                 "auto_reconnect_hint": "Si se cae la sesión, el conector intentará volver a levantarla."
             }
+        },
+        "connect": {
+            "title": "Vincular WhatsApp",
+            "description": "Escanea el QR para conectar «{{name}}» como dispositivo vinculado.",
+            "scan": "Abre WhatsApp en el teléfono y escanea este código",
+            "steps": "WhatsApp → Dispositivos vinculados → Vincular un dispositivo.",
+            "waiting": "Esperando el código QR…",
+            "starting": "Iniciando sesión de WhatsApp…",
+            "refresh": "Actualizar QR",
+            "qr_alt": "Código QR de WhatsApp",
+            "qr_error": "No se pudo obtener el código QR.",
+            "start_error": "No se pudo iniciar la sesión. Revisa la configuración de OpenWA.",
+            "network_error": "Error de red al pedir el QR.",
+            "not_configured": "El conector de WhatsApp no está configurado en el servidor. Un administrador debe definir OPENWA_API_URL y OPENWA_API_KEY.",
+            "ready_title": "WhatsApp conectado",
+            "ready_phone": "Número {{phone}}"
+        },
+        "disconnect": {
+            "title": "Desconectar WhatsApp",
+            "description": "Vas a desvincular el canal <strong>{{name}}</strong>. El teléfono dejará de enviar y recibir por este canal hasta que escanees un QR de nuevo.",
+            "confirm": "Sí, desconectar",
+            "loading": "Desconectando..."
         },
         "delete": {
             "title": "Eliminar sesión",

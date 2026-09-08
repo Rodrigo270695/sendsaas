@@ -66,6 +66,9 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
     Route::prefix('comunicaciones')->name('comunicaciones.')->group(function () {
         Route::middleware('permission:whatsapp.view')->get('sesiones', [WhatsappSessionController::class, 'index'])->name('sesiones.index');
         Route::middleware('permission:whatsapp.connect')->post('sesiones', [WhatsappSessionController::class, 'store'])->name('sesiones.store');
+        Route::middleware('permission:whatsapp.connect')->post('sesiones/{whatsappSession}/connect', [WhatsappSessionController::class, 'connect'])->name('sesiones.connect');
+        Route::middleware('permission:whatsapp.connect')->get('sesiones/{whatsappSession}/qr', [WhatsappSessionController::class, 'qr'])->name('sesiones.qr');
+        Route::middleware('permission:whatsapp.connect')->post('sesiones/{whatsappSession}/disconnect', [WhatsappSessionController::class, 'disconnect'])->name('sesiones.disconnect');
         Route::middleware('permission:whatsapp.update')->put('sesiones/{whatsappSession}', [WhatsappSessionController::class, 'update'])->name('sesiones.update');
         Route::middleware('permission:whatsapp.delete')->delete('sesiones/{whatsappSession}', [WhatsappSessionController::class, 'destroy'])->name('sesiones.destroy');
 

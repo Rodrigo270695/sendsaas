@@ -28,7 +28,9 @@ import { usePermission } from '@/hooks/use-permission';
 import { usePlanLimitReached } from '@/hooks/use-plan-limits';
 import AppLayout from '@/layouts/app-layout';
 import type { Paginated } from '@/types';
+import { SessionConnectDialog } from './components/session-connect-dialog';
 import { SessionDeleteDialog } from './components/session-delete-dialog';
+import { SessionDisconnectDialog } from './components/session-disconnect-dialog';
 import { SessionFormModal } from './components/session-form-modal';
 import { SessionRowActions } from './components/session-row-actions';
 import type {
@@ -45,13 +47,18 @@ type SessionsIndexProps = {
     filters: SessionFilters;
     stats: SessionStats;
     sedes: readonly SedeOption[];
+    openwa: {
+        configured: boolean;
+    };
 };
 
 type ModalState =
     | { type: 'idle' }
     | { type: 'create' }
     | { type: 'edit'; session: WhatsappSession }
-    | { type: 'delete'; session: WhatsappSession };
+    | { type: 'delete'; session: WhatsappSession }
+    | { type: 'connect'; session: WhatsappSession }
+    | { type: 'disconnect'; session: WhatsappSession };
 
 const DEFAULT_PER_PAGE = 10;
 const DEFAULT_ESTADO: SessionEstadoFilter = 'todas';
@@ -74,13 +81,15 @@ export default function Index({
     filters,
     stats,
     sedes,
+    openwa = { configured: false },
 }: SessionsIndexProps) {
     const { t } = useTranslation(['comunicaciones', 'common']);
     const { can } = usePermission();
     const canCreate = can('whatsapp.connect');
+    const canConnect = can('whatsapp.connect');
     const canUpdate = can('whatsapp.update');
     const canDelete = can('whatsapp.delete');
-    const showRowActions = canUpdate || canDelete;
+    const showRowActions = canConnect || canUpdate || canDelete;
     const limitReached = usePlanLimitReached('max_whatsapp_sessions');
 
     const {
@@ -139,6 +148,14 @@ export default function Index({
     );
     const openDelete = useCallback(
         (session: WhatsappSession) => setModal({ type: 'delete', session }),
+        [],
+    );
+    const openConnect = useCallback(
+        (session: WhatsappSession) => setModal({ type: 'connect', session }),
+        [],
+    );
+    const openDisconnect = useCallback(
+        (session: WhatsappSession) => setModal({ type: 'disconnect', session }),
         [],
     );
 
@@ -225,12 +242,15 @@ export default function Index({
             base.push({
                 key: 'acciones',
                 header: t('comunicaciones:sesiones.columns.acciones'),
-                className: 'w-12',
+                className: 'w-36',
                 cell: (row) => (
                     <SessionRowActions
                         session={row}
+                        onConnect={openConnect}
+                        onDisconnect={openDisconnect}
                         onEdit={openEdit}
                         onDelete={openDelete}
+                        canConnect={canConnect}
                         canUpdate={canUpdate}
                         canDelete={canDelete}
                     />
@@ -239,7 +259,17 @@ export default function Index({
         }
 
         return base;
-    }, [t, showRowActions, canUpdate, canDelete, openEdit, openDelete]);
+    }, [
+        t,
+        showRowActions,
+        canConnect,
+        canUpdate,
+        canDelete,
+        openConnect,
+        openDisconnect,
+        openEdit,
+        openDelete,
+    ]);
 
     return (
         <>
@@ -416,6 +446,23 @@ export default function Index({
                     if (!open) closeModal();
                 }}
                 session={modal.type === 'delete' ? modal.session : null}
+            />
+
+            <SessionConnectDialog
+                open={modal.type === 'connect'}
+                onOpenChange={(open) => {
+                    if (!open) closeModal();
+                }}
+                session={modal.type === 'connect' ? modal.session : null}
+                configured={openwa.configured}
+            />
+
+            <SessionDisconnectDialog
+                open={modal.type === 'disconnect'}
+                onOpenChange={(open) => {
+                    if (!open) closeModal();
+                }}
+                session={modal.type === 'disconnect' ? modal.session : null}
             />
         </>
     );

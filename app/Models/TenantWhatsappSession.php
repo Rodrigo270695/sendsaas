@@ -148,6 +148,11 @@ class TenantWhatsappSession extends Model
         return $clean !== '' ? $clean : 'sesion';
     }
 
+    public function isReady(): bool
+    {
+        return $this->status === self::STATUS_CONNECTED;
+    }
+
     public function statusGroup(): string
     {
         if ($this->status === self::STATUS_CONNECTED) {
