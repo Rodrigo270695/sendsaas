@@ -9,6 +9,7 @@ use App\Http\Controllers\TenantImpersonationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhatsappSessionController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::redirect('/manifest.webmanifest', '/manifest.json', 301);
 
@@ -68,12 +69,12 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         Route::middleware('permission:whatsapp.update')->put('sesiones/{whatsappSession}', [WhatsappSessionController::class, 'update'])->name('sesiones.update');
         Route::middleware('permission:whatsapp.delete')->delete('sesiones/{whatsappSession}', [WhatsappSessionController::class, 'destroy'])->name('sesiones.destroy');
 
-        Route::middleware('permission:comunicaciones.envios.view')->group(function () {
-            Route::inertia('envios', 'comunicaciones/envios/index')->name('envios.index');
-        });
-        Route::middleware('permission:comunicaciones.historial.view')->group(function () {
-            Route::inertia('historial', 'comunicaciones/historial/index')->name('historial.index');
-        });
+        Route::middleware('permission:comunicaciones.envios.view')
+            ->get('envios', fn () => Inertia::render('comunicaciones/envios/index'))
+            ->name('envios.index');
+        Route::middleware('permission:comunicaciones.historial.view')
+            ->get('historial', fn () => Inertia::render('comunicaciones/historial/index'))
+            ->name('historial.index');
     });
 
     Route::prefix('plataforma')->name('plataforma.')->middleware('tenant.central')->group(function () {

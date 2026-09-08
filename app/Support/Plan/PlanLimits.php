@@ -9,6 +9,7 @@ use App\Models\Sede;
 use App\Models\Tenant;
 use App\Models\TenantWhatsappSession;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
 
@@ -165,10 +166,26 @@ final class PlanLimits
      */
     private static function countIfTableExists(string $table, callable $count): int
     {
-        if (! Schema::hasTable($table)) {
+        if (! self::publicTableExists($table)) {
             return 0;
         }
 
         return $count();
+    }
+
+    /**
+     * Con search_path de tenant (`od_*`, public), Schema::hasTable()
+     * mira el schema de empresa primero y no ve tablas de `public`.
+     */
+    public static function publicTableExists(string $table): bool
+    {
+        if (DB::getDriverName() === 'pgsql') {
+            return (bool) DB::selectOne(
+                'select 1 from information_schema.tables where table_schema = ? and table_name = ? limit 1',
+                ['public', $table],
+            );
+        }
+
+        return Schema::hasTable($table);
     }
 }
