@@ -49,6 +49,19 @@ test('system roles cannot be deleted', function () {
     expect(Role::query()->whereKey($role->id)->exists())->toBeTrue();
 });
 
+test('superadmin can export roles as xlsx', function () {
+    $admin = User::query()->where('email', SuperadminSeeder::EMAIL)->firstOrFail();
+
+    $this->actingAs($admin)
+        ->get(route('configuracion.roles.export'))
+        ->assertOk()
+        ->assertHeader(
+            'content-type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        ->assertDownload();
+});
+
 test('superadmin can create a custom role', function () {
     $admin = User::query()->where('email', SuperadminSeeder::EMAIL)->firstOrFail();
 

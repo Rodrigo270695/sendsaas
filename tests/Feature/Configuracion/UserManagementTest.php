@@ -27,6 +27,19 @@ test('superadmin can view the users index', function () {
         );
 });
 
+test('superadmin can export users as xlsx', function () {
+    $admin = User::query()->where('email', SuperadminSeeder::EMAIL)->firstOrFail();
+
+    $this->actingAs($admin)
+        ->get(route('configuracion.usuarios.export'))
+        ->assertOk()
+        ->assertHeader(
+            'content-type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        ->assertDownload();
+});
+
 test('user without permission cannot view users', function () {
     $user = User::factory()->create();
 

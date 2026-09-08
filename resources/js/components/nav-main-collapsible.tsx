@@ -141,7 +141,7 @@ export function NavMainCollapsible({
                             asChild
                             isActive={isCurrentUrl(item.href)}
                             tooltip={{ children: item.title }}
-                            className="font-medium transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary"
+                            className="font-medium transition-all data-[active=true]:border-r-[3px] data-[active=true]:border-primary data-[active=true]:bg-primary/10 data-[active=true]:font-semibold data-[active=true]:text-primary"
                         >
                             <Link href={item.href} onClick={closeMobileSidebar}>
                                 {item.icon && <item.icon />}
@@ -221,7 +221,7 @@ function NavSubItem({
                 className={cn(
                     'group/sub relative flex h-9 items-center gap-2.5 overflow-hidden rounded-md pr-2 pl-3 text-sm transition-all duration-200 outline-hidden focus-visible:ring-2 focus-visible:ring-ring',
                     active
-                        ? 'bg-primary/10 font-medium text-primary'
+                        ? 'border-r-[3px] border-primary bg-primary/10 font-semibold text-primary'
                         : 'text-sidebar-foreground/85 hover:translate-x-0.5 hover:bg-primary/8 hover:text-foreground',
                 )}
             >

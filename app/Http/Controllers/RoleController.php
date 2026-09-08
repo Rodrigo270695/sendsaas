@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Exports\RolesXlsxExport;
 use App\Http\Requests\RoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
@@ -218,34 +219,36 @@ class RoleController extends Controller
             $tipo = 'todos';
         }
 
+        $sort = (string) $request->string('sort', '');
+        $direction = strtolower((string) $request->string('direction', 'desc'));
+        $sortValid = in_array($sort, self::SORTABLE_COLUMNS, true);
+        $directionValid = in_array($direction, ['asc', 'desc'], true);
+
         $query = $this->buildBaseQuery($search, $tipo)
             ->withCount('permissions')
-            ->orderBy('name');
+            ->with(['permissions:id,name']);
 
-        $filename = 'roles-'.now()->format('Ymd-His').'.csv';
+        if ($sortValid) {
+            $query->orderBy($sort, $directionValid ? $direction : 'asc');
+            $query->orderByDesc('created_at');
+        } else {
+            $query->orderBy('name');
+        }
 
-        return response()->streamDownload(function () use ($query): void {
-            $handle = fopen('php://output', 'w');
-            if ($handle === false) {
-                return;
-            }
+        $filename = 'roles-'.now()->format('Ymd-His').'.xlsx';
+        $exporter = new RolesXlsxExport;
 
-            fputcsv($handle, ['nombre', 'descripcion', 'tipo', 'permisos', 'creado']);
-
-            $query->lazy()->each(function (Role $role) use ($handle): void {
-                fputcsv($handle, [
-                    $role->name,
-                    $role->description,
-                    $role->is_system ? 'sistema' : 'personalizado',
-                    $role->permissions_count,
-                    optional($role->created_at)?->toDateTimeString(),
-                ]);
-            });
-
-            fclose($handle);
-        }, $filename, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
+        return response()->streamDownload(
+            function () use ($exporter, $query): void {
+                $exporter->streamTo($query);
+            },
+            $filename,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate',
+                'Pragma' => 'no-cache',
+            ],
+        );
     }
 
     /**
