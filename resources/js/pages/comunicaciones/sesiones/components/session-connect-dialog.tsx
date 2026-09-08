@@ -227,7 +227,7 @@ export function SessionConnectDialog({
                     {configured ? (
                         <Button
                             type="button"
-                            onClick={startConnect}
+                            onClick={() => void fetchQr()}
                             disabled={loading}
                             className="cursor-pointer gap-2"
                         >

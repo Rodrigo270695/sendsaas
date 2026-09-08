@@ -69,7 +69,7 @@ test('tenant admin can create the first session on a one-slot plan', function ()
 
     expect($session)->not->toBeNull()
         ->and($session->alias)->toBe('WhatsApp principal')
-        ->and($session->openwa_session_name)->toBe('demo')
+        ->and($session->openwa_session_name)->toBe('ss-demo')
         ->and($session->status)->toBe('created');
 
     $this->actingAs($admin)
@@ -379,6 +379,37 @@ test('connect creates the remote openwa session and stores its id', function () 
 
     expect($session->openwa_session_id)->toBe('ow-1')
         ->and($session->status)->toBe('qr_ready');
+});
+
+test('qr poll does not restart baileys when remote status is still created', function () {
+    enableOpenWaForTests();
+    fakeOpenWaSession([
+        'id' => 'ow-1',
+        'name' => 'ss-demo',
+        'status' => 'created',
+    ], 'data:image/png;base64,qrdemo');
+
+    $admin = sesionesAdmin();
+    $session = TenantWhatsappSession::factory()->create([
+        'tenant_id' => $admin->tenant_id,
+        'openwa_session_name' => 'ss-demo',
+        'openwa_session_id' => 'ow-1',
+        'status' => 'created',
+        'alias' => 'Principal',
+    ]);
+
+    $this->actingAs($admin)
+        ->getJson('http://demo.sendsaas.test/comunicaciones/sesiones/'.$session->id.'/qr')
+        ->assertOk()
+        ->assertJson([
+            'qr_code' => 'data:image/png;base64,qrdemo',
+        ]);
+
+    $starts = collect(Http::recorded())->filter(
+        fn (array $pair) => $pair[0]->method() === 'POST' && str_contains($pair[0]->url(), '/start'),
+    );
+
+    expect($starts)->toHaveCount(0);
 });
 
 test('qr endpoint returns the openwa qr code', function () {

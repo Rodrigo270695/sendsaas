@@ -133,14 +133,10 @@ class WhatsappSessionController extends Controller
                 $whatsappSession = $linker->ensureRemote($whatsappSession, wake: true);
             }
 
-            if (! $whatsappSession->isReady()) {
-                $remote = $client->getSession((string) $whatsappSession->openwa_session_id);
-                $status = (string) ($remote['status'] ?? $whatsappSession->status);
-                if (in_array($status, ['created', 'disconnected', 'failed'], true)) {
-                    $client->tryStartIfDown((string) $whatsappSession->openwa_session_id, $status);
-                }
-            }
-
+            // No despertar/reiniciar Baileys en el poll del QR.
+            // Si el remoto sigue en `created` y aquí se llama start() cada 4 s,
+            // el QR que el usuario escanea queda inválido y WhatsApp dice
+            // «No se pudo vincular el dispositivo».
             $whatsappSession = $linker->refresh($whatsappSession);
         } catch (\Throwable $e) {
             report($e);

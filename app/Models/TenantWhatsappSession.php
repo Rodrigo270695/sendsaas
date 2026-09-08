@@ -121,7 +121,8 @@ class TenantWhatsappSession extends Model
 
     public static function generateSessionName(string $tenantId, string $slug): string
     {
-        $base = self::sanitizeSessionSlug($slug);
+        // Prefijo para no chocar con VetSaaS si comparten el mismo OpenWA (`demo`).
+        $base = 'ss-'.self::sanitizeSessionSlug($slug);
         $existing = self::withTrashed()
             ->where('tenant_id', $tenantId)
             ->pluck('openwa_session_name')
