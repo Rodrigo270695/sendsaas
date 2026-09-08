@@ -51,6 +51,28 @@ class HandleInertiaRequests extends Middleware
             'contact_whatsapp' => (string) config('app.contact_whatsapp', '51976809804'),
             'timezone' => config('app.timezone'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'flash' => function () use ($request) {
+                $session = $request->session();
+                $payload = [
+                    'success' => $session->get('success'),
+                    'error' => $session->get('error'),
+                    'info' => $session->get('info'),
+                    'warning' => $session->get('warning'),
+                ];
+
+                $hasMessage = collect($payload)
+                    ->filter(fn ($value) => is_string($value) && $value !== '')
+                    ->isNotEmpty();
+
+                if (! $hasMessage) {
+                    return null;
+                }
+
+                return [
+                    'id' => sha1(serialize($payload).microtime(true)),
+                    ...$payload,
+                ];
+            },
         ];
     }
 

@@ -9,18 +9,58 @@
         "confirm": "Confirm",
         "close": "Close",
         "search": "Search",
+        "filter": "Filter",
+        "clear": "Clear",
+        "clear_filters": "Clear filters",
+        "export": "Export",
+        "export_csv": "Export CSV",
+        "export_xlsx": "Export Excel",
+        "copy": "Copy",
+        "view": "View",
         "back": "Back",
+        "more_options": "More options",
         "loading": "Loading...",
         "continue": "Continue",
         "retry": "Retry"
     },
     "feedback": {
         "no_results": "No results",
+        "no_records": "No records",
+        "loading_error": "Something went wrong while loading the data.",
         "save_success": "Changes saved successfully.",
-        "save_error": "Could not save the changes."
+        "save_error": "Could not save the changes.",
+        "delete_success": "Record deleted successfully.",
+        "delete_error": "Could not delete the record.",
+        "copied": "Copied to clipboard",
+        "copy_error": "Could not copy to clipboard"
+    },
+    "table": {
+        "showing": "Showing",
+        "of": "of",
+        "results": "results",
+        "per_page": "Per page",
+        "first_page": "First page",
+        "previous_page": "Previous page",
+        "next_page": "Next page",
+        "last_page": "Last page",
+        "go_to_page": "Go to page {{page}}",
+        "page_of": "{{current}} / {{total}}",
+        "selected_singular": "selected",
+        "selected_plural": "selected",
+        "select_all": "Select all rows",
+        "select_row": "Select row"
     },
     "form": {
-        "required_field": "Required field"
+        "required_field": "Required field",
+        "unsaved_changes": "You have unsaved changes. Are you sure you want to discard them?"
+    },
+    "document_types": {
+        "placeholder": "Select",
+        "dni": "ID card",
+        "ruc": "Tax ID",
+        "ce": "Foreign resident card",
+        "pas": "Passport",
+        "otr": "Other"
     },
     "language": {
         "label": "Language",

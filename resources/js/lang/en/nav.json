@@ -1,8 +1,30 @@
 {
+    "section": "Platform",
+    "groups": {
+        "bandeja": "Inbox",
+        "contactos": "Contacts",
+        "campanas": "Campaigns",
+        "reportes": "Reports",
+        "configuracion": "Settings",
+        "plataforma_sistema": "System",
+        "plataforma_empresas": "Companies",
+        "plataforma_cobros": "Billing",
+        "plataforma_producto": "Product"
+    },
     "items": {
         "dashboard": "Dashboard",
-        "repository": "Repository",
-        "documentation": "Documentation"
+        "conversaciones": "Conversations",
+        "contactos": "Contacts",
+        "campanas": "Campaigns",
+        "automatizaciones": "Automations",
+        "reportes": "Reports",
+        "roles": "Roles",
+        "usuarios": "Users",
+        "operaciones": "Operations",
+        "tenants": "Companies",
+        "planes": "Plans",
+        "cobros": "Billing",
+        "whatsapp": "WhatsApp"
     },
     "user_menu": {
         "settings": "Settings",

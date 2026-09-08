@@ -1,0 +1,156 @@
+{
+    "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "save_changes": "Save changes",
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "close": "Close",
+        "search": "Search",
+        "filter": "Filter",
+        "clear": "Clear",
+        "clear_filters": "Clear filters",
+        "export": "Export",
+        "export_csv": "Export CSV",
+        "export_xlsx": "Export Excel",
+        "copy": "Copy",
+        "view": "View",
+        "back": "Back",
+        "more_options": "More options",
+        "loading": "Loading...",
+        "retry": "Retry"
+    },
+    "auto_refresh": {
+        "every": "Automatic refresh every 60s",
+        "updating": "Updating…",
+        "updated_seconds": "Updated {{seconds}}s ago",
+        "now": "Refresh now"
+    },
+    "ticket_ancho": {
+        "label": "Thermal roll width",
+        "56": "56 mm",
+        "58": "58 mm",
+        "80": "80 mm",
+        "hint": "Choose the width for this print. Reopening will use the value from General Settings."
+    },
+    "feedback": {
+        "no_results": "No results",
+        "no_records": "No records",
+        "loading_error": "An error occurred while loading the data.",
+        "save_success": "Changes saved successfully.",
+        "save_error": "Couldn't save changes.",
+        "delete_success": "Record deleted successfully.",
+        "delete_error": "Couldn't delete record.",
+        "copied": "Copied to clipboard",
+        "copy_error": "Couldn't copy to clipboard"
+    },
+    "impersonation": {
+        "banner_title": "Support mode (impersonation)",
+        "banner_body": "You are operating in {{clinic}} with your superadmin account. End support mode when finished.",
+        "banner_body_short": "Operating in {{clinic}} as superadmin.",
+        "banner_leave": "Exit support mode",
+        "banner_leave_short": "Exit",
+        "banner_fallback_clinic": "this clinic",
+        "chip_label": "Support · {{clinic}}",
+        "minimize": "Hide notice"
+    },
+    "table": {
+        "showing": "Showing",
+        "of": "of",
+        "results": "results",
+        "per_page": "Per page",
+        "first_page": "First page",
+        "previous_page": "Previous page",
+        "next_page": "Next page",
+        "last_page": "Last page",
+        "go_to_page": "Go to page {{page}}",
+        "page_of": "{{current}} / {{total}}",
+        "selected_singular": "selected",
+        "selected_plural": "selected",
+        "select_all": "Select all rows",
+        "select_row": "Select row"
+    },
+    "form": {
+        "required_field": "Required field",
+        "unsaved_changes": "You have unsaved changes. Are you sure you want to discard them?"
+    },
+    "filters": {
+        "all": "All",
+        "all_states": "All statuses",
+        "all_states_description": "Show records in any status",
+        "active": "Active",
+        "inactive": "Inactive"
+    },
+    "aria": {
+        "results_count_other": "{{count}} results"
+    },
+    "state": {
+        "complete": "Complete",
+        "incomplete": "Incomplete",
+        "configured": "Configured",
+        "not_configured": "Not configured"
+    },
+    "language": {
+        "label": "Language",
+        "es": "Español",
+        "en": "English"
+    },
+    "tenant_required": {
+        "page_title": "Select a clinic",
+        "title": "Select a clinic to continue",
+        "description": "This section belongs to a specific clinic's operational panel. As a superadmin you must pick which clinic you want to work with.",
+        "attempted_path": "Requested path",
+        "cta_primary": "Go to Platform › Tenants",
+        "cta_secondary": "Back to Dashboard",
+        "helper_inline": "Operational data (patients, appointments, settings…) lives inside each clinic's own schema, so from the central host there is no tenant to target. Soon, impersonation from the clinic list will solve this without asking for credentials (Phase 5)."
+    },
+    "http_errors": {
+        "cta_dashboard": "Go to Dashboard",
+        "cta_login": "Go to login",
+        "cta_back": "Go back",
+        "attempted_path": "Requested path",
+        "details_title": "Details",
+        "details_hint": "Helpful context about what happened.",
+        "forbidden": {
+            "title": "Access denied",
+            "description": "You do not have permission to view this section, or the current context does not allow it.",
+            "helper": "If you believe you should have access, ask a clinic administrator to review your role. If you are in support mode, open the clinic via «Enter as support» from Platform › Tenants."
+        },
+        "not_found": {
+            "title": "Page not found",
+            "description": "The route you tried to open does not exist or is no longer available.",
+            "helper": "Check the address or return to the main panel. If the link came from the menu, the module may not be enabled for your clinic yet."
+        },
+        "server_error": {
+            "title": "Server error",
+            "description": "An unexpected problem occurred while processing your request.",
+            "helper": "Try again in a few moments. If the error persists, contact your clinic support or system administrator."
+        }
+    },
+    "date_range": {
+        "preset_today": "Today",
+        "preset_yesterday": "Yesterday",
+        "preset_this_week": "This week",
+        "preset_last_week": "Last week",
+        "preset_this_month": "This month",
+        "preset_last_month": "Last month",
+        "preset_this_year": "This year",
+        "custom": "Custom",
+        "from": "From",
+        "to": "To",
+        "apply": "Apply range",
+        "clear": "Clear range",
+        "all_dates": "All dates"
+    },
+    "whatsapp": {
+        "disconnected_title": "Action required: link WhatsApp",
+        "disconnected_body_tenant": "We updated notifications. Without scanning the QR, reminders and queue messages will not send. Tap «Go connect».",
+        "disconnected_body_platform": "We updated the gateway. Re-link platform WhatsApp for renewal notices.",
+        "reconnect": "Go connect",
+        "banner_title": "Action required: link WhatsApp",
+        "banner_body_tenant": "We updated notifications. Without scanning the QR, reminders and queue messages will not send. Tap «Go connect».",
+        "banner_body_platform": "We updated the gateway. Re-link platform WhatsApp for renewal notices."
+    }
+}

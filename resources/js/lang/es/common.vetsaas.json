@@ -1,0 +1,156 @@
+{
+    "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "save_changes": "Guardar cambios",
+        "create": "Crear",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "confirm": "Confirmar",
+        "close": "Cerrar",
+        "search": "Buscar",
+        "filter": "Filtrar",
+        "clear": "Limpiar",
+        "clear_filters": "Limpiar filtros",
+        "export": "Exportar",
+        "export_csv": "Exportar CSV",
+        "export_xlsx": "Exportar Excel",
+        "copy": "Copiar",
+        "view": "Ver",
+        "back": "Volver",
+        "more_options": "Más opciones",
+        "loading": "Cargando...",
+        "retry": "Reintentar"
+    },
+    "auto_refresh": {
+        "every": "Actualización automática cada 60 s",
+        "updating": "Actualizando…",
+        "updated_seconds": "Actualizado hace {{seconds}}s",
+        "now": "Actualizar ahora"
+    },
+    "ticket_ancho": {
+        "label": "Ancho del rollo térmico",
+        "56": "56 mm",
+        "58": "58 mm",
+        "80": "80 mm",
+        "hint": "Elige el ancho para esta impresión. Al volver a abrir se usará el valor de Configuración General."
+    },
+    "feedback": {
+        "no_results": "Sin resultados",
+        "no_records": "Sin registros",
+        "loading_error": "Ocurrió un error al cargar la información.",
+        "save_success": "Cambios guardados correctamente.",
+        "save_error": "No se pudieron guardar los cambios.",
+        "delete_success": "Registro eliminado correctamente.",
+        "delete_error": "No se pudo eliminar el registro.",
+        "copied": "Copiado al portapapeles",
+        "copy_error": "No se pudo copiar al portapapeles"
+    },
+    "impersonation": {
+        "banner_title": "Modo soporte (impersonación)",
+        "banner_body": "Estás operando en {{clinic}} con tu cuenta de superadmin. Cierra la sesión de soporte cuando termines.",
+        "banner_body_short": "Operando en {{clinic}} como superadmin.",
+        "banner_leave": "Salir del modo soporte",
+        "banner_leave_short": "Salir",
+        "banner_fallback_clinic": "esta clínica",
+        "chip_label": "Soporte · {{clinic}}",
+        "minimize": "Ocultar aviso"
+    },
+    "table": {
+        "showing": "Mostrando",
+        "of": "de",
+        "results": "resultados",
+        "per_page": "Por página",
+        "first_page": "Primera página",
+        "previous_page": "Página anterior",
+        "next_page": "Página siguiente",
+        "last_page": "Última página",
+        "go_to_page": "Ir a página {{page}}",
+        "page_of": "{{current}} / {{total}}",
+        "selected_singular": "seleccionada",
+        "selected_plural": "seleccionadas",
+        "select_all": "Seleccionar todas las filas",
+        "select_row": "Seleccionar fila"
+    },
+    "form": {
+        "required_field": "Campo obligatorio",
+        "unsaved_changes": "Tienes cambios sin guardar. ¿Estás seguro que quieres descartarlos?"
+    },
+    "filters": {
+        "all": "Todas",
+        "all_states": "Todos los estados",
+        "all_states_description": "Mostrar registros en cualquier estado",
+        "active": "Activas",
+        "inactive": "Inactivas"
+    },
+    "aria": {
+        "results_count_other": "{{count}} resultados"
+    },
+    "state": {
+        "complete": "Completa",
+        "incomplete": "Incompleta",
+        "configured": "Configurada",
+        "not_configured": "Sin configurar"
+    },
+    "language": {
+        "label": "Idioma",
+        "es": "Español",
+        "en": "English"
+    },
+    "tenant_required": {
+        "page_title": "Selecciona una clínica",
+        "title": "Selecciona una clínica para continuar",
+        "description": "Esta sección pertenece al panel operativo de una clínica específica. Como superadmin debes elegir desde qué clínica quieres trabajar.",
+        "attempted_path": "Ruta solicitada",
+        "cta_primary": "Ir a Plataforma › Tenants",
+        "cta_secondary": "Volver al Dashboard",
+        "helper_inline": "Los datos operativos (pacientes, citas, configuración…) viven dentro del schema de cada clínica, así que desde el host central no hay un tenant al que apuntar. Próximamente la impersonation desde el listado de clínicas resolverá esto sin pedir credenciales (Fase 5)."
+    },
+    "http_errors": {
+        "cta_dashboard": "Ir al Dashboard",
+        "cta_login": "Ir al inicio de sesión",
+        "cta_back": "Volver atrás",
+        "attempted_path": "Ruta solicitada",
+        "details_title": "Detalles",
+        "details_hint": "Información útil para entender qué ocurrió.",
+        "forbidden": {
+            "title": "Acceso no permitido",
+            "description": "No tienes permiso para ver esta sección o el contexto actual no permite abrirla.",
+            "helper": "Si crees que deberías tener acceso, pide a un administrador de la clínica que revise tu rol. Si estás en soporte, entra a la clínica con «Entrar como soporte» desde Plataforma › Tenants."
+        },
+        "not_found": {
+            "title": "Página no encontrada",
+            "description": "La ruta que intentaste abrir no existe o ya no está disponible.",
+            "helper": "Revisa la dirección o vuelve al panel principal. Si el enlace venía del menú, puede que el módulo aún no esté habilitado para tu clínica."
+        },
+        "server_error": {
+            "title": "Error del servidor",
+            "description": "Ocurrió un problema inesperado al procesar tu solicitud.",
+            "helper": "Intenta de nuevo en unos momentos. Si el error persiste, contacta al soporte de tu clínica o al administrador del sistema."
+        }
+    },
+    "date_range": {
+        "preset_today": "Hoy",
+        "preset_yesterday": "Ayer",
+        "preset_this_week": "Esta semana",
+        "preset_last_week": "Semana pasada",
+        "preset_this_month": "Este mes",
+        "preset_last_month": "Mes anterior",
+        "preset_this_year": "Este año",
+        "custom": "Personalizado",
+        "from": "Desde",
+        "to": "Hasta",
+        "apply": "Aplicar rango",
+        "clear": "Quitar rango",
+        "all_dates": "Todas las fechas"
+    },
+    "whatsapp": {
+        "disconnected_title": "Acción requerida: vincular WhatsApp",
+        "disconnected_body_tenant": "Actualizamos las notificaciones. Sin escanear el QR no saldrán recordatorios ni mensajes. Pulsa «Ir a conectar».",
+        "disconnected_body_platform": "Actualizamos el gateway. Vincula de nuevo el WhatsApp de plataforma para avisos de renovación.",
+        "reconnect": "Ir a conectar",
+        "banner_title": "Acción requerida: vincular WhatsApp",
+        "banner_body_tenant": "Actualizamos las notificaciones. Sin escanear el QR no saldrán recordatorios ni mensajes de la cola. Pulsa «Ir a conectar».",
+        "banner_body_platform": "Actualizamos el gateway. Vincula de nuevo el WhatsApp de plataforma para avisos de renovación."
+    }
+}

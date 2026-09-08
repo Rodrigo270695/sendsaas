@@ -1,5 +1,6 @@
 import type { Auth } from '@/types/auth';
 import type { TenantShared } from '@/types/tenant';
+import type { FlashToast } from '@/types/ui';
 
 declare module 'react' {
     interface InputHTMLAttributes<T> {
@@ -18,6 +19,7 @@ declare module '@inertiajs/core' {
             contact_whatsapp: string;
             timezone: string;
             sidebarOpen: boolean;
+            flash: FlashToast | null;
             [key: string]: unknown;
         };
     }

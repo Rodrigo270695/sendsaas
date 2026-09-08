@@ -9,8 +9,11 @@ export type AppLayoutProps = {
 export type AppVariant = 'header' | 'sidebar';
 
 export type FlashToast = {
-    type: 'success' | 'info' | 'warning' | 'error';
-    message: string;
+    id: string;
+    success?: string | null;
+    error?: string | null;
+    info?: string | null;
+    warning?: string | null;
 };
 
 export type AuthLayoutProps = {

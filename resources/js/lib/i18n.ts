@@ -6,12 +6,16 @@ import authEn from '@/lang/en/auth.json';
 import commonEn from '@/lang/en/common.json';
 import dashboardEn from '@/lang/en/dashboard.json';
 import navEn from '@/lang/en/nav.json';
+import rolesEn from '@/lang/en/roles.json';
 import settingsEn from '@/lang/en/settings.json';
+import usuariosEn from '@/lang/en/usuarios.json';
 import authEs from '@/lang/es/auth.json';
 import commonEs from '@/lang/es/common.json';
 import dashboardEs from '@/lang/es/dashboard.json';
 import navEs from '@/lang/es/nav.json';
+import rolesEs from '@/lang/es/roles.json';
 import settingsEs from '@/lang/es/settings.json';
+import usuariosEs from '@/lang/es/usuarios.json';
 
 export const SUPPORTED_LOCALES = ['es', 'en'] as const;
 
@@ -27,38 +31,51 @@ const namespaces = [
     'auth',
     'settings',
     'dashboard',
+    'roles',
+    'usuarios',
 ] as const;
 
-i18n.use(LanguageDetector)
-    .use(initReactI18next)
-    .init({
-        resources: {
-            es: {
-                common: commonEs,
-                nav: navEs,
-                auth: authEs,
-                settings: settingsEs,
-                dashboard: dashboardEs,
-            },
-            en: {
-                common: commonEn,
-                nav: navEn,
-                auth: authEn,
-                settings: settingsEn,
-                dashboard: dashboardEn,
-            },
+const isBrowser = typeof document !== 'undefined';
+
+if (isBrowser) {
+    i18n.use(LanguageDetector);
+}
+
+i18n.use(initReactI18next).init({
+    resources: {
+        es: {
+            common: commonEs,
+            nav: navEs,
+            auth: authEs,
+            settings: settingsEs,
+            dashboard: dashboardEs,
+            roles: rolesEs,
+            usuarios: usuariosEs,
         },
-        fallbackLng: DEFAULT_LOCALE,
-        defaultNS: 'common',
-        ns: [...namespaces],
-        interpolation: { escapeValue: false },
-        detection: {
-            order: ['localStorage', 'navigator', 'htmlTag'],
-            lookupLocalStorage: LOCALE_STORAGE_KEY,
-            caches: ['localStorage'],
+        en: {
+            common: commonEn,
+            nav: navEn,
+            auth: authEn,
+            settings: settingsEn,
+            dashboard: dashboardEn,
+            roles: rolesEn,
+            usuarios: usuariosEn,
         },
-        react: { useSuspense: false },
-    });
+    },
+    lng: isBrowser ? undefined : DEFAULT_LOCALE,
+    fallbackLng: DEFAULT_LOCALE,
+    defaultNS: 'common',
+    ns: [...namespaces],
+    interpolation: { escapeValue: false },
+    detection: isBrowser
+        ? {
+              order: ['localStorage', 'navigator', 'htmlTag'],
+              lookupLocalStorage: LOCALE_STORAGE_KEY,
+              caches: ['localStorage'],
+          }
+        : undefined,
+    react: { useSuspense: false },
+});
 
 function syncHtmlLang(locale: string): void {
     if (typeof document !== 'undefined') {

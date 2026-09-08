@@ -1,20 +1,44 @@
 import { usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
+
+export type PermissionInput = string | string[];
 
 export function usePermission() {
     const { auth } = usePage().props;
-    const permissions = new Set(auth.permissions ?? []);
-    const roles = new Set(auth.roles ?? []);
-    const isSuperadmin = roles.has('superadmin');
+    const permissions = useMemo(
+        () => auth.permissions ?? [],
+        [auth.permissions],
+    );
+    const roles = useMemo(() => auth.roles ?? [], [auth.roles]);
+    const permissionSet = useMemo(() => new Set(permissions), [permissions]);
+    const isSuperadmin = roles.includes('superadmin');
 
-    const can = (permission: string): boolean => {
+    const can = (input: PermissionInput): boolean => {
         if (isSuperadmin) {
             return true;
         }
 
-        return permissions.has(permission);
+        const list = Array.isArray(input) ? input : [input];
+
+        return list.some((permission) => permissionSet.has(permission));
     };
 
-    const hasRole = (role: string): boolean => roles.has(role);
+    const canAll = (list: string[]): boolean => {
+        if (isSuperadmin) {
+            return true;
+        }
 
-    return { can, hasRole, isSuperadmin, permissions, roles };
+        return list.every((permission) => can(permission));
+    };
+
+    const hasRole = (role: string): boolean => roles.includes(role);
+
+    return {
+        can,
+        canAll,
+        hasRole,
+        isSuperadmin,
+        permissions,
+        roles,
+    };
 }

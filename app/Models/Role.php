@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Permission\Models\Role as SpatieRole;
 
@@ -60,5 +61,32 @@ class Role extends SpatieRole
         return Attribute::make(
             get: fn (): bool => in_array($this->name, self::protectedRoleNames(), true),
         );
+    }
+
+    public function isPlatformRole(): bool
+    {
+        return in_array($this->name, self::PLATFORM_ROLES, true);
+    }
+
+    public function isBaseTenantRole(): bool
+    {
+        return in_array($this->name, self::BASE_TENANT_ROLES, true);
+    }
+
+    /**
+     * @param  Builder<Role>  $query
+     * @return Builder<Role>
+     */
+    public function scopeOfType(Builder $query, string $type): Builder
+    {
+        if ($type === 'sistema') {
+            return $query->whereIn('name', self::protectedRoleNames());
+        }
+
+        if ($type === 'personalizado') {
+            return $query->whereNotIn('name', self::protectedRoleNames());
+        }
+
+        return $query;
     }
 }

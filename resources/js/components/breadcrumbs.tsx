@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
 import { Fragment } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -16,8 +15,6 @@ export function Breadcrumbs({
 }: {
     breadcrumbs: BreadcrumbItemType[];
 }) {
-    const { t } = useTranslation();
-
     return (
         <>
             {breadcrumbs.length > 0 && (
@@ -31,18 +28,18 @@ export function Breadcrumbs({
                                     <BreadcrumbItem>
                                         {isLast ? (
                                             <BreadcrumbPage>
-                                                {t(item.title, {
-                                                    defaultValue: item.title,
-                                                })}
+                                                {item.title}
                                             </BreadcrumbPage>
-                                        ) : (
+                                        ) : item.href ? (
                                             <BreadcrumbLink asChild>
                                                 <Link href={item.href}>
-                                                    {t(item.title, {
-                                                        defaultValue: item.title,
-                                                    })}
+                                                    {item.title}
                                                 </Link>
                                             </BreadcrumbLink>
+                                        ) : (
+                                            <span className="text-muted-foreground select-none">
+                                                {item.title}
+                                            </span>
                                         )}
                                     </BreadcrumbItem>
                                     {!isLast && <BreadcrumbSeparator />}
