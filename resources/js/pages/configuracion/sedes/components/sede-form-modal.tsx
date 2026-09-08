@@ -186,6 +186,7 @@ export function SedeFormModal({
                         id="sede-nombre"
                         label={t('sedes:form.fields.nombre')}
                         error={errors.nombre}
+                        required
                         className="sm:col-span-2"
                     >
                         <Input
