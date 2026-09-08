@@ -1,0 +1,129 @@
+{
+    "title": "Tenants",
+    "description": "Empresas que usan SendSaaS. Alta manual, suspensión, reanudación y acceso de soporte.",
+    "search_placeholder": "Buscar por slug, razón social, RUC o email…",
+    "filter_label": "Filtrar por estado",
+    "filter_plan_label": "Filtrar por plan",
+    "filters": {
+        "all": "Todos",
+        "trial": "En prueba",
+        "active": "Activos",
+        "suspended": "Suspendidos",
+        "cancelled": "Cancelados",
+        "plan_all": "Todos los planes",
+        "plan_none": "Sin plan"
+    },
+    "stats": {
+        "total": "Total",
+        "active": "Activos",
+        "trial": "En prueba",
+        "suspended": "Suspendidos",
+        "cancelled": "Cancelados",
+        "filters": "Filtros activos",
+        "matches": "Coincidencias"
+    },
+    "actions": {
+        "new": "Nuevo tenant",
+        "new_short": "Nuevo",
+        "create_first": "Crear el primer tenant"
+    },
+    "columns": {
+        "tenant": "Tenant",
+        "contact": "Contacto",
+        "plan": "Plan",
+        "status": "Estado",
+        "expiry": "Vencimiento",
+        "created_at": "Creado",
+        "acciones": "Acciones"
+    },
+    "row": {
+        "actions_for": "Acciones para {{name}}",
+        "copy_slug": "Copiar slug",
+        "open_subdomain": "Abrir subdominio",
+        "enter_support": "Entrar como soporte",
+        "suspend": "Suspender",
+        "resume": "Reanudar",
+        "trial": "En prueba",
+        "active": "Activo",
+        "suspended": "Suspendido",
+        "cancelled": "Cancelado",
+        "no_phone": "Sin teléfono",
+        "no_plan": "Sin plan",
+        "cancelled_locked": "Tenant cancelado",
+        "no_expiry": "Sin vencimiento",
+        "expiry_ok": "Al día ({{days}} días)",
+        "expiry_today": "Vence hoy",
+        "expiry_overdue": "Vencido"
+    },
+    "form": {
+        "title_create": "Nuevo tenant",
+        "title_edit": "Editar tenant",
+        "description_create": "Registra una empresa. El subdominio quedará en {{slug}}.{{domain}} y el schema físico se llamará od_{{slug}}.",
+        "description_edit": "Actualiza la información comercial y de contacto. Las transiciones de estado se hacen desde las acciones de la fila.",
+        "section_identity": "Identidad",
+        "section_identity_hint": "Slug del subdominio y datos legales de la empresa.",
+        "section_contact": "Contacto y acceso",
+        "section_contact_hint": "Email del administrador inicial y teléfono.",
+        "section_platform": "Plan y plataforma",
+        "section_platform_hint": "Cupo inicial, zona horaria e idioma.",
+        "fields": {
+            "slug": "Slug (subdominio)",
+            "slug_hint": "Solo minúsculas, dígitos y guiones. Será {{slug}}.{{domain}}.",
+            "slug_placeholder": "mi-empresa",
+            "razon_social": "Razón social",
+            "razon_social_placeholder": "SendSaaS Demo S.A.C.",
+            "nombre_comercial": "Nombre comercial",
+            "nombre_comercial_placeholder": "Demo",
+            "email_admin": "Email del administrador",
+            "email_admin_hint": "Será el primer admin_empresa de este tenant.",
+            "telefono": "Teléfono",
+            "plan": "Plan",
+            "plan_placeholder": "Sin plan",
+            "admin_password": "Contraseña del admin",
+            "admin_password_hint": "Mínimo 8 caracteres. Compártela por un canal seguro.",
+            "timezone": "Zona horaria",
+            "timezone_hint": "Formato IANA (America/Lima por defecto).",
+            "locale": "Idioma",
+            "locale_hint": "Formato es_PE / en_US.",
+            "trial_days": "Días de prueba",
+            "trial_days_hint": "0 = activo de inmediato. Si es mayor a 0, nace en prueba."
+        },
+        "submit_create": "Crear tenant",
+        "submit_edit": "Guardar cambios"
+    },
+    "delete": {
+        "title": "Eliminar tenant",
+        "description": "Vas a eliminar <strong>{{name}}</strong>. El tenant pasará a estado <strong>cancelado</strong> y se ocultará de los listados.",
+        "active_blocked": "Este tenant está activo. Para eliminarlo, primero suspéndelo.",
+        "confirm": "Sí, eliminar",
+        "loading": "Eliminando…"
+    },
+    "suspend": {
+        "title": "Suspender tenant",
+        "description": "Vas a suspender a <strong>{{name}}</strong>. Sus usuarios no podrán acceder al subdominio hasta que reanudes.",
+        "reason_label": "Motivo de la suspensión",
+        "reason_placeholder": "Ej: impago o solicitud del cliente.",
+        "reason_hint": "Mínimo {{min}} caracteres.",
+        "confirm": "Suspender",
+        "loading": "Aplicando…"
+    },
+    "resume": {
+        "title": "Reanudar tenant",
+        "description": "Vas a reanudar a <strong>{{name}}</strong>. Sus usuarios podrán volver a acceder al subdominio.",
+        "confirm": "Reanudar"
+    },
+    "empty": {
+        "no_records_title": "Aún no hay tenants",
+        "no_records_description": "Crea el primero desde este panel o espera el alta desde Orvae PE.",
+        "no_results_title": "Sin resultados",
+        "no_results_description": "Ajusta los filtros o la búsqueda para ver más tenants."
+    },
+    "aria": {
+        "results_count_one": "1 tenant coincide con los filtros actuales.",
+        "results_count_other": "{{count}} tenants coinciden con los filtros actuales."
+    },
+    "toast": {
+        "load_error": "No pudimos cargar los tenants. Reintenta en unos segundos.",
+        "slug_copied": "Slug copiado al portapapeles"
+    }
+}

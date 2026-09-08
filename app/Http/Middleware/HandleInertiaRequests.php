@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Tenancy\TenantManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
@@ -41,7 +42,13 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'greeting_name' => $this->greetingName($request),
-            'tenant' => null,
+            'tenant' => $this->sharedTenant(),
+            'tenancy' => [
+                'root_domain' => (string) config('tenant.root_domain'),
+                'scheme' => $request->getScheme(),
+                'login_path' => '/login',
+            ],
+            'tenant_impersonation' => $this->sharedImpersonation($request),
             'auth' => [
                 'user' => $request->user(),
                 'permissions' => $request->user()?->getAllPermissions()->pluck('name')->values() ?? [],
@@ -100,5 +107,44 @@ class HandleInertiaRequests extends Middleware
 
             return $label !== '' ? $label : (string) config('app.name', 'SendSaaS');
         });
+    }
+
+    /**
+     * @return array{slug: string, nombre_comercial: string|null, razon_social: string|null}|null
+     */
+    private function sharedTenant(): ?array
+    {
+        if (! app()->bound(TenantManager::class)) {
+            return null;
+        }
+
+        $tenant = app(TenantManager::class)->current()?->tenant;
+
+        if ($tenant === null) {
+            return null;
+        }
+
+        return [
+            'slug' => (string) $tenant->slug,
+            'nombre_comercial' => $tenant->nombre_comercial,
+            'razon_social' => $tenant->razon_social,
+        ];
+    }
+
+    /**
+     * @return array{tenant_id: string, tenant_label: string}|null
+     */
+    private function sharedImpersonation(Request $request): ?array
+    {
+        $imp = $request->session()->get('tenant_impersonation');
+
+        if (! is_array($imp) || empty($imp['tenant_id'])) {
+            return null;
+        }
+
+        return [
+            'tenant_id' => (string) $imp['tenant_id'],
+            'tenant_label' => (string) ($imp['tenant_label'] ?? 'Empresa'),
+        ];
     }
 }

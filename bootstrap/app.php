@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Middleware\EnsureCentralHost;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\MatchUserTenant;
+use App\Http\Middleware\ResolveTenant;
 use App\Http\Middleware\SetPermissionsTeam;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -23,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->web(append: [
+            ResolveTenant::class,
             SetPermissionsTeam::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,
@@ -33,6 +37,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'tenant.match-user' => MatchUserTenant::class,
+            'tenant.central' => EnsureCentralHost::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

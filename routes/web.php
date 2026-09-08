@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TenantImpersonationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,7 +11,13 @@ Route::redirect('/manifest.webmanifest', '/manifest.json', 301);
 
 Route::redirect('/', '/login')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('impersonate/accept', [TenantImpersonationController::class, 'accept'])
+    ->middleware('throttle:12,1')
+    ->name('impersonate.accept');
+
+Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () {
+    Route::post('impersonate/leave', [TenantImpersonationController::class, 'leave'])
+        ->name('impersonate.leave');
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
     Route::prefix('configuracion')->name('configuracion.')->group(function () {
@@ -34,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('permission:usuarios.delete')->delete('usuarios/{user}', [UserController::class, 'destroy'])->name('usuarios.destroy');
     });
 
-    Route::prefix('plataforma')->name('plataforma.')->group(function () {
+    Route::prefix('plataforma')->name('plataforma.')->middleware('tenant.central')->group(function () {
         Route::middleware('permission:plataforma-planes.view')->group(function () {
             Route::get('planes', [PlanController::class, 'index'])->name('planes.index');
         });
@@ -44,6 +52,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('permission:plataforma-planes.update')->put('planes/{plan}/features', [PlanController::class, 'updateFeatures'])->name('planes.update-features');
         Route::middleware('permission:plataforma-planes.update')->put('planes/{plan}', [PlanController::class, 'update'])->name('planes.update');
         Route::middleware('permission:plataforma-planes.delete')->delete('planes/{plan}', [PlanController::class, 'destroy'])->name('planes.destroy');
+
+        Route::middleware('permission:plataforma-tenants.view')->get('tenants', [TenantController::class, 'index'])->name('tenants.index');
+        Route::middleware('permission:plataforma-tenants.create')->post('tenants', [TenantController::class, 'store'])->name('tenants.store');
+        Route::middleware('permission:plataforma-tenants.update')->put('tenants/{tenant}', [TenantController::class, 'update'])->name('tenants.update');
+        Route::middleware('permission:plataforma-tenants.suspend')->post('tenants/{tenant}/suspend', [TenantController::class, 'suspend'])->name('tenants.suspend');
+        Route::middleware('permission:plataforma-tenants.resume')->post('tenants/{tenant}/resume', [TenantController::class, 'resume'])->name('tenants.resume');
+        Route::middleware('permission:plataforma-tenants.delete')->delete('tenants/{tenant}', [TenantController::class, 'destroy'])->name('tenants.destroy');
+        Route::middleware('permission:plataforma-tenants.impersonate')->post('tenants/{tenant}/impersonate', [TenantImpersonationController::class, 'start'])->name('tenants.impersonate');
     });
 });
 

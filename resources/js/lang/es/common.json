@@ -54,6 +54,16 @@
         "required_field": "Campo obligatorio",
         "unsaved_changes": "Tienes cambios sin guardar. ¿Estás seguro que quieres descartarlos?"
     },
+    "impersonation": {
+        "banner_title": "Modo soporte (impersonación)",
+        "banner_body": "Estás operando en {{clinic}} con tu cuenta de superadmin. Cierra la sesión de soporte cuando termines.",
+        "banner_body_short": "Operando en {{clinic}} como superadmin.",
+        "banner_leave": "Salir del modo soporte",
+        "banner_leave_short": "Salir",
+        "banner_fallback_clinic": "esta empresa",
+        "chip_label": "Soporte · {{clinic}}",
+        "minimize": "Ocultar aviso"
+    },
     "document_types": {
         "placeholder": "Selecciona",
         "dni": "DNI",

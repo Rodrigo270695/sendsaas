@@ -54,6 +54,16 @@
         "required_field": "Required field",
         "unsaved_changes": "You have unsaved changes. Are you sure you want to discard them?"
     },
+    "impersonation": {
+        "banner_title": "Support mode (impersonation)",
+        "banner_body": "You are operating in {{clinic}} with your superadmin account. Leave support mode when you finish.",
+        "banner_body_short": "Operating in {{clinic}} as superadmin.",
+        "banner_leave": "Leave support mode",
+        "banner_leave_short": "Leave",
+        "banner_fallback_clinic": "this company",
+        "chip_label": "Support · {{clinic}}",
+        "minimize": "Hide notice"
+    },
     "document_types": {
         "placeholder": "Select",
         "dni": "ID card",

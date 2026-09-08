@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             SuperadminSeeder::class,
             TenantRolesSeeder::class,
             PlansAndFeaturesSeeder::class,
+            DemoTenantsSeeder::class,
         ]);
 
         User::factory()->create([

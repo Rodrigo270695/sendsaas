@@ -2,6 +2,7 @@ import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
+import { TenantImpersonationBanner } from '@/components/tenant-impersonation-banner';
 import type { AppLayoutProps } from '@/types';
 
 /**
@@ -24,6 +25,7 @@ export default function AppSidebarLayout({
                 variant="sidebar"
                 className="h-svh max-h-svh overflow-hidden md:h-[calc(100svh-(--spacing(4)))] md:max-h-[calc(100svh-(--spacing(4)))]"
             >
+                <TenantImpersonationBanner />
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden has-data-fixed-viewport:overflow-hidden">
                     {children}

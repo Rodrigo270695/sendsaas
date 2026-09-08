@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Tenancy\TenantManager;
 use Database\Factories\TenantFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,9 +16,12 @@ class Tenant extends Model
     /** @use HasFactory<TenantFactory> */
     use HasFactory, HasUuids, SoftDeletes;
 
+    public const ESTADOS = ['trial', 'active', 'suspended', 'cancelled'];
+
     protected $fillable = [
         'slug',
         'schema_name',
+        'plan_id',
         'razon_social',
         'nombre_comercial',
         'ruc',
@@ -26,6 +31,10 @@ class Tenant extends Model
         'logo_url',
         'estado',
         'trial_ends_at',
+        'suspended_at',
+        'suspension_reason',
+        'cancelled_at',
+        'cancel_reason',
         'timezone',
         'locale',
         'canal_adquisicion',
@@ -41,8 +50,24 @@ class Tenant extends Model
         ];
     }
 
+    /**
+     * @return HasMany<User, $this>
+     */
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * @return BelongsTo<Plan, $this>
+     */
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class);
+    }
+
+    public static function schemaFromSlug(string $slug): string
+    {
+        return TenantManager::schemaFromSlug($slug);
     }
 }
