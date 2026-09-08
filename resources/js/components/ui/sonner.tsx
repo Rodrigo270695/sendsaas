@@ -1,13 +1,18 @@
 import { AlertTriangle, Check, Info, X } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { useAppearance } from '@/hooks/use-appearance';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
+
+function ToastGlyph({ children }: { children: ReactNode }) {
+    return <span className="sendsaas-toast-glyph">{children}</span>;
+}
 
 /**
  * Toaster global de SendSaaS.
  *
  * - Esquina superior derecha.
- * - Iconos Lucide (check visible, sin el círculo nativo de Sonner).
+ * - El círculo y el glifo son nuestros: Sonner alinea el SVG a la izquierda.
  * - Colores de marca (#AB3C3D).
  */
 function Toaster({ ...props }: ToasterProps) {
@@ -27,16 +32,32 @@ function Toaster({ ...props }: ToasterProps) {
             offset={16}
             gap={10}
             icons={{
-                success: <Check className="size-4" strokeWidth={3} />,
-                error: <X className="size-4" strokeWidth={3} />,
-                info: <Info className="size-4" strokeWidth={2.5} />,
-                warning: <AlertTriangle className="size-4" strokeWidth={2.5} />,
+                success: (
+                    <ToastGlyph>
+                        <Check aria-hidden strokeWidth={3} />
+                    </ToastGlyph>
+                ),
+                error: (
+                    <ToastGlyph>
+                        <X aria-hidden strokeWidth={3} />
+                    </ToastGlyph>
+                ),
+                info: (
+                    <ToastGlyph>
+                        <Info aria-hidden strokeWidth={2.5} />
+                    </ToastGlyph>
+                ),
+                warning: (
+                    <ToastGlyph>
+                        <AlertTriangle aria-hidden strokeWidth={2.5} />
+                    </ToastGlyph>
+                ),
                 close: <X className="size-3.5" strokeWidth={2.5} />,
             }}
             toastOptions={{
                 classNames: {
                     toast: 'group toast pointer-events-auto !flex !items-start rounded-xl border border-border/60 bg-card text-foreground shadow-lg shadow-brand-900/8 ring-1 ring-brand-600/10 backdrop-blur-sm',
-                    icon: 'mt-0.5 shrink-0',
+                    icon: 'shrink-0',
                     content: 'min-w-0 flex-1',
                     title: 'text-sm leading-snug font-semibold',
                     description: 'text-xs text-muted-foreground',
@@ -69,6 +90,10 @@ function Toaster({ ...props }: ToasterProps) {
                     '--warning-bg': 'oklch(0.98 0.04 80)',
                     '--warning-text': 'oklch(0.55 0.16 70)',
                     '--warning-border': 'oklch(0.85 0.12 75)',
+                    '--toast-icon-margin-start': '0px',
+                    '--toast-icon-margin-end': '0px',
+                    '--toast-svg-margin-start': '0px',
+                    '--toast-svg-margin-end': '0px',
                     '--toast-close-button-start': 'unset',
                     '--toast-close-button-end': '0',
                     '--toast-close-button-transform': 'translate(35%, -35%)',
