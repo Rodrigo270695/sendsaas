@@ -236,10 +236,14 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
+            <SidebarHeader className="group-data-[collapsible=icon]:items-center">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton
+                            size="lg"
+                            asChild
+                            className="hover:bg-transparent group-data-[collapsible=icon]:justify-center"
+                        >
                             <Link href={dashboard()}>
                                 <AppLogo />
                             </Link>

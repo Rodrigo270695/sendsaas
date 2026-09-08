@@ -10,10 +10,8 @@ export default function AppLogo() {
 
     return (
         <>
-            <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-full bg-brand-50 ring-1 ring-brand-200/70 dark:bg-brand-950 dark:ring-brand-800">
-                <AppLogoIcon className="size-8" />
-            </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
+            <AppLogoIcon className="size-8 shrink-0" />
+            <div className="ml-1 grid flex-1 text-left text-sm group-data-[collapsible=icon]:hidden">
                 <span className="truncate leading-tight font-semibold tracking-tight">
                     {title}
                 </span>
