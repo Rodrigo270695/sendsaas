@@ -40,7 +40,19 @@ export default function LoginFlipContent({
 
     const frontRef = useRef<HTMLDivElement>(null);
     const backRef = useRef<HTMLDivElement>(null);
+    const hasFlippedRef = useRef(false);
     const [height, setHeight] = useState<number | undefined>(undefined);
+
+    const showView = (next: View) => {
+        const hiding = next === 'forgot' ? frontRef.current : backRef.current;
+        const focused = document.activeElement;
+
+        if (focused instanceof HTMLElement && hiding?.contains(focused)) {
+            focused.blur();
+        }
+
+        setView(next);
+    };
 
     useEffect(() => {
         const target = flipped ? backRef.current : frontRef.current;
@@ -63,6 +75,24 @@ export default function LoginFlipContent({
         return () => window.clearTimeout(timeoutId);
     }, [view, viewMeta]);
 
+    useEffect(() => {
+        if (!hasFlippedRef.current) {
+            hasFlippedRef.current = true;
+            return;
+        }
+
+        const target = flipped ? backRef.current : frontRef.current;
+        const firstField = target?.querySelector<HTMLElement>(
+            'input:not([type="hidden"]), textarea, select',
+        );
+
+        const timeoutId = window.setTimeout(() => {
+            firstField?.focus();
+        }, 450);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [flipped]);
+
     return (
         <div style={{ perspective: '1600px' }} className="relative">
             <div
@@ -78,12 +108,12 @@ export default function LoginFlipContent({
                 <FlipFace ref={frontRef} hidden={flipped} rotation="front">
                     <LoginForm
                         canResetPassword={canResetPassword}
-                        onForgotPassword={() => setView('forgot')}
+                        onForgotPassword={() => showView('forgot')}
                     />
                 </FlipFace>
 
                 <FlipFace ref={backRef} hidden={!flipped} rotation="back">
-                    <ForgotPasswordForm onBackToLogin={() => setView('login')} />
+                    <ForgotPasswordForm onBackToLogin={() => showView('login')} />
                 </FlipFace>
             </div>
         </div>
@@ -103,7 +133,6 @@ function FlipFace({ ref, hidden, rotation, children }: FlipFaceProps) {
     return (
         <div
             ref={ref}
-            aria-hidden={hidden}
             inert={hidden}
             style={{
                 backfaceVisibility: 'hidden',
