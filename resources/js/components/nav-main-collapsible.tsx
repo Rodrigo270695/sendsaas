@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
 import {
@@ -64,7 +64,8 @@ export function NavMainCollapsible({
         useCurrentUrl();
     const { isMobile, setOpenMobile } = useSidebar();
     const { can, permissions } = usePermission();
-    const hasTenant = false;
+    const tenant = usePage().props.tenant;
+    const hasTenant = tenant !== null && tenant !== undefined;
 
     const itemVisible = (item: NavItem): boolean => {
         if (!isItemImplemented(item) || !matchesContext(item.context, hasTenant)) {

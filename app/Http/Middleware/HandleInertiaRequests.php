@@ -52,8 +52,8 @@ class HandleInertiaRequests extends Middleware
             'tenant_impersonation' => fn () => $this->sharedImpersonation($request),
             'auth' => [
                 'user' => $request->user(),
-                'permissions' => $request->user()?->getAllPermissions()->pluck('name')->values() ?? [],
-                'roles' => $request->user()?->getRoleNames()->values() ?? [],
+                'permissions' => $this->resolveUserPermissions($request->user()),
+                'roles' => $this->resolveUserRoles($request->user()),
             ],
             'locale' => $request->getLocale(),
             'contact_whatsapp' => (string) config('app.contact_whatsapp', '51976809804'),
@@ -166,5 +166,53 @@ class HandleInertiaRequests extends Middleware
         }
 
         return null;
+    }
+
+    /**
+     * Superadmin guarda el rol en team null. En un host tenant Spatie
+     * consulta el team del tenant y getRoleNames()/getAllPermissions()
+     * quedan vacíos: el sidebar se veía sin menús.
+     *
+     * @return list<string>
+     */
+    private function resolveUserPermissions(?User $user): array
+    {
+        if ($user === null) {
+            return [];
+        }
+
+        if ($user->isPlatformSuperadmin()) {
+            $previousTeam = getPermissionsTeamId();
+            setPermissionsTeamId(null);
+
+            try {
+                $user->unsetRelation('roles');
+                $user->unsetRelation('permissions');
+
+                return $user->getAllPermissions()->pluck('name')->values()->all();
+            } finally {
+                setPermissionsTeamId($previousTeam);
+                $user->unsetRelation('roles');
+                $user->unsetRelation('permissions');
+            }
+        }
+
+        return $user->getAllPermissions()->pluck('name')->values()->all();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function resolveUserRoles(?User $user): array
+    {
+        if ($user === null) {
+            return [];
+        }
+
+        if ($user->isPlatformSuperadmin()) {
+            return ['superadmin'];
+        }
+
+        return $user->getRoleNames()->values()->all();
     }
 }

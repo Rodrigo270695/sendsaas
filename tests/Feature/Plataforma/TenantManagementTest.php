@@ -195,6 +195,7 @@ test('impersonation start then accept enters the tenant dashboard as support', f
             ->where('tenant_impersonation.tenant_id', (string) $tenant->id)
             ->where('tenant_impersonation.tenant_label', 'Acme')
             ->where('auth.user.id', (string) $admin->id)
+            ->where('auth.roles', ['superadmin'])
         );
 });
 
