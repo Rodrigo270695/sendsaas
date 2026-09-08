@@ -444,7 +444,7 @@ export default function Index({
                                     variant="outline"
                                     className="cursor-pointer gap-2"
                                 >
-                                    <a href={exportUrl} download>
+                                    <a href={exportUrl} download="usuarios.xlsx">
                                         <Download
                                             className="size-4"
                                             strokeWidth={2.5}

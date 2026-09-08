@@ -108,7 +108,7 @@ class UsersXlsxExport
             sprintf(
                 'Exportado el %s · %d registros',
                 now()->format('d/m/Y H:i'),
-                $query->toBase()->getCountForPagination(),
+                (clone $query)->toBase()->getCountForPagination(),
             ),
         );
         $sheet->mergeCells("A2:{$lastColumnLetter}2");

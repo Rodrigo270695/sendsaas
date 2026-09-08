@@ -10,6 +10,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\User;
 use App\Support\Tenancy\AdminScope;
+use App\Support\XlsxDownload;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class UserController extends Controller
 {
@@ -237,7 +238,7 @@ class UserController extends Controller
         return back()->with('success', $message);
     }
 
-    public function export(Request $request): StreamedResponse
+    public function export(Request $request): BinaryFileResponse
     {
         $search = trim((string) $request->string('search', ''));
         $estado = (string) $request->string('estado', 'todos');
@@ -267,16 +268,9 @@ class UserController extends Controller
         $filename = 'usuarios-'.now()->format('Ymd-His').'.xlsx';
         $exporter = new UsersXlsxExport;
 
-        return response()->streamDownload(
-            function () use ($exporter, $query): void {
-                $exporter->streamTo($query);
-            },
+        return XlsxDownload::from(
+            fn (string $path) => $exporter->streamTo($query, $path),
             $filename,
-            [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Cache-Control' => 'no-store, no-cache, must-revalidate',
-                'Pragma' => 'no-cache',
-            ],
         );
     }
 

@@ -9,6 +9,7 @@ use App\Http\Requests\RoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Support\Tenancy\AdminScope;
+use App\Support\XlsxDownload;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class RoleController extends Controller
 {
@@ -211,7 +212,7 @@ class RoleController extends Controller
         return back()->with('success', $message);
     }
 
-    public function export(Request $request): StreamedResponse
+    public function export(Request $request): BinaryFileResponse
     {
         $search = trim((string) $request->string('search', ''));
         $tipo = (string) $request->string('tipo', 'todos');
@@ -238,16 +239,9 @@ class RoleController extends Controller
         $filename = 'roles-'.now()->format('Ymd-His').'.xlsx';
         $exporter = new RolesXlsxExport;
 
-        return response()->streamDownload(
-            function () use ($exporter, $query): void {
-                $exporter->streamTo($query);
-            },
+        return XlsxDownload::from(
+            fn (string $path) => $exporter->streamTo($query, $path),
             $filename,
-            [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Cache-Control' => 'no-store, no-cache, must-revalidate',
-                'Pragma' => 'no-cache',
-            ],
         );
     }
 

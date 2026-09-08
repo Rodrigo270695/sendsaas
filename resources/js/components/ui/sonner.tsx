@@ -1,3 +1,4 @@
+import { AlertTriangle, Check, Info, X } from 'lucide-react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { useAppearance } from '@/hooks/use-appearance';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
@@ -5,10 +6,9 @@ import { Toaster as Sonner, type ToasterProps } from 'sonner';
 /**
  * Toaster global de SendSaaS.
  *
- * - Esquina superior derecha, como el panel de VetSaaS.
- * - Colores de marca (#AB3C3D) en success y acciones.
- * - Tema sincronizado con claro/oscuro.
- * - Flash de Laravel vía `useFlashToast`.
+ * - Esquina superior derecha.
+ * - Iconos Lucide (check visible, sin el círculo nativo de Sonner).
+ * - Colores de marca (#AB3C3D).
  */
 function Toaster({ ...props }: ToasterProps) {
     const { appearance } = useAppearance();
@@ -26,6 +26,13 @@ function Toaster({ ...props }: ToasterProps) {
             duration={4000}
             offset={16}
             gap={10}
+            icons={{
+                success: <Check className="size-4" strokeWidth={2.75} />,
+                error: <X className="size-4" strokeWidth={2.75} />,
+                info: <Info className="size-4" strokeWidth={2.5} />,
+                warning: <AlertTriangle className="size-4" strokeWidth={2.5} />,
+                close: <X className="size-3.5" strokeWidth={2.5} />,
+            }}
             toastOptions={{
                 classNames: {
                     toast: 'group toast pointer-events-auto rounded-xl border border-border/60 bg-card text-foreground shadow-lg shadow-brand-900/8 ring-1 ring-brand-600/10 backdrop-blur-sm',
@@ -60,6 +67,9 @@ function Toaster({ ...props }: ToasterProps) {
                     '--warning-bg': 'oklch(0.98 0.04 80)',
                     '--warning-text': 'oklch(0.55 0.16 70)',
                     '--warning-border': 'oklch(0.85 0.12 75)',
+                    '--toast-close-button-start': 'unset',
+                    '--toast-close-button-end': '0',
+                    '--toast-close-button-transform': 'translate(35%, -35%)',
                 } as React.CSSProperties
             }
             {...props}
