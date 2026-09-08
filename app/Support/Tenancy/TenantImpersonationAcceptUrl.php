@@ -15,6 +15,11 @@ final class TenantImpersonationAcceptUrl
         $root = trim((string) config('tenant.root_domain'));
 
         $scheme = $request->getScheme();
+        $appScheme = parse_url((string) config('app.url'), PHP_URL_SCHEME);
+        if (is_string($appScheme) && $appScheme === 'https') {
+            $scheme = 'https';
+        }
+
         $host = $slug.'.'.$root;
 
         $port = $request->getPort();

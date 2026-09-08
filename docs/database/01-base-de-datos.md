@@ -28,6 +28,7 @@ PostgreSQL (una sola BD)
 - Schema **nunca** viene del request. Se lee de `tenants.schema_name` y se sanea (`od_` + `[a-z0-9_]`, max 63).
 - Prefijo: `TENANT_SCHEMA_PREFIX=od_` (VetSaaS usa `vet_`).
 - Log de migraciones tenant: **dentro** del schema, no en `public.migrations`.
+- Cache, locks y sesiones de Laravel viven en **`public.cache` / `public.cache_locks` / `public.sessions`**. El host del tenant hace `search_path = od_xxx, public`; si esas tablas no están calificadas, “Entrar como soporte” no encuentra el token.
 
 Leyenda: **YA** = ya corrió en este repo. **PENDIENTE** = hay que crear.
 

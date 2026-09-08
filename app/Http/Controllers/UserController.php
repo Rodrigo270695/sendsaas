@@ -131,6 +131,8 @@ class UserController extends Controller
 
     public function update(UserRequest $request, User $user): RedirectResponse
     {
+        $this->abortIfDemoProtectedUser($user);
+
         AdminScope::assertUserAccessible($user);
 
         if ($request->user()?->id === $user->id && $request->boolean('is_active') === false) {
@@ -166,6 +168,8 @@ class UserController extends Controller
 
     public function updateDocuments(UserDocumentsRequest $request, User $user): RedirectResponse
     {
+        $this->abortIfDemoProtectedUser($user);
+
         AdminScope::assertUserAccessible($user);
 
         $data = $request->validated();
@@ -190,6 +194,8 @@ class UserController extends Controller
 
     public function destroy(Request $request, User $user): RedirectResponse
     {
+        $this->abortIfDemoProtectedUser($user);
+
         AdminScope::assertUserAccessible($user);
 
         if ($request->user()?->id === $user->id) {
@@ -223,8 +229,12 @@ class UserController extends Controller
             ->when($currentId, fn (Builder $query) => $query->where('id', '!=', $currentId))
             ->get();
 
-        $blocked = $deletable->filter(fn (User $user): bool => $user->isPlatformSuperadmin());
-        $toDelete = $deletable->reject(fn (User $user): bool => $user->isPlatformSuperadmin());
+        $blocked = $deletable->filter(
+            fn (User $user): bool => $user->isPlatformSuperadmin() || is_demo_protected_user($user),
+        );
+        $toDelete = $deletable->reject(
+            fn (User $user): bool => $user->isPlatformSuperadmin() || is_demo_protected_user($user),
+        );
 
         if ($toDelete->isEmpty()) {
             return back()->with('info', 'No se eliminaron usuarios: la selección estaba protegida.');
@@ -325,6 +335,15 @@ class UserController extends Controller
         }
 
         return $query;
+    }
+
+    private function abortIfDemoProtectedUser(User $user): void
+    {
+        if (! is_demo_protected_user($user)) {
+            return;
+        }
+
+        abort(403, 'El administrador de la empresa demo no se puede editar ni eliminar.');
     }
 
     /**

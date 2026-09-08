@@ -83,12 +83,14 @@ class RoleController extends Controller
                 'coincidencias' => $roles->total(),
             ],
             'permissions_catalog' => $this->buildPermissionsCatalog(),
-            'mutations_locked' => false,
+            'mutations_locked' => is_public_demo_tenant(),
         ]);
     }
 
     public function store(RoleRequest $request): RedirectResponse
     {
+        $this->abortIfDemoRolesLocked();
+
         $data = $request->validated();
 
         Role::create([
@@ -103,6 +105,8 @@ class RoleController extends Controller
 
     public function update(RoleRequest $request, Role $role): RedirectResponse
     {
+        $this->abortIfDemoRolesLocked();
+
         AdminScope::assertRoleAccessible($role);
 
         if ($role->is_system) {
@@ -123,6 +127,8 @@ class RoleController extends Controller
 
     public function updatePermissions(Request $request, Role $role): RedirectResponse
     {
+        $this->abortIfDemoRolesLocked();
+
         AdminScope::assertRoleAccessible($role);
 
         $assignable = AdminScope::assignablePermissionNames();
@@ -165,6 +171,8 @@ class RoleController extends Controller
 
     public function destroy(Role $role): RedirectResponse
     {
+        $this->abortIfDemoRolesLocked();
+
         AdminScope::assertRoleAccessible($role);
 
         if ($role->is_system) {
@@ -180,6 +188,8 @@ class RoleController extends Controller
 
     public function bulkDestroy(Request $request): RedirectResponse
     {
+        $this->abortIfDemoRolesLocked();
+
         $data = $request->validate([
             'ids' => ['required', 'array', 'min:1', 'max:500'],
             'ids.*' => ['integer'],
@@ -243,6 +253,19 @@ class RoleController extends Controller
             fn (string $path) => $exporter->streamTo($query, $path),
             $filename,
         );
+    }
+
+    /**
+     * En el tenant público `demo` no se crean, editan ni se cambian
+     * permisos de roles. El resto de empresas sí.
+     */
+    private function abortIfDemoRolesLocked(): void
+    {
+        if (! is_public_demo_tenant()) {
+            return;
+        }
+
+        abort(403, 'En la empresa demo no se pueden modificar roles ni permisos.');
     }
 
     /**

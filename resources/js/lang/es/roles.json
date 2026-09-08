@@ -42,7 +42,8 @@
         "actions_for": "Acciones para {{name}}",
         "type_system": "Sistema",
         "type_custom": "Personalizado",
-        "system_locked": "Rol protegido: no se puede renombrar ni eliminar (sí puedes ajustar permisos)."
+        "system_locked": "Rol protegido: no se puede renombrar ni eliminar (sí puedes ajustar permisos).",
+        "demo_locked": "En la demo no se pueden cambiar los permisos de estos roles."
     },
     "empty": {
         "no_records_title": "Aún no hay roles personalizados",

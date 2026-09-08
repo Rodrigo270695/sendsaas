@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\DemoTenantsSeeder;
 use Database\Seeders\PermissionsSeeder;
+use Database\Seeders\PlansAndFeaturesSeeder;
 use Database\Seeders\SuperadminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -111,4 +113,95 @@ test('user without permission cannot lookup dni', function () {
     $this->actingAs($user)
         ->getJson(route('configuracion.usuarios.consulta-dni', ['dni' => '77344506']))
         ->assertForbidden();
+});
+
+test('demo seed user cannot be edited or receive documents', function () {
+    $this->seed(PlansAndFeaturesSeeder::class);
+    $this->seed(DemoTenantsSeeder::class);
+
+    $demo = User::query()->where('email', DemoTenantsSeeder::EMAIL)->firstOrFail();
+    $host = 'http://demo.sendsaas.test';
+
+    $this->actingAs($demo)
+        ->get($host.'/configuracion/usuarios')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('users.data.0.demo_locked', true)
+        );
+
+    $this->actingAs($demo)
+        ->put($host.'/configuracion/usuarios/'.$demo->id, [
+            'name' => 'Hackeado',
+            'email' => $demo->email,
+            'is_active' => true,
+            'role' => 'admin_empresa',
+        ])
+        ->assertForbidden();
+
+    $this->actingAs($demo)
+        ->put($host.'/configuracion/usuarios/'.$demo->id.'/documentos', [
+            'colegiatura' => '123',
+        ])
+        ->assertForbidden();
+
+    expect($demo->fresh()->name)->toBe('Administrador demo');
+});
+
+test('superadmin in support mode cannot edit the demo seed user', function () {
+    $this->seed(PlansAndFeaturesSeeder::class);
+    $this->seed(DemoTenantsSeeder::class);
+
+    $demo = User::query()->where('email', DemoTenantsSeeder::EMAIL)->firstOrFail();
+    $admin = User::query()->where('email', SuperadminSeeder::EMAIL)->firstOrFail();
+
+    $this->actingAs($admin)
+        ->withSession([
+            'tenant_impersonation' => [
+                'tenant_id' => (string) $demo->tenant_id,
+                'tenant_label' => 'Demo',
+            ],
+        ])
+        ->put('http://demo.sendsaas.test/configuracion/usuarios/'.$demo->id, [
+            'name' => 'Soporte editó',
+            'email' => $demo->email,
+            'is_active' => true,
+            'role' => 'admin_empresa',
+        ])
+        ->assertForbidden();
+
+    expect($demo->fresh()->name)->toBe('Administrador demo');
+});
+
+test('another user in the demo tenant can still be updated', function () {
+    $this->seed(PlansAndFeaturesSeeder::class);
+    $this->seed(DemoTenantsSeeder::class);
+
+    $demo = User::query()->where('email', DemoTenantsSeeder::EMAIL)->firstOrFail();
+    $other = User::factory()->create([
+        'tenant_id' => $demo->tenant_id,
+        'name' => 'Agente demo',
+        'email' => 'agente@demo.test',
+    ]);
+
+    $previous = getPermissionsTeamId();
+    setPermissionsTeamId($demo->tenant_id);
+
+    try {
+        $other->syncRoles(['agente']);
+    } finally {
+        setPermissionsTeamId($previous);
+    }
+
+    $this->actingAs($demo)
+        ->from('http://demo.sendsaas.test/configuracion/usuarios')
+        ->put('http://demo.sendsaas.test/configuracion/usuarios/'.$other->id, [
+            'name' => 'Agente actualizado',
+            'email' => $other->email,
+            'is_active' => true,
+            'role' => 'agente',
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    expect($other->fresh()->name)->toBe('Agente actualizado');
 });

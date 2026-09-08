@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Support\Tenancy\DemoTenant;
 use App\Tenancy\TenantManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -110,7 +111,7 @@ class HandleInertiaRequests extends Middleware
     }
 
     /**
-     * @return array{slug: string, nombre_comercial: string|null, razon_social: string|null}|null
+     * @return array{slug: string, nombre_comercial: string|null, razon_social: string|null, is_demo: bool}|null
      */
     private function sharedTenant(): ?array
     {
@@ -128,6 +129,7 @@ class HandleInertiaRequests extends Middleware
             'slug' => (string) $tenant->slug,
             'nombre_comercial' => $tenant->nombre_comercial,
             'razon_social' => $tenant->razon_social,
+            'is_demo' => DemoTenant::isSlug((string) $tenant->slug),
         ];
     }
 

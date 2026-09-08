@@ -1,9 +1,13 @@
 <?php
 
 use App\Models\Role;
+use App\Models\Tenant;
 use App\Models\User;
+use Database\Seeders\DemoTenantsSeeder;
 use Database\Seeders\PermissionsSeeder;
+use Database\Seeders\PlansAndFeaturesSeeder;
 use Database\Seeders\SuperadminSeeder;
+use Database\Seeders\TenantRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -75,4 +79,76 @@ test('superadmin can create a custom role', function () {
         ->assertSessionHas('success');
 
     expect(Role::query()->where('name', 'auditor')->whereNull('tenant_id')->exists())->toBeTrue();
+});
+
+test('demo tenant cannot manage role permissions', function () {
+    $this->seed(PlansAndFeaturesSeeder::class);
+    $this->seed(DemoTenantsSeeder::class);
+
+    $demo = User::query()->where('email', DemoTenantsSeeder::EMAIL)->firstOrFail();
+    $role = Role::query()
+        ->where('name', 'admin_empresa')
+        ->where('tenant_id', $demo->tenant_id)
+        ->firstOrFail();
+
+    $this->actingAs($demo)
+        ->get('http://demo.sendsaas.test/configuracion/roles')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('mutations_locked', true)
+        );
+
+    $this->actingAs($demo)
+        ->put('http://demo.sendsaas.test/configuracion/roles/'.$role->id.'/permissions', [
+            'permissions' => ['usuarios.view'],
+        ])
+        ->assertForbidden();
+
+    $this->actingAs($demo)
+        ->post('http://demo.sendsaas.test/configuracion/roles', [
+            'name' => 'auditor-demo',
+            'description' => 'No debe crearse',
+        ])
+        ->assertForbidden();
+});
+
+test('another tenant can still manage role permissions', function () {
+    $tenant = Tenant::factory()->create([
+        'slug' => 'acme',
+        'estado' => 'active',
+    ]);
+    app(TenantRolesSeeder::class)->seedForTenant((string) $tenant->id, true);
+
+    $admin = User::factory()->create([
+        'tenant_id' => $tenant->id,
+        'email' => 'admin@acme.test',
+    ]);
+    $previous = getPermissionsTeamId();
+    setPermissionsTeamId($tenant->id);
+
+    try {
+        $admin->syncRoles(['admin_empresa']);
+    } finally {
+        setPermissionsTeamId($previous);
+    }
+
+    $role = Role::query()
+        ->where('name', 'agente')
+        ->where('tenant_id', $tenant->id)
+        ->firstOrFail();
+
+    $this->actingAs($admin)
+        ->get('http://acme.sendsaas.test/configuracion/roles')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('mutations_locked', false)
+        );
+
+    $this->actingAs($admin)
+        ->from('http://acme.sendsaas.test/configuracion/roles')
+        ->put('http://acme.sendsaas.test/configuracion/roles/'.$role->id.'/permissions', [
+            'permissions' => ['usuarios.view'],
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('success');
 });

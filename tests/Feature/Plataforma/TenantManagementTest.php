@@ -163,6 +163,35 @@ test('impersonation start redirects to the tenant accept url', function () {
         ->toContain('acme.sendsaas.test/impersonate/accept?token=');
 });
 
+test('impersonation start then accept enters the tenant dashboard as support', function () {
+    $tenant = Tenant::factory()->create([
+        'slug' => 'acme',
+        'estado' => 'active',
+        'nombre_comercial' => 'Acme',
+    ]);
+    $admin = superadmin();
+
+    $start = $this->actingAs($admin)
+        ->post(route('plataforma.tenants.impersonate', $tenant));
+
+    $start->assertRedirect();
+    $location = (string) $start->headers->get('Location');
+    expect($location)->toContain('acme.sendsaas.test/impersonate/accept?token=');
+
+    parse_str((string) parse_url($location, PHP_URL_QUERY), $query);
+
+    $this->flushSession();
+
+    $this->get('http://acme.sendsaas.test/impersonate/accept?token='.($query['token'] ?? ''))
+        ->assertRedirect('/dashboard');
+
+    $this->assertAuthenticatedAs($admin);
+    expect(session('tenant_impersonation.tenant_id'))->toBe((string) $tenant->id)
+        ->and(session('tenant_impersonation.tenant_label'))->toBe('Acme');
+
+    $this->get('http://acme.sendsaas.test/dashboard')->assertOk();
+});
+
 test('impersonation accept logs the superadmin into the tenant host', function () {
     $tenant = Tenant::factory()->create([
         'slug' => 'acme',

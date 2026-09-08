@@ -41,6 +41,8 @@ export type User = {
     roles: readonly UserRoleRef[];
     /** Usuario que dio de alta a este (puede ser null para el primer superadmin). */
     created_by: UserCreatedByRef | null;
+    /** Admin semilla del tenant demo: no se edita ni se le suben documentos. */
+    demo_locked?: boolean;
 };
 
 export type UserStats = {

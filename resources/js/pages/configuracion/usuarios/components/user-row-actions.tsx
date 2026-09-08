@@ -42,8 +42,9 @@ export function UserRowActions({
 
     const isSelf = currentUserId === user.id;
     const isSuperadmin = user.roles.some((r) => r.name === 'superadmin');
-    const showEdit = canUpdate;
-    const showDelete = canDelete && !isSelf && !isSuperadmin;
+    const isDemoLocked = Boolean(user.demo_locked);
+    const showEdit = canUpdate && !isDemoLocked;
+    const showDelete = canDelete && !isSelf && !isSuperadmin && !isDemoLocked;
 
     const handleCopy = async () => {
         try {
@@ -114,7 +115,7 @@ export function UserRowActions({
                     </DropdownMenuItem>
                 )}
 
-                {(isSelf || isSuperadmin) && (
+                {(isSelf || isSuperadmin || isDemoLocked) && (
                     <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -122,9 +123,11 @@ export function UserRowActions({
                             className="gap-2 text-xs text-muted-foreground"
                         >
                             <Lock className="size-3.5" strokeWidth={2.25} />
-                            {isSelf
-                                ? t('usuarios:row.self_locked')
-                                : t('usuarios:row.superadmin_locked')}
+                            {isDemoLocked
+                                ? t('usuarios:row.demo_locked')
+                                : isSelf
+                                  ? t('usuarios:row.self_locked')
+                                  : t('usuarios:row.superadmin_locked')}
                         </DropdownMenuItem>
                     </>
                 )}

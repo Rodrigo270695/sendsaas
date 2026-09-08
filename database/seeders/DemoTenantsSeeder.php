@@ -4,13 +4,14 @@ namespace Database\Seeders;
 
 use App\Models\Plan;
 use App\Services\Tenancy\TenantProvisioner;
+use App\Support\Tenancy\DemoTenant;
 use Illuminate\Database\Seeder;
 
 class DemoTenantsSeeder extends Seeder
 {
-    public const SLUG = 'demo';
+    public const SLUG = DemoTenant::SLUG;
 
-    public const EMAIL = 'demo@sendsaas.pe';
+    public const EMAIL = DemoTenant::ADMIN_EMAIL;
 
     public const PASSWORD = 'demo1234';
 

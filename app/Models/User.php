@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\UsesPublicSchema;
 use App\Notifications\Auth\PasswordResetLinkNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -62,7 +63,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, HasUuids, Notifiable, PasskeyAuthenticatable, SoftDeletes, TwoFactorAuthenticatable;
+    use HasFactory, HasRoles, HasUuids, Notifiable, PasskeyAuthenticatable, SoftDeletes, TwoFactorAuthenticatable, UsesPublicSchema;
 
     private ?bool $isPlatformSuperadminMemo = null;
 
@@ -75,6 +76,7 @@ class User extends Authenticatable implements PasskeyUser
         'cv_url',
         'dni_file_url',
         'firma_url',
+        'demo_locked',
     ];
 
     protected function casts(): array
@@ -120,6 +122,11 @@ class User extends Authenticatable implements PasskeyUser
     public function getFirmaUrlAttribute(): ?string
     {
         return $this->publicDiskUrl($this->firma_path);
+    }
+
+    public function getDemoLockedAttribute(): bool
+    {
+        return is_demo_protected_user($this);
     }
 
     private function publicDiskUrl(?string $path): ?string

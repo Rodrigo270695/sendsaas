@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\UsesPublicSchema;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Permission\Models\Role as SpatieRole;
@@ -16,6 +17,8 @@ use Spatie\Permission\Models\Role as SpatieRole;
  */
 class Role extends SpatieRole
 {
+    use UsesPublicSchema;
+
     public const PLATFORM_ROLES = ['superadmin'];
 
     public const BASE_TENANT_ROLES = [

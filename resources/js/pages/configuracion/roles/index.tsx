@@ -104,7 +104,7 @@ export default function Index({
     const canDelete = !mutations_locked && can('roles.delete');
     const canExport = can('roles.export');
     const canBulkDelete = !mutations_locked && can('roles.bulk-delete');
-    const showRowActions = canUpdate || canDelete;
+    const showRowActions = canUpdate || canDelete || mutations_locked;
 
     const {
         search,
@@ -307,6 +307,7 @@ export default function Index({
                             onManagePermissions={openManagePermissions}
                             canUpdate={canUpdate}
                             canDelete={canDelete}
+                            mutationsLocked={mutations_locked}
                         />
                     </div>
                 ),
@@ -320,6 +321,7 @@ export default function Index({
         showRowActions,
         canUpdate,
         canDelete,
+        mutations_locked,
         openEdit,
         openDelete,
         openManagePermissions,

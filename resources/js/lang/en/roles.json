@@ -42,7 +42,8 @@
         "actions_for": "Actions for {{name}}",
         "type_system": "System",
         "type_custom": "Custom",
-        "system_locked": "Protected role: cannot be renamed or deleted (you can still adjust permissions)."
+        "system_locked": "Protected role: cannot be renamed or deleted (you can still adjust permissions).",
+        "demo_locked": "In the demo, these roles cannot have their permissions changed."
     },
     "empty": {
         "no_records_title": "No custom roles yet",

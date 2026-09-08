@@ -60,6 +60,8 @@ server {
 
 Cookie de sesión: `SESSION_DOMAIN=null` (una cookie por host, igual que VetSaaS). Así **Abrir subdominio** muestra el login de la empresa y **Salir de soporte** no tumba la sesión del panel central.
 
+Cache y sesiones de Laravel deben apuntar al schema `public` (`SESSION_TABLE=public.sessions`, `DB_CACHE_TABLE=public.cache`). Si no, **Entrar como soporte** pierde el token al cambiar el `search_path` del tenant y cae en el login del subdominio.
+
 ---
 
 ## 3. Primer boot en el VPS (solo lo que ya existe)

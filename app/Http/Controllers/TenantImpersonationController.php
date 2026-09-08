@@ -64,14 +64,14 @@ class TenantImpersonationController extends Controller
         }
 
         /** @var array{superadmin_id?: string, tenant_id?: string, central_origin?: string}|null $payload */
-        $payload = Cache::pull(self::CACHE_PREFIX.$token);
+        $payload = Cache::get(self::CACHE_PREFIX.$token);
 
         if (! is_array($payload) || empty($payload['superadmin_id']) || empty($payload['tenant_id'])) {
-            return redirect()->route('login')->with('error', 'El enlace de soporte expiró. Inténtalo de nuevo.');
+            return redirect('/login')->with('error', 'El enlace de soporte expiró. Inténtalo de nuevo.');
         }
 
         $currentTenantId = $manager->check() ? $manager->id() : null;
-        if ($currentTenantId === null || $currentTenantId !== $payload['tenant_id']) {
+        if ($currentTenantId === null || (string) $currentTenantId !== (string) $payload['tenant_id']) {
             abort(404);
         }
 
@@ -81,6 +81,8 @@ class TenantImpersonationController extends Controller
         if ($superadmin === null || ! $superadmin->isPlatformSuperadmin()) {
             abort(403);
         }
+
+        Cache::forget(self::CACHE_PREFIX.$token);
 
         Auth::guard('web')->login($superadmin);
         $request->session()->regenerate();
@@ -94,13 +96,13 @@ class TenantImpersonationController extends Controller
             : '';
 
         $request->session()->put('tenant_impersonation', [
-            'tenant_id' => $payload['tenant_id'],
+            'tenant_id' => (string) $payload['tenant_id'],
             'tenant_label' => $label,
             'started_at' => now()->toIso8601String(),
             'central_origin' => $centralOrigin !== '' ? $centralOrigin : null,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Entraste como soporte.');
+        return redirect('/dashboard')->with('success', 'Entraste como soporte.');
     }
 
     public function leave(Request $request): Response|RedirectResponse

@@ -21,6 +21,8 @@ export type RoleRowActionsProps = {
     canUpdate?: boolean;
     /** Si false, no se renderiza la opción "Eliminar". */
     canDelete?: boolean;
+    /** Tenant demo: sin gestionar permisos. */
+    mutationsLocked?: boolean;
 };
 
 /**
@@ -40,15 +42,13 @@ export function RoleRowActions({
     onManagePermissions,
     canUpdate = true,
     canDelete = true,
+    mutationsLocked = false,
 }: RoleRowActionsProps) {
     const { t } = useTranslation(['roles', 'common']);
 
-    const showEdit = canUpdate && !role.is_system;
-    const showDelete = canDelete && !role.is_system;
-    // Para roles del sistema mostramos igual la opción pero como
-    // "Ver permisos" (modo solo lectura). Así el usuario entiende qué
-    // tiene asignado el superadmin sin pelearse con un menú oculto.
-    const showPermissions = canUpdate;
+    const showEdit = canUpdate && !role.is_system && !mutationsLocked;
+    const showDelete = canDelete && !role.is_system && !mutationsLocked;
+    const showPermissions = canUpdate && !mutationsLocked;
 
     const handleCopy = async () => {
         try {
@@ -100,7 +100,7 @@ export function RoleRowActions({
                     </>
                 )}
 
-                {role.is_system && (
+                {(role.is_system || mutationsLocked) && (
                     <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -108,7 +108,9 @@ export function RoleRowActions({
                             className="gap-2 text-xs text-muted-foreground"
                         >
                             <Lock className="size-3.5" strokeWidth={2.25} />
-                            {t('roles:row.system_locked')}
+                            {mutationsLocked
+                                ? t('roles:row.demo_locked')
+                                : t('roles:row.system_locked')}
                         </DropdownMenuItem>
                     </>
                 )}

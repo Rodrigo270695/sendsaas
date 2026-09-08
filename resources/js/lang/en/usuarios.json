@@ -49,7 +49,8 @@
         "documents": "Documents / CV",
         "actions_for": "Actions for {{name}}",
         "self_locked": "You can't edit or delete your own account from here.",
-        "superadmin_locked": "Superadmin accounts are managed from the seeder."
+        "superadmin_locked": "Superadmin accounts are managed from the seeder.",
+        "demo_locked": "The demo administrator cannot be edited and cannot upload documents."
     },
     "empty": {
         "no_records_title": "No users yet",

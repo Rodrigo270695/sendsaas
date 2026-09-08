@@ -150,18 +150,24 @@ export default function Index({
 
     const closeModal = useCallback(() => setModal({ type: 'idle' }), []);
     const openCreate = useCallback(() => setModal({ type: 'create' }), []);
-    const openEdit = useCallback(
-        (user: User) => setModal({ type: 'edit', user }),
-        [],
-    );
-    const openDocuments = useCallback(
-        (user: User) => setModal({ type: 'documents', user }),
-        [],
-    );
-    const openDelete = useCallback(
-        (user: User) => setModal({ type: 'delete', user }),
-        [],
-    );
+    const openEdit = useCallback((user: User) => {
+        if (user.demo_locked) {
+            return;
+        }
+        setModal({ type: 'edit', user });
+    }, []);
+    const openDocuments = useCallback((user: User) => {
+        if (user.demo_locked) {
+            return;
+        }
+        setModal({ type: 'documents', user });
+    }, []);
+    const openDelete = useCallback((user: User) => {
+        if (user.demo_locked) {
+            return;
+        }
+        setModal({ type: 'delete', user });
+    }, []);
     const openBulkDelete = useCallback(
         () => setModal({ type: 'bulk-delete' }),
         [],
