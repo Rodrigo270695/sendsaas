@@ -1,0 +1,35 @@
+{
+    "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "save_changes": "Guardar cambios",
+        "create": "Crear",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "confirm": "Confirmar",
+        "close": "Cerrar",
+        "search": "Buscar",
+        "back": "Volver",
+        "loading": "Cargando...",
+        "continue": "Continuar",
+        "retry": "Reintentar"
+    },
+    "feedback": {
+        "no_results": "Sin resultados",
+        "save_success": "Cambios guardados correctamente.",
+        "save_error": "No se pudieron guardar los cambios."
+    },
+    "form": {
+        "required_field": "Campo obligatorio"
+    },
+    "language": {
+        "label": "Idioma",
+        "es": "Español",
+        "en": "English"
+    },
+    "http_errors": {
+        "cta_dashboard": "Ir al Dashboard",
+        "cta_login": "Ir al inicio de sesión",
+        "cta_back": "Volver atrás"
+    }
+}

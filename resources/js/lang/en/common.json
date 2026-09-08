@@ -1,0 +1,35 @@
+{
+    "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "save_changes": "Save changes",
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "close": "Close",
+        "search": "Search",
+        "back": "Back",
+        "loading": "Loading...",
+        "continue": "Continue",
+        "retry": "Retry"
+    },
+    "feedback": {
+        "no_results": "No results",
+        "save_success": "Changes saved successfully.",
+        "save_error": "Could not save the changes."
+    },
+    "form": {
+        "required_field": "Required field"
+    },
+    "language": {
+        "label": "Language",
+        "es": "Español",
+        "en": "English"
+    },
+    "http_errors": {
+        "cta_dashboard": "Go to Dashboard",
+        "cta_login": "Go to login",
+        "cta_back": "Go back"
+    }
+}

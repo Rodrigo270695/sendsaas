@@ -1,0 +1,38 @@
+{
+    "title": "Configuración",
+    "description": "Administra tu perfil y la configuración de tu cuenta",
+    "nav": {
+        "profile": "Perfil",
+        "security": "Seguridad",
+        "appearance": "Apariencia"
+    },
+    "profile": {
+        "head": "Configuración de perfil",
+        "title": "Perfil",
+        "description": "Actualiza tu nombre y correo electrónico",
+        "unverified": "Tu correo no está verificado.",
+        "resend": "Haz clic aquí para reenviar el correo de verificación.",
+        "link_sent": "Se envió un nuevo enlace de verificación a tu correo."
+    },
+    "security": {
+        "head": "Configuración de seguridad",
+        "title": "Actualizar contraseña",
+        "description": "Usa una contraseña larga y aleatoria para mantener tu cuenta segura"
+    },
+    "appearance": {
+        "head": "Configuración de apariencia",
+        "title": "Apariencia",
+        "description": "Actualiza la apariencia de tu cuenta",
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema"
+    },
+    "delete": {
+        "title": "Eliminar cuenta",
+        "description": "Elimina tu cuenta y todos sus recursos",
+        "warning": "Advertencia",
+        "caution": "Procede con cuidado, esta acción no se puede deshacer.",
+        "confirm_title": "¿Seguro que quieres eliminar tu cuenta?",
+        "confirm_body": "Cuando elimines tu cuenta, todos sus recursos y datos se borrarán de forma permanente. Ingresa tu contraseña para confirmar."
+    }
+}

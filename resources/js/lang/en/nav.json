@@ -1,0 +1,14 @@
+{
+    "items": {
+        "dashboard": "Dashboard",
+        "repository": "Repository",
+        "documentation": "Documentation"
+    },
+    "user_menu": {
+        "settings": "Settings",
+        "profile": "Profile",
+        "appearance": "Appearance",
+        "password": "Password",
+        "logout": "Log out"
+    }
+}

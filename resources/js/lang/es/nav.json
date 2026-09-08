@@ -1,0 +1,14 @@
+{
+    "items": {
+        "dashboard": "Dashboard",
+        "repository": "Repositorio",
+        "documentation": "Documentación"
+    },
+    "user_menu": {
+        "settings": "Configuración",
+        "profile": "Perfil",
+        "appearance": "Apariencia",
+        "password": "Contraseña",
+        "logout": "Cerrar sesión"
+    }
+}
