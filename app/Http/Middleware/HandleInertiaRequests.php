@@ -48,6 +48,7 @@ class HandleInertiaRequests extends Middleware
                 'roles' => $request->user()?->getRoleNames()->values() ?? [],
             ],
             'locale' => $request->getLocale(),
+            'contact_whatsapp' => (string) config('app.contact_whatsapp', '51976809804'),
             'timezone' => config('app.timezone'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

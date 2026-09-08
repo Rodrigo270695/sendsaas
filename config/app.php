@@ -17,6 +17,7 @@ return [
 
     'platform_superadmin_name' => env('PLATFORM_SUPERADMIN_NAME', 'Super administrador'),
     'platform_superadmin_email' => env('PLATFORM_SUPERADMIN_EMAIL', 'superadmin@sendsaas.pe'),
+    'contact_whatsapp' => env('CONTACT_WHATSAPP', '51976809804'),
 
     /*
     |--------------------------------------------------------------------------

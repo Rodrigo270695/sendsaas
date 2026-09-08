@@ -15,6 +15,7 @@ declare module '@inertiajs/core' {
             tenant: TenantShared | null;
             auth: Auth;
             locale: string;
+            contact_whatsapp: string;
             timezone: string;
             sidebarOpen: boolean;
             [key: string]: unknown;

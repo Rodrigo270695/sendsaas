@@ -2,7 +2,7 @@
  * Service Worker SendSaaS — caché de estáticos + base para push.
  */
 const STATIC_CACHE = 'sendsaas-static-v1';
-const NETWORK_ONLY_PREFIXES = ['/login', '/register', '/dashboard'];
+const NETWORK_ONLY_PREFIXES = ['/login', '/forgot-password', '/reset-password', '/dashboard'];
 
 self.addEventListener('install', () => {
     self.skipWaiting();

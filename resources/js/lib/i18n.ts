@@ -60,8 +60,13 @@ i18n.use(LanguageDetector)
         react: { useSuspense: false },
     });
 
-i18n.on('languageChanged', (locale) => {
-    document.documentElement.setAttribute('lang', locale);
-});
+function syncHtmlLang(locale: string): void {
+    if (typeof document !== 'undefined') {
+        document.documentElement.setAttribute('lang', locale);
+    }
+}
+
+syncHtmlLang(i18n.language || DEFAULT_LOCALE);
+i18n.on('languageChanged', syncHtmlLang);
 
 export default i18n;

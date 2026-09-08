@@ -1,13 +1,13 @@
-// Components
-import { Form, Head } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import { logout } from '@/routes';
-import { send } from '@/routes/verification';
+import AuthStatus from '@/components/auth/auth-status';
+import VerifyEmailForm from '@/components/auth/verify-email-form';
 
-export default function VerifyEmail({ status }: { status?: string }) {
+type Props = {
+    status?: string;
+};
+
+export default function VerifyEmail({ status }: Props) {
     const { t } = useTranslation('auth');
 
     return (
@@ -15,28 +15,10 @@ export default function VerifyEmail({ status }: { status?: string }) {
             <Head title={t('verify.head')} />
 
             {status === 'verification-link-sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    {t('verify.sent')}
-                </div>
+                <AuthStatus>{t('verify.sent')}</AuthStatus>
             )}
 
-            <Form {...send.form()} className="space-y-6 text-center">
-                {({ processing }) => (
-                    <>
-                        <Button disabled={processing} variant="secondary">
-                            {processing && <Spinner />}
-                            {t('verify.resend')}
-                        </Button>
-
-                        <TextLink
-                            href={logout()}
-                            className="mx-auto block text-sm"
-                        >
-                            {t('verify.logout')}
-                        </TextLink>
-                    </>
-                )}
-            </Form>
+            <VerifyEmailForm />
         </>
     );
 }

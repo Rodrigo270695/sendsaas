@@ -223,3 +223,49 @@
         @apply bg-background text-foreground;
     }
 }
+
+@keyframes aurora-drift-1 {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+        transform: translate3d(8%, -6%, 0) scale(1.08);
+    }
+}
+@keyframes aurora-drift-2 {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+        transform: translate3d(-6%, 8%, 0) scale(1.05);
+    }
+}
+@keyframes aurora-drift-3 {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) scale(0.95);
+    }
+    50% {
+        transform: translate3d(5%, 5%, 0) scale(1.1);
+    }
+}
+
+.aurora-blob-1 {
+    animation: aurora-drift-1 22s ease-in-out infinite;
+}
+.aurora-blob-2 {
+    animation: aurora-drift-2 26s ease-in-out infinite;
+}
+.aurora-blob-3 {
+    animation: aurora-drift-3 30s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aurora-blob-1,
+    .aurora-blob-2,
+    .aurora-blob-3 {
+        animation: none;
+    }
+}

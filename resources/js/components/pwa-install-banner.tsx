@@ -18,7 +18,6 @@ const BRAND_HOVER = '#8C2F30';
 
 const HIDE_PATH_PREFIXES = [
     '/login',
-    '/register',
     '/forgot-password',
     '/reset-password',
 ] as const;

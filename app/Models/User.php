@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\Auth\PasswordResetLinkNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -133,6 +134,11 @@ class User extends Authenticatable implements PasskeyUser
     /**
      * @return BelongsTo<User, $this>
      */
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
+    {
+        $this->notify(new PasswordResetLinkNotification($token));
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
