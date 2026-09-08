@@ -35,4 +35,24 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | API Perú (consulta DNI / RUC vía apiperu.dev)
+    |--------------------------------------------------------------------------
+    */
+    'apiperu' => [
+        'base_url' => env('APIPERU_BASE_URL', 'https://apiperu.dev/api'),
+        'token' => env('APIPERU_TOKEN'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | APISUNAT / Lucode (respaldo DNI / RUC)
+    |--------------------------------------------------------------------------
+    */
+    'apisunat_lookup' => [
+        'base_url' => env('APISUNAT_LOOKUP_BASE_URL', 'https://dev.apisunat.pe/api/v1'),
+        'token' => env('APISUNAT_LOOKUP_TOKEN'),
+    ],
+
 ];

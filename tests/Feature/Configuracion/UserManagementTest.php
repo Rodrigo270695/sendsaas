@@ -4,6 +4,8 @@ use App\Models\User;
 use Database\Seeders\PermissionsSeeder;
 use Database\Seeders\SuperadminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
@@ -69,4 +71,44 @@ test('platform superadmin cannot be deleted by another user', function () {
         ->assertForbidden();
 
     expect(User::query()->whereKey($admin->id)->exists())->toBeTrue();
+});
+
+test('superadmin can lookup dni via apiperu', function () {
+    Cache::flush();
+    config()->set('services.apiperu.token', 'apiperu-token');
+    config()->set('services.apiperu.base_url', 'https://apiperu.dev/api');
+
+    Http::fake([
+        'https://apiperu.dev/api/dni' => Http::response([
+            'success' => true,
+            'data' => [
+                'nombres' => 'MARIA',
+                'apellido_paterno' => 'LOPEZ',
+                'apellido_materno' => 'DIAZ',
+                'nombre_completo' => 'LOPEZ DIAZ MARIA',
+            ],
+        ], 200),
+    ]);
+
+    $admin = User::query()->where('email', SuperadminSeeder::EMAIL)->firstOrFail();
+
+    $this->actingAs($admin)
+        ->getJson(route('configuracion.usuarios.consulta-dni', ['dni' => '77344506']))
+        ->assertOk()
+        ->assertJson([
+            'success' => true,
+            'data' => [
+                'dni' => '77344506',
+                'nombres' => 'MARIA',
+                'apellidos' => 'LOPEZ DIAZ',
+            ],
+        ]);
+});
+
+test('user without permission cannot lookup dni', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->getJson(route('configuracion.usuarios.consulta-dni', ['dni' => '77344506']))
+        ->assertForbidden();
 });

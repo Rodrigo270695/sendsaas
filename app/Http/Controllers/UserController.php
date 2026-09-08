@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Exports\UsersXlsxExport;
+use App\Http\Controllers\Concerns\RespondsToApiPeruConsulta;
 use App\Http\Requests\UserDocumentsRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\Integrations\ApiPeruDniService;
 use App\Support\Tenancy\AdminScope;
 use App\Support\XlsxDownload;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -23,6 +26,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class UserController extends Controller
 {
+    use RespondsToApiPeruConsulta;
+
     private const PER_PAGE_OPTIONS = [10, 15, 20, 25, 50, 100];
 
     private const SORTABLE_COLUMNS = [
@@ -277,6 +282,26 @@ class UserController extends Controller
     /**
      * @return Builder<User>
      */
+    public function consultaDni(Request $request, ApiPeruDniService $apiPeru): JsonResponse
+    {
+        abort_unless(
+            $request->user()?->can('usuarios.create')
+            || $request->user()?->can('usuarios.update'),
+            403,
+        );
+
+        $dni = preg_replace('/\D+/', '', (string) $request->query('dni', ''));
+        $request->merge(['dni' => $dni]);
+
+        $validated = $request->validate([
+            'dni' => ['required', 'string', 'regex:/^[0-9]{8}$/'],
+        ]);
+
+        return $this->consultaApiPeruResponse(
+            fn () => $apiPeru->consultar($validated['dni']),
+        );
+    }
+
     private function buildBaseQuery(string $search, string $estado, string $rol): Builder
     {
         $query = AdminScope::usersQuery();

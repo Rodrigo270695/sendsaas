@@ -125,6 +125,8 @@ export function UserFormModal({
     const tipoDoc = data.documento_tipo.trim().toUpperCase();
     const isDni = tipoDoc === 'DNI';
     const docMaxLen = isDni ? 8 : undefined;
+    const docCompleto =
+        isDni && soloDigitosDocumento(data.documento_numero, 8).length === 8;
 
     useEffect(() => {
         if (open) {
@@ -144,15 +146,76 @@ export function UserFormModal({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, user?.id]);
 
-    const onConsultarDni = () => {
-        const dni = soloDigitosDocumento(data.documento_numero, 8);
+    const onConsultarDni = async (forcedNumero?: string) => {
+        const dni = soloDigitosDocumento(forcedNumero ?? data.documento_numero, 8);
         if (dni.length !== 8) {
             toastManager.error({ title: t('usuarios:form.consultar_invalid_dni') });
             return;
         }
-
-        toastManager.info({ title: t('usuarios:form.consultar_unavailable') });
+        const key = `DNI:${dni}`;
+        lastConsultaKeyRef.current = key;
+        setConsultandoDoc(true);
+        try {
+            const res = await fetch(
+                `/configuracion/usuarios/consulta-dni?dni=${encodeURIComponent(dni)}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    credentials: 'same-origin',
+                },
+            );
+            const body = (await res.json()) as {
+                success?: boolean;
+                message?: string;
+                data?: {
+                    nombre_completo?: string;
+                    nombres?: string;
+                    apellidos?: string;
+                    dni?: string;
+                };
+            };
+            if (!res.ok || !body.success || !body.data) {
+                toastManager.error({
+                    title: body.message ?? t('usuarios:form.consultar_error'),
+                });
+                return;
+            }
+            const completo =
+                body.data.nombre_completo?.trim() ||
+                [body.data.nombres, body.data.apellidos]
+                    .filter(Boolean)
+                    .join(' ')
+                    .trim();
+            setData((prev) => ({
+                ...prev,
+                documento_numero: body.data?.dni ?? dni,
+                name: completo || prev.name,
+            }));
+            if (completo) {
+                toastManager.success({ title: t('usuarios:form.consultar_ok') });
+            }
+        } catch {
+            toastManager.error({ title: t('usuarios:form.consultar_error') });
+        } finally {
+            setConsultandoDoc(false);
+        }
     };
+
+    useEffect(() => {
+        if (!open || !isDni || !docCompleto || consultandoDoc || processing) {
+            return;
+        }
+        const digits = soloDigitosDocumento(data.documento_numero, 8);
+        const key = `DNI:${digits}`;
+        if (lastConsultaKeyRef.current === key) {
+            return;
+        }
+        void onConsultarDni(digits);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, data.documento_numero, tipoDoc, docCompleto, consultandoDoc, processing]);
 
     const isDirty = useMemo(() => {
         const initial = initialSnapshotRef.current;
@@ -291,7 +354,7 @@ export function UserFormModal({
                             consulting={consultandoDoc}
                             disabled={processing}
                             invalid={Boolean(errors.documento_numero)}
-                            onConsult={onConsultarDni}
+                            onConsult={() => void onConsultarDni()}
                             consultAriaLabel={t('usuarios:form.consultar_dni')}
                         />
                     </FormField>

@@ -82,7 +82,7 @@
         "consultar_invalid_dni": "El DNI debe tener 8 dígitos.",
         "consultar_error": "No se pudo consultar el DNI. Intenta de nuevo o completa el nombre manualmente.",
         "consultar_ok": "Datos cargados desde RENIEC",
-        "consultar_unavailable": "La consulta de DNI no está disponible todavía. Completa el nombre manualmente.",
+        "consultar_unavailable": "La consulta de DNI no está configurada. Completa el nombre manualmente.",
         "file_view_current": "Ver archivo actual",
         "file_remove": "Quitar",
         "fields": {

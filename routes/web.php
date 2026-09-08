@@ -34,6 +34,9 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         Route::middleware('permission:usuarios.view')->group(function () {
             Route::get('usuarios', [UserController::class, 'index'])->name('usuarios.index');
         });
+        Route::get('usuarios/consulta-dni', [UserController::class, 'consultaDni'])
+            ->middleware('throttle:30,1')
+            ->name('usuarios.consulta-dni');
         Route::middleware('permission:usuarios.export')->get('usuarios/export', [UserController::class, 'export'])->name('usuarios.export');
         Route::middleware('permission:usuarios.create')->post('usuarios', [UserController::class, 'store'])->name('usuarios.store');
         Route::middleware('permission:usuarios.bulk-delete')->delete('usuarios/bulk', [UserController::class, 'bulkDestroy'])->name('usuarios.bulk-destroy');

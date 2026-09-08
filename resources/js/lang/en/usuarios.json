@@ -82,7 +82,7 @@
         "consultar_invalid_dni": "DNI must be 8 digits.",
         "consultar_error": "Could not look up the DNI. Try again or fill the name manually.",
         "consultar_ok": "Data loaded from RENIEC",
-        "consultar_unavailable": "ID lookup is not available yet. Enter the name manually.",
+        "consultar_unavailable": "ID lookup is not configured. Enter the name manually.",
         "file_view_current": "View current file",
         "file_remove": "Remove",
         "fields": {
