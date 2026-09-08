@@ -53,7 +53,7 @@ export default function ResetPasswordForm({
                                 icon={Mail}
                                 autoComplete="email"
                                 defaultValue={email}
-                                className="h-11"
+                                className="auth-field h-11"
                                 readOnly
                                 aria-invalid={!!errors.email}
                             />

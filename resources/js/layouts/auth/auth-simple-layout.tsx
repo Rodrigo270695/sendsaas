@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import AuthAuroraBackground from '@/components/auth/auth-aurora-background';
 import AuthChatScene from '@/components/auth/auth-chat-scene';
+import AuthPointerGlow from '@/components/auth/auth-pointer-glow';
 import AuthFooter from '@/components/auth/auth-footer';
 import AuthFormCard from '@/components/auth/auth-form-card';
 import AuthGreeting from '@/components/auth/auth-greeting';
@@ -46,6 +47,7 @@ export default function AuthSimpleLayout({
     return (
         <div className="relative isolate flex min-h-svh flex-col overflow-hidden bg-background text-foreground">
             <AuthAuroraBackground />
+            <AuthPointerGlow />
             <AuthChatScene />
             <AuthHeader brandName={brandName} />
 

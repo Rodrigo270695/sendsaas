@@ -34,7 +34,7 @@ export default function ForgotPasswordForm({
                                 autoFocus
                                 autoComplete="email"
                                 placeholder={t('fields.email_placeholder')}
-                                className="h-11"
+                                className="auth-field h-11"
                                 aria-invalid={!!errors.email}
                             />
                             <InputError message={errors.email} />
@@ -43,7 +43,7 @@ export default function ForgotPasswordForm({
                         <Button
                             type="submit"
                             size="lg"
-                            className="h-11 w-full text-base font-medium"
+                            className="auth-shine-button relative h-11 w-full overflow-hidden text-base font-medium"
                             disabled={processing}
                             data-test="email-password-reset-link-button"
                         >

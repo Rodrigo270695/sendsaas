@@ -50,7 +50,7 @@ export default function AuthGreeting({
                 className="animate-in fade-in slide-in-from-bottom-1 text-balance text-3xl font-semibold tracking-tight text-foreground duration-500 sm:text-4xl"
             >
                 {greeting},
-                <span className="mt-1 block bg-linear-to-br from-brand-700 to-brand-500 bg-clip-text text-transparent dark:from-brand-300 dark:to-brand-200">
+                <span className="auth-title-shimmer mt-1 block bg-linear-to-br from-brand-700 via-brand-500 to-brand-700 bg-size-[200%_100%] bg-clip-text text-transparent dark:from-brand-300 dark:via-brand-200 dark:to-brand-300">
                     {title ?? 'SendSaaS.'}
                 </span>
             </h1>

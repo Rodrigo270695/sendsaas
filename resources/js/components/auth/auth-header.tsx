@@ -26,7 +26,7 @@ export default function AuthHeader({
         <header className="relative z-20 flex items-center justify-between px-5 py-5 sm:px-8 sm:py-6 lg:px-12">
             <Link
                 href={login()}
-                className="inline-flex items-center gap-2.5 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group inline-flex items-center gap-2.5 rounded-md outline-none transition-transform duration-200 hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
                 <AppLogoIcon className="size-9 rounded-xl" />
                 <span className="text-base font-semibold tracking-tight text-foreground">

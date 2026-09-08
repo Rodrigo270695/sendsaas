@@ -130,6 +130,10 @@ function FlipFace({ ref, hidden, rotation, children }: FlipFaceProps) {
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-white/90 to-transparent dark:via-white/25"
                 />
+                <div
+                    aria-hidden="true"
+                    className="auth-card-sheen pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-linear-to-r from-transparent via-white/35 to-transparent dark:via-white/10"
+                />
 
                 <svg
                     aria-hidden="true"

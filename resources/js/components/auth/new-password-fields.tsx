@@ -63,7 +63,7 @@ export default function NewPasswordFields({
                     autoFocus={autoFocus}
                     autoComplete="new-password"
                     placeholder={t('fields.password_placeholder')}
-                    className="h-11"
+                    className="auth-field h-11"
                     value={password}
                     onChange={(event) =>
                         onPasswordChange(event.target.value)
@@ -90,7 +90,7 @@ export default function NewPasswordFields({
                     required
                     autoComplete="new-password"
                     placeholder={t('fields.password_placeholder')}
-                    className="h-11"
+                    className="auth-field h-11"
                     value={passwordConfirmation}
                     onChange={(event) =>
                         onPasswordConfirmationChange(event.target.value)

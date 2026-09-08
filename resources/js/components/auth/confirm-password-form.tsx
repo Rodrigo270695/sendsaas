@@ -27,7 +27,7 @@ export default function ConfirmPasswordForm() {
                             autoFocus
                             autoComplete="current-password"
                             placeholder={t('fields.password_placeholder')}
-                            className="h-11"
+                            className="auth-field h-11"
                             aria-invalid={!!errors.password}
                         />
                         <InputError message={errors.password} />
@@ -36,7 +36,7 @@ export default function ConfirmPasswordForm() {
                     <Button
                         type="submit"
                         size="lg"
-                        className="h-11 w-full text-base font-medium"
+                        className="auth-shine-button relative h-11 w-full overflow-hidden text-base font-medium"
                         disabled={processing}
                         data-test="confirm-password-button"
                     >

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
-import PasskeyVerify from '@/components/passkey-verify';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -38,12 +37,6 @@ export default function LoginForm({
         >
             {({ processing, errors }) => (
                 <div className="grid gap-6">
-                    <PasskeyVerify
-                        label={t('login.passkey')}
-                        loadingLabel={t('login.passkey_loading')}
-                        separator={t('login.passkey_separator')}
-                    />
-
                     <div className="grid gap-2">
                         <Label htmlFor="email">{t('fields.email')}</Label>
                         <FieldWithIcon
@@ -56,7 +49,7 @@ export default function LoginForm({
                             tabIndex={1}
                             autoComplete="email"
                             placeholder={t('fields.email_placeholder')}
-                            className="h-11"
+                            className="auth-field h-11"
                             aria-invalid={!!errors.email}
                         />
                         <InputError message={errors.email} />
@@ -94,7 +87,7 @@ export default function LoginForm({
                             tabIndex={2}
                             autoComplete="current-password"
                             placeholder={t('fields.password_placeholder')}
-                            className="h-11"
+                            className="auth-field h-11"
                             aria-invalid={!!errors.password}
                         />
                         <InputError message={errors.password} />
@@ -120,7 +113,7 @@ export default function LoginForm({
                     <Button
                         type="submit"
                         size="lg"
-                        className="mt-1 h-11 w-full text-base font-medium"
+                        className="auth-shine-button relative mt-1 h-11 w-full overflow-hidden cursor-pointer text-base font-medium shadow-[0_10px_24px_-10px_rgba(171,60,61,0.65)] transition-transform duration-200 hover:-translate-y-px hover:shadow-[0_16px_32px_-12px_rgba(171,60,61,0.75)] active:translate-y-0"
                         tabIndex={4}
                         disabled={processing}
                         data-test="login-button"
