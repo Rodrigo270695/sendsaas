@@ -53,8 +53,8 @@ test('seeder defines openwa and outbound quotas', function () {
         ->and(PlanLimits::wouldExceed($starter, 'max_outbound_per_day', 500))->toBeTrue()
         ->and(PlanLimits::wouldExceed($starter, 'max_whatsapp_sessions', 0))->toBeFalse()
         ->and(PlanLimits::intLimit($enterprise, 'max_whatsapp_sessions'))->toBeNull()
-        ->and(PlanLimits::moduleEnabled($starter, 'modulo_campanas'))->toBeFalse()
-        ->and(PlanLimits::moduleEnabled($enterprise, 'modulo_campanas'))->toBeTrue();
+        ->and(PlanLimits::stringValue($starter, 'send_window_start'))->toBe('08:00')
+        ->and(PlanLimits::stringValue($enterprise, 'soporte_tipo'))->toBe('whatsapp_prioritario');
 });
 
 test('superadmin can create a plan', function () {

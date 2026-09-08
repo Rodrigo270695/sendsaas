@@ -115,12 +115,25 @@ export function PlanFeaturesModal({
         return groupedCatalog
             .map((g) => ({
                 ...g,
-                items: g.items.filter((item) =>
-                    item.feature.toLowerCase().includes(q),
-                ),
+                items: g.items.filter((item) => {
+                    const label = t(
+                        `planes:features_modal.labels.${item.feature}`,
+                        { defaultValue: item.feature },
+                    ).toLowerCase();
+                    const description = t(
+                        `planes:features_modal.descriptions.${item.feature}`,
+                        { defaultValue: '' },
+                    ).toLowerCase();
+
+                    return (
+                        item.feature.toLowerCase().includes(q) ||
+                        label.includes(q) ||
+                        description.includes(q)
+                    );
+                }),
             }))
             .filter((g) => g.items.length > 0);
-    }, [groupedCatalog, query]);
+    }, [groupedCatalog, query, t]);
 
     const toggleGroup = (group: string) => {
         setExpandedGroups((prev) => {
@@ -455,8 +468,10 @@ function FeatureRow({
     return (
         <div className="flex items-center justify-between gap-3 px-3 py-2.5">
             <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                <span className="truncate font-mono text-xs text-foreground/90">
-                    {entry.feature}
+                <span className="truncate text-sm font-medium text-foreground">
+                    {t(`planes:features_modal.labels.${entry.feature}`, {
+                        defaultValue: entry.feature,
+                    })}
                 </span>
                 <span className="truncate text-[11px] text-muted-foreground">
                     {t(`planes:features_modal.descriptions.${entry.feature}`, {

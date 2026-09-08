@@ -28,7 +28,7 @@ class Plan extends Model
 
     /**
      * Features conocidas. Fuente de verdad del UI y de `resolveFeature`.
-     * Sin facturación: cupos de OpenWA, mensajes y módulos de bandeja.
+     * Cupos de uso + ventana de envío. Sin módulos ni facturación.
      *
      * @var array<string, array{type: 'int'|'bool'|'str', group: string, default: int|bool|string|null}>
      */
@@ -41,14 +41,6 @@ class Plan extends Model
         'max_campaigns' => ['type' => 'int', 'group' => 'limites', 'default' => 5],
         'max_automations' => ['type' => 'int', 'group' => 'limites', 'default' => 3],
         'max_sedes' => ['type' => 'int', 'group' => 'limites', 'default' => 1],
-
-        'multi_sede' => ['type' => 'bool', 'group' => 'modulos', 'default' => false],
-        'modulo_recordatorios' => ['type' => 'bool', 'group' => 'modulos', 'default' => false],
-        'modulo_automatizaciones' => ['type' => 'bool', 'group' => 'modulos', 'default' => false],
-        'modulo_campanas' => ['type' => 'bool', 'group' => 'modulos', 'default' => false],
-        'modulo_dashboard' => ['type' => 'bool', 'group' => 'modulos', 'default' => false],
-        'api_acceso' => ['type' => 'bool', 'group' => 'modulos', 'default' => false],
-        'reportes_avanzados' => ['type' => 'bool', 'group' => 'modulos', 'default' => false],
 
         'send_window_start' => ['type' => 'str', 'group' => 'envio', 'default' => '08:00'],
         'send_window_end' => ['type' => 'str', 'group' => 'envio', 'default' => '20:00'],

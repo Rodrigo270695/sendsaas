@@ -67,6 +67,19 @@ type ModalState =
 const DEFAULT_PER_PAGE = 10;
 const DEFAULT_ESTADO: PlanEstadoFilter = 'todos';
 
+function formatPrice(value: string | null): string {
+    if (value === null || value === '') {
+        return '—';
+    }
+
+    const num = Number(value);
+    if (Number.isNaN(num)) {
+        return '—';
+    }
+
+    return `S/. ${num.toFixed(2)}`;
+}
+
 function formatLimit(
     value: number | null,
     limited: (count: number) => string,
@@ -226,6 +239,31 @@ export default function Index({
                         </div>
                     );
                 },
+            },
+            {
+                key: 'precio_mensual',
+                header: t('planes:columns.precio_mensual'),
+                sortable: true,
+                cell: (plan) => (
+                    <span className="font-mono text-xs font-semibold text-foreground">
+                        {formatPrice(plan.precio_mensual)}
+                    </span>
+                ),
+            },
+            {
+                key: 'precio_anual',
+                header: t('planes:columns.precio_anual'),
+                sortable: true,
+                cell: (plan) =>
+                    plan.precio_anual ? (
+                        <span className="font-mono text-xs font-semibold text-foreground">
+                            {formatPrice(plan.precio_anual)}
+                        </span>
+                    ) : (
+                        <span className="text-xs text-muted-foreground italic">
+                            {t('planes:row.no_yearly')}
+                        </span>
+                    ),
             },
             {
                 key: 'limits',

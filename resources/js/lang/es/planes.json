@@ -26,6 +26,8 @@
     },
     "columns": {
         "plan": "Plan",
+        "precio_mensual": "Precio mensual",
+        "precio_anual": "Precio anual",
         "limits": "Cupos",
         "features": "Features",
         "trial": "Prueba",
@@ -43,6 +45,7 @@
         "messages_day": "{{count}} msg/día",
         "messages_unlimited": "Mensajes ilimitados",
         "days": "días",
+        "no_yearly": "Sin precio anual",
         "no_trial": "Sin prueba",
         "active": "Activo",
         "inactive": "Inactivo",
@@ -96,7 +99,7 @@
     },
     "features_modal": {
         "title": "Gestionar features",
-        "description": "Cupos de OpenWA, mensajes y módulos de este plan",
+        "description": "Cupos de OpenWA, mensajes y ventana de envío de este plan",
         "active_count_one": "1 feature activa",
         "active_count_other": "{{count}} features activas",
         "active_count": "{{count}} features activas",
@@ -116,28 +119,33 @@
         },
         "groups": {
             "limites": "Cupos",
-            "modulos": "Módulos",
             "envio": "Ventana de envío y soporte"
         },
+        "labels": {
+            "max_usuarios": "Usuarios",
+            "max_whatsapp_sessions": "Sesiones OpenWA",
+            "max_outbound_per_day": "Mensajes por día",
+            "max_outbound_per_month": "Mensajes por mes",
+            "max_contacts": "Contactos",
+            "max_campaigns": "Campañas",
+            "max_automations": "Automatizaciones",
+            "max_sedes": "Sedes",
+            "send_window_start": "Inicio de envío",
+            "send_window_end": "Fin de envío",
+            "soporte_tipo": "Tipo de soporte"
+        },
         "descriptions": {
-            "max_usuarios": "Usuarios de la empresa que pueden usar la bandeja.",
-            "max_whatsapp_sessions": "Números / sesiones OpenWA conectadas.",
-            "max_outbound_per_day": "Mensajes salientes por día (-1 = ilimitado).",
-            "max_outbound_per_month": "Mensajes salientes por mes (-1 = ilimitado).",
-            "max_contacts": "Contactos en la agenda.",
-            "max_campaigns": "Campañas activas.",
-            "max_automations": "Automatizaciones activas.",
-            "max_sedes": "Sedes de la empresa.",
-            "multi_sede": "Permite más de una sede.",
-            "modulo_recordatorios": "Recordatorios automáticos.",
-            "modulo_automatizaciones": "Motor de automatizaciones.",
-            "modulo_campanas": "Campañas masivas.",
-            "modulo_dashboard": "Métricas y dashboard.",
-            "api_acceso": "Acceso a la API.",
-            "reportes_avanzados": "Reportes avanzados.",
-            "send_window_start": "Hora de inicio de envío (HH:MM).",
-            "send_window_end": "Hora de corte de envío (HH:MM).",
-            "soporte_tipo": "docs / email / whatsapp / whatsapp_prioritario."
+            "max_usuarios": "Personas de la empresa que pueden entrar a la bandeja.",
+            "max_whatsapp_sessions": "Cuántos números de WhatsApp se pueden conectar a OpenWA.",
+            "max_outbound_per_day": "Tope de mensajes que se pueden enviar en un día. −1 = ilimitado.",
+            "max_outbound_per_month": "Tope de mensajes que se pueden enviar en un mes. −1 = ilimitado.",
+            "max_contacts": "Contactos que caben en la agenda.",
+            "max_campaigns": "Campañas que pueden estar activas a la vez.",
+            "max_automations": "Automatizaciones que pueden estar activas a la vez.",
+            "max_sedes": "Sucursales de la empresa.",
+            "send_window_start": "Desde esta hora (HH:MM) el sistema puede enviar mensajes masivos.",
+            "send_window_end": "Hasta esta hora (HH:MM) se envían. Fuera de horario se pausa el drip.",
+            "soporte_tipo": "Canal de ayuda del plan: docs, email, whatsapp o whatsapp_prioritario."
         }
     },
     "delete": {

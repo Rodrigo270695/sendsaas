@@ -26,6 +26,8 @@
     },
     "columns": {
         "plan": "Plan",
+        "precio_mensual": "Monthly price",
+        "precio_anual": "Yearly price",
         "limits": "Quotas",
         "features": "Features",
         "trial": "Trial",
@@ -43,6 +45,7 @@
         "messages_day": "{{count}} msg/day",
         "messages_unlimited": "Unlimited messages",
         "days": "days",
+        "no_yearly": "No yearly price",
         "no_trial": "No trial",
         "active": "Active",
         "inactive": "Inactive",
@@ -96,7 +99,7 @@
     },
     "features_modal": {
         "title": "Manage features",
-        "description": "OpenWA, message quotas, and modules for this plan",
+        "description": "OpenWA quotas, messages, and send window for this plan",
         "active_count_one": "1 active feature",
         "active_count_other": "{{count}} active features",
         "active_count": "{{count}} active features",
@@ -116,28 +119,33 @@
         },
         "groups": {
             "limites": "Quotas",
-            "modulos": "Modules",
             "envio": "Send window and support"
         },
+        "labels": {
+            "max_usuarios": "Users",
+            "max_whatsapp_sessions": "OpenWA sessions",
+            "max_outbound_per_day": "Messages per day",
+            "max_outbound_per_month": "Messages per month",
+            "max_contacts": "Contacts",
+            "max_campaigns": "Campaigns",
+            "max_automations": "Automations",
+            "max_sedes": "Locations",
+            "send_window_start": "Send start",
+            "send_window_end": "Send end",
+            "soporte_tipo": "Support type"
+        },
         "descriptions": {
-            "max_usuarios": "Company users who can use the inbox.",
-            "max_whatsapp_sessions": "Connected OpenWA numbers / sessions.",
-            "max_outbound_per_day": "Outbound messages per day (−1 = unlimited).",
-            "max_outbound_per_month": "Outbound messages per month (−1 = unlimited).",
-            "max_contacts": "Contacts in the address book.",
-            "max_campaigns": "Active campaigns.",
-            "max_automations": "Active automations.",
+            "max_usuarios": "Company people who can use the inbox.",
+            "max_whatsapp_sessions": "How many WhatsApp numbers can connect to OpenWA.",
+            "max_outbound_per_day": "Outbound messages allowed in one day. −1 = unlimited.",
+            "max_outbound_per_month": "Outbound messages allowed in one month. −1 = unlimited.",
+            "max_contacts": "Contacts that fit in the address book.",
+            "max_campaigns": "Campaigns that can be active at once.",
+            "max_automations": "Automations that can be active at once.",
             "max_sedes": "Company locations.",
-            "multi_sede": "Allows more than one location.",
-            "modulo_recordatorios": "Automatic reminders.",
-            "modulo_automatizaciones": "Automation engine.",
-            "modulo_campanas": "Broadcast campaigns.",
-            "modulo_dashboard": "Metrics and dashboard.",
-            "api_acceso": "API access.",
-            "reportes_avanzados": "Advanced reports.",
-            "send_window_start": "Send window start (HH:MM).",
-            "send_window_end": "Send window end (HH:MM).",
-            "soporte_tipo": "docs / email / whatsapp / whatsapp_prioritario."
+            "send_window_start": "From this time (HH:MM) the system may send mass messages.",
+            "send_window_end": "Until this time (HH:MM) messages go out. Outside the window, drip pauses.",
+            "soporte_tipo": "Help channel for the plan: docs, email, whatsapp, or whatsapp_prioritario."
         }
     },
     "delete": {

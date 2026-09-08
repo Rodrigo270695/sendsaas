@@ -21,7 +21,6 @@ class PlansAndFeaturesSeeder extends Seeder
                 'orden' => 1,
                 'features' => [
                     ...self::limits(sedes: 1, usuarios: 1, wa: 1, day: 50, month: 1500, contacts: 100, campaigns: 0, automations: 0),
-                    ...self::modules(recordatorios: false, automatizaciones: false, campanas: false, dashboard: false, api: false, reportes: false, multiSede: false),
                     ...self::envio('08:00', '20:00', 'docs'),
                 ],
             ],
@@ -35,13 +34,12 @@ class PlansAndFeaturesSeeder extends Seeder
                 'orden' => 2,
                 'features' => [
                     ...self::limits(sedes: 1, usuarios: 2, wa: 1, day: 500, month: 15000, contacts: 1000, campaigns: 2, automations: 0),
-                    ...self::modules(recordatorios: false, automatizaciones: false, campanas: false, dashboard: false, api: false, reportes: false, multiSede: false),
                     ...self::envio('08:00', '20:00', 'email'),
                 ],
             ],
             'profesional' => [
                 'nombre' => 'Profesional',
-                'descripcion' => 'Recordatorios, automatizaciones, campañas y dashboard. 1500 mensajes/día.',
+                'descripcion' => '5 usuarios, 1 OpenWA y 1500 mensajes salientes por día.',
                 'badge' => 'Más popular',
                 'color_hex' => '#1D4ED8',
                 'precio_mensual' => 99,
@@ -49,13 +47,12 @@ class PlansAndFeaturesSeeder extends Seeder
                 'orden' => 3,
                 'features' => [
                     ...self::limits(sedes: 1, usuarios: 5, wa: 1, day: 1500, month: 45000, contacts: 5000, campaigns: 10, automations: 10),
-                    ...self::modules(recordatorios: true, automatizaciones: true, campanas: true, dashboard: true, api: false, reportes: false, multiSede: false),
                     ...self::envio('08:00', '20:00', 'whatsapp'),
                 ],
             ],
             'business' => [
                 'nombre' => 'Business',
-                'descripcion' => 'Dos sesiones OpenWA, 15 usuarios, API y reportes. 5000 mensajes/día.',
+                'descripcion' => '15 usuarios, 2 sesiones OpenWA y 5000 mensajes salientes por día.',
                 'badge' => 'Mejor valor',
                 'color_hex' => '#7C3AED',
                 'precio_mensual' => 199,
@@ -63,7 +60,6 @@ class PlansAndFeaturesSeeder extends Seeder
                 'orden' => 4,
                 'features' => [
                     ...self::limits(sedes: 2, usuarios: 15, wa: 2, day: 5000, month: 150000, contacts: -1, campaigns: 50, automations: 30),
-                    ...self::modules(recordatorios: true, automatizaciones: true, campanas: true, dashboard: true, api: true, reportes: true, multiSede: true),
                     ...self::envio('08:00', '20:00', 'whatsapp'),
                 ],
             ],
@@ -77,7 +73,6 @@ class PlansAndFeaturesSeeder extends Seeder
                 'orden' => 5,
                 'features' => [
                     ...self::limits(sedes: -1, usuarios: -1, wa: -1, day: -1, month: -1, contacts: -1, campaigns: -1, automations: -1),
-                    ...self::modules(recordatorios: true, automatizaciones: true, campanas: true, dashboard: true, api: true, reportes: true, multiSede: true),
                     ...self::envio('08:00', '20:00', 'whatsapp_prioritario'),
                 ],
             ],
@@ -136,29 +131,6 @@ class PlansAndFeaturesSeeder extends Seeder
             ['feature' => 'max_contacts', 'valor_int' => $contacts, 'valor_bool' => null, 'valor_str' => null],
             ['feature' => 'max_campaigns', 'valor_int' => $campaigns, 'valor_bool' => null, 'valor_str' => null],
             ['feature' => 'max_automations', 'valor_int' => $automations, 'valor_bool' => null, 'valor_str' => null],
-        ];
-    }
-
-    /**
-     * @return list<array{feature: string, valor_int: null, valor_bool: bool, valor_str: null}>
-     */
-    private static function modules(
-        bool $recordatorios,
-        bool $automatizaciones,
-        bool $campanas,
-        bool $dashboard,
-        bool $api,
-        bool $reportes,
-        bool $multiSede,
-    ): array {
-        return [
-            ['feature' => 'multi_sede', 'valor_int' => null, 'valor_bool' => $multiSede, 'valor_str' => null],
-            ['feature' => 'modulo_recordatorios', 'valor_int' => null, 'valor_bool' => $recordatorios, 'valor_str' => null],
-            ['feature' => 'modulo_automatizaciones', 'valor_int' => null, 'valor_bool' => $automatizaciones, 'valor_str' => null],
-            ['feature' => 'modulo_campanas', 'valor_int' => null, 'valor_bool' => $campanas, 'valor_str' => null],
-            ['feature' => 'modulo_dashboard', 'valor_int' => null, 'valor_bool' => $dashboard, 'valor_str' => null],
-            ['feature' => 'api_acceso', 'valor_int' => null, 'valor_bool' => $api, 'valor_str' => null],
-            ['feature' => 'reportes_avanzados', 'valor_int' => null, 'valor_bool' => $reportes, 'valor_str' => null],
         ];
     }
 

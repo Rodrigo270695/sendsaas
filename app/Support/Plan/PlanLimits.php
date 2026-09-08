@@ -7,7 +7,7 @@ namespace App\Support\Plan;
 use App\Models\Plan;
 
 /**
- * Cupos y módulos de un plan. -1 en valor_int = ilimitado.
+ * Cupos de un plan. -1 en valor_int = ilimitado.
  *
  * Sin facturación ni overrides: el worker de envío y OpenWA leen esto.
  */

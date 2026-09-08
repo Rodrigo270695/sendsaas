@@ -26,6 +26,7 @@ class PlanController extends Controller
         'codigo',
         'nombre',
         'precio_mensual',
+        'precio_anual',
         'orden',
         'created_at',
     ];
