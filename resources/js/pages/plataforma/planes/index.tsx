@@ -242,28 +242,34 @@ export default function Index({
             },
             {
                 key: 'precio_mensual',
-                header: t('planes:columns.precio_mensual'),
+                header: t('planes:columns.pricing'),
                 sortable: true,
-                cell: (plan) => (
-                    <span className="font-mono text-xs font-semibold text-foreground">
-                        {formatPrice(plan.precio_mensual)}
-                    </span>
-                ),
-            },
-            {
-                key: 'precio_anual',
-                header: t('planes:columns.precio_anual'),
-                sortable: true,
-                cell: (plan) =>
-                    plan.precio_anual ? (
-                        <span className="font-mono text-xs font-semibold text-foreground">
-                            {formatPrice(plan.precio_anual)}
-                        </span>
-                    ) : (
-                        <span className="text-xs text-muted-foreground italic">
-                            {t('planes:row.no_yearly')}
-                        </span>
-                    ),
+                cell: (plan) => {
+                    const anual =
+                        plan.precio_anual ??
+                        (Number.isNaN(Number(plan.precio_mensual))
+                            ? null
+                            : (Number(plan.precio_mensual) * 10).toFixed(2));
+
+                    return (
+                        <div className="flex flex-col text-xs leading-tight">
+                            <span className="font-mono font-semibold text-foreground">
+                                {formatPrice(plan.precio_mensual)}
+                                <span className="text-[10px] font-normal text-muted-foreground">
+                                    {' '}
+                                    /{t('planes:row.per_month')}
+                                </span>
+                            </span>
+                            <span className="font-mono text-muted-foreground">
+                                {formatPrice(anual)}
+                                <span className="text-[10px]">
+                                    {' '}
+                                    /{t('planes:row.per_year')}
+                                </span>
+                            </span>
+                        </div>
+                    );
+                },
             },
             {
                 key: 'limits',

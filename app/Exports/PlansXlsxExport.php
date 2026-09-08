@@ -44,7 +44,7 @@ class PlansXlsxExport
                 'value' => fn (Plan $plan) => $this->intLabel($plan, 'max_usuarios'),
             ],
             [
-                'label' => 'Sesiones OpenWA',
+                'label' => 'Sesiones de WhatsApp',
                 'value' => fn (Plan $plan) => $this->intLabel($plan, 'max_whatsapp_sessions'),
             ],
             [
@@ -52,12 +52,17 @@ class PlansXlsxExport
                 'value' => fn (Plan $plan) => $this->intLabel($plan, 'max_outbound_per_day'),
             ],
             [
-                'label' => 'Mensajes/mes',
-                'value' => fn (Plan $plan) => $this->intLabel($plan, 'max_outbound_per_month'),
+                'label' => 'Precio mensual',
+                'value' => fn (Plan $plan) => 'S/. '.number_format((float) $plan->precio_mensual, 2, '.', ','),
             ],
             [
-                'label' => 'Referencia mensual',
-                'value' => fn (Plan $plan) => 'S/. '.number_format((float) $plan->precio_mensual, 2, '.', ','),
+                'label' => 'Precio anual',
+                'value' => fn (Plan $plan) => 'S/. '.number_format(
+                    (float) ($plan->precio_anual ?? Plan::precioAnualDesdeMensual($plan->precio_mensual)),
+                    2,
+                    '.',
+                    ',',
+                ),
             ],
             [
                 'label' => 'Público',

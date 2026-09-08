@@ -15,6 +15,9 @@ class Plan extends Model
 
     public const CODIGO_FREE = 'free';
 
+    /** Meses que se cobran al pagar anual (2 de regalo). */
+    public const MESES_ANUAL_COBRADOS = 10;
+
     /**
      * @var list<string>
      */
@@ -36,7 +39,6 @@ class Plan extends Model
         'max_usuarios' => ['type' => 'int', 'group' => 'limites', 'default' => 2],
         'max_whatsapp_sessions' => ['type' => 'int', 'group' => 'limites', 'default' => 1],
         'max_outbound_per_day' => ['type' => 'int', 'group' => 'limites', 'default' => 500],
-        'max_outbound_per_month' => ['type' => 'int', 'group' => 'limites', 'default' => 15000],
         'max_contacts' => ['type' => 'int', 'group' => 'limites', 'default' => 500],
         'max_campaigns' => ['type' => 'int', 'group' => 'limites', 'default' => 5],
         'max_automations' => ['type' => 'int', 'group' => 'limites', 'default' => 3],
@@ -97,6 +99,16 @@ class Plan extends Model
     public static function findByCodigo(string $codigo): ?self
     {
         return self::query()->where('codigo', $codigo)->first();
+    }
+
+    public static function precioAnualDesdeMensual(float|int|string $mensual): string
+    {
+        return number_format(
+            round(((float) $mensual) * self::MESES_ANUAL_COBRADOS, 2),
+            2,
+            '.',
+            '',
+        );
     }
 
     /**

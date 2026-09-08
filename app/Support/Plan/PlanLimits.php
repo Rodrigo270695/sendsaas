@@ -18,7 +18,6 @@ final class PlanLimits
         'max_usuarios',
         'max_whatsapp_sessions',
         'max_outbound_per_day',
-        'max_outbound_per_month',
         'max_contacts',
         'max_campaigns',
         'max_automations',

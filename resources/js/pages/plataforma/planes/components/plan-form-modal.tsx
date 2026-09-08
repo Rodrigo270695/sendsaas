@@ -347,21 +347,16 @@ export function PlanFormModal({
                             id="plan-precio-anual"
                             label={t('planes:form.fields.precio_anual')}
                             hint={t('planes:form.fields.precio_anual_hint')}
-                            error={errors.precio_anual}
                         >
                             <Input
                                 id="plan-precio-anual"
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                value={data.precio_anual}
-                                onChange={(e) =>
-                                    setData('precio_anual', e.target.value)
+                                readOnly
+                                value={
+                                    Number.isNaN(Number(data.precio_mensual))
+                                        ? '—'
+                                        : `S/. ${(Number(data.precio_mensual) * 10).toFixed(2)}`
                                 }
-                                placeholder={t(
-                                    'planes:form.fields.precio_anual_placeholder',
-                                )}
-                                className="font-mono"
+                                className="font-mono text-muted-foreground"
                             />
                         </FormField>
 

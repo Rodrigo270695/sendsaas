@@ -48,7 +48,6 @@ test('seeder defines openwa and outbound quotas', function () {
         ->and($starter->resolveFeature('max_usuarios'))->toBe(2)
         ->and($starter->resolveFeature('max_whatsapp_sessions'))->toBe(1)
         ->and($starter->resolveFeature('max_outbound_per_day'))->toBe(500)
-        ->and($starter->resolveFeature('max_outbound_per_month'))->toBe(15000)
         ->and(PlanLimits::intLimit($starter, 'max_outbound_per_day'))->toBe(500)
         ->and(PlanLimits::wouldExceed($starter, 'max_outbound_per_day', 500))->toBeTrue()
         ->and(PlanLimits::wouldExceed($starter, 'max_whatsapp_sessions', 0))->toBeFalse()
@@ -78,7 +77,10 @@ test('superadmin can create a plan', function () {
         ->assertRedirect(route('plataforma.planes.index'))
         ->assertSessionHas('success');
 
-    expect(Plan::query()->where('codigo', 'agencia')->exists())->toBeTrue();
+    $creado = Plan::query()->where('codigo', 'agencia')->first();
+    expect($creado)->not->toBeNull()
+        ->and((float) $creado->precio_mensual)->toBe(79.0)
+        ->and((float) $creado->precio_anual)->toBe(790.0);
 });
 
 test('plan codigo cannot be changed after create', function () {

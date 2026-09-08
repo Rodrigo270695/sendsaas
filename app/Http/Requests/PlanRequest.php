@@ -93,7 +93,7 @@ class PlanRequest extends FormRequest
                 : null,
             'badge' => filled($this->input('badge')) ? trim((string) $this->input('badge')) : null,
             'color_hex' => filled($this->input('color_hex')) ? trim((string) $this->input('color_hex')) : null,
-            'precio_anual' => filled($this->input('precio_anual')) ? $this->input('precio_anual') : null,
+            'precio_anual' => Plan::precioAnualDesdeMensual($this->input('precio_mensual', 0)),
             'es_publico' => $this->boolean('es_publico'),
             'activo' => $this->boolean('activo'),
         ]);
