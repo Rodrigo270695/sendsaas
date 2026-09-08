@@ -189,7 +189,13 @@ test('impersonation start then accept enters the tenant dashboard as support', f
     expect(session('tenant_impersonation.tenant_id'))->toBe((string) $tenant->id)
         ->and(session('tenant_impersonation.tenant_label'))->toBe('Acme');
 
-    $this->get('http://acme.sendsaas.test/dashboard')->assertOk();
+    $this->get('http://acme.sendsaas.test/dashboard')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('tenant_impersonation.tenant_id', (string) $tenant->id)
+            ->where('tenant_impersonation.tenant_label', 'Acme')
+            ->where('auth.user.id', (string) $admin->id)
+        );
 });
 
 test('impersonation accept logs the superadmin into the tenant host', function () {

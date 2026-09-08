@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/hooks/use-initials';
 import type { User } from '@/types';
@@ -5,10 +6,13 @@ import type { User } from '@/types';
 export function UserInfo({
     user,
     showEmail = false,
+    supportMode = false,
 }: {
     user: User;
     showEmail?: boolean;
+    supportMode?: boolean;
 }) {
+    const { t } = useTranslation('common');
     const getInitials = useInitials();
 
     return (
@@ -21,11 +25,15 @@ export function UserInfo({
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
-                {showEmail && (
+                {showEmail ? (
                     <span className="text-muted-foreground truncate text-xs">
                         {user.email}
                     </span>
-                )}
+                ) : supportMode ? (
+                    <span className="truncate text-xs font-medium text-destructive">
+                        {t('impersonation.sidebar_mode')}
+                    </span>
+                ) : null}
             </div>
         </>
     );

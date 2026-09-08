@@ -49,7 +49,7 @@ class HandleInertiaRequests extends Middleware
                 'scheme' => $request->getScheme(),
                 'login_path' => '/login',
             ],
-            'tenant_impersonation' => $this->sharedImpersonation($request),
+            'tenant_impersonation' => fn () => $this->sharedImpersonation($request),
             'auth' => [
                 'user' => $request->user(),
                 'permissions' => $request->user()?->getAllPermissions()->pluck('name')->values() ?? [],
@@ -140,13 +140,31 @@ class HandleInertiaRequests extends Middleware
     {
         $imp = $request->session()->get('tenant_impersonation');
 
-        if (! is_array($imp) || empty($imp['tenant_id'])) {
-            return null;
+        if (is_array($imp) && ! empty($imp['tenant_id'])) {
+            return [
+                'tenant_id' => (string) $imp['tenant_id'],
+                'tenant_label' => (string) ($imp['tenant_label'] ?? 'Empresa'),
+            ];
         }
 
-        return [
-            'tenant_id' => (string) $imp['tenant_id'],
-            'tenant_label' => (string) ($imp['tenant_label'] ?? 'Empresa'),
-        ];
+        $user = $request->user();
+        $tenant = app()->bound(TenantManager::class)
+            ? app(TenantManager::class)->current()?->tenant
+            : null;
+
+        if (
+            $user instanceof User
+            && $tenant !== null
+            && $user->isPlatformSuperadmin()
+        ) {
+            $label = trim((string) ($tenant->nombre_comercial ?: $tenant->razon_social));
+
+            return [
+                'tenant_id' => (string) $tenant->getKey(),
+                'tenant_label' => $label !== '' ? $label : 'Empresa',
+            ];
+        }
+
+        return null;
     }
 }

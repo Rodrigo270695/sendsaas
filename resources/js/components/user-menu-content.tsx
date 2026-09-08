@@ -10,6 +10,7 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
+import { isTenantImpersonating } from '@/components/tenant-impersonation-banner';
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import {
@@ -35,9 +36,7 @@ export function UserMenuContent({ user }: Props) {
     const { t, i18n } = useTranslation(['nav', 'common']);
     const { tenant_impersonation: imp } = usePage().props;
     const cleanup = useMobileNavigation();
-    const impersonating = Boolean(
-        imp && typeof imp === 'object' && 'tenant_id' in imp,
-    );
+    const impersonating = isTenantImpersonating(imp);
 
     const handleLogout = () => {
         cleanup();

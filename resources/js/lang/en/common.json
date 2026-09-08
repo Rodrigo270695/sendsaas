@@ -62,7 +62,8 @@
         "banner_leave_short": "Leave",
         "banner_fallback_clinic": "this company",
         "chip_label": "Support · {{clinic}}",
-        "minimize": "Hide notice"
+        "minimize": "Hide notice",
+        "sidebar_mode": "Support mode"
     },
     "document_types": {
         "placeholder": "Select",
