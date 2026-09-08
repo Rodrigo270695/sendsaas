@@ -7,8 +7,10 @@ namespace App\Services\Tenancy;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Tenancy\TenantManager;
+use App\Tenancy\TenantSchemaMigrator;
 use Database\Seeders\TenantRolesSeeder;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Output\NullOutput;
 
 class TenantProvisioner
 {
@@ -82,6 +84,13 @@ class TenantProvisioner
         }
 
         DB::statement('CREATE SCHEMA IF NOT EXISTS "'.$schema.'"');
+
+        $tenantMigrations = glob(database_path('migrations/tenant/*.php')) ?: [];
+        if ($tenantMigrations === []) {
+            return;
+        }
+
+        app(TenantSchemaMigrator::class)->migrate($schema, new NullOutput);
     }
 
     private function ensureAdmin(Tenant $tenant, string $name, string $email, string $password): void

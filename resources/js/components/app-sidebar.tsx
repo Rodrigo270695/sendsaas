@@ -118,6 +118,12 @@ function useNavConfig(): { singles: NavItem[]; groups: NavGroup[] } {
                     context: 'both',
                     items: [
                         {
+                            title: t('items.sedes'),
+                            href: '/configuracion/sedes',
+                            icon: Building2,
+                            permission: 'sedes.view',
+                        },
+                        {
                             title: t('items.roles'),
                             href: '/configuracion/roles',
                             icon: ShieldCheck,

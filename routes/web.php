@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\GeoController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SedeController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantImpersonationController;
 use App\Http\Controllers\UserController;
@@ -24,7 +26,18 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         ->name('impersonate.leave');
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
+    Route::get('geo/departamentos', [GeoController::class, 'departamentos'])->name('geo.departamentos');
+    Route::get('geo/provincias', [GeoController::class, 'provincias'])->name('geo.provincias');
+    Route::get('geo/distritos', [GeoController::class, 'distritos'])->name('geo.distritos');
+
     Route::prefix('configuracion')->name('configuracion.')->group(function () {
+        Route::middleware('permission:sedes.view')->get('sedes', [SedeController::class, 'index'])->name('sedes.index');
+        Route::middleware('permission:sedes.export')->get('sedes/export', [SedeController::class, 'export'])->name('sedes.export');
+        Route::middleware('permission:sedes.create')->post('sedes', [SedeController::class, 'store'])->name('sedes.store');
+        Route::middleware('permission:sedes.bulk-delete')->delete('sedes/bulk', [SedeController::class, 'bulkDestroy'])->name('sedes.bulk-destroy');
+        Route::middleware('permission:sedes.update')->put('sedes/{sede}', [SedeController::class, 'update'])->name('sedes.update');
+        Route::middleware('permission:sedes.delete')->delete('sedes/{sede}', [SedeController::class, 'destroy'])->name('sedes.destroy');
+
         Route::middleware('permission:roles.view')->group(function () {
             Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
         });

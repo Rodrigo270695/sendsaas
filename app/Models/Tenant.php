@@ -60,6 +60,14 @@ class Tenant extends Model
     }
 
     /**
+     * @return HasMany<Sede, $this>
+     */
+    public function sedes(): HasMany
+    {
+        return $this->hasMany(Sede::class);
+    }
+
+    /**
      * @return BelongsTo<Plan, $this>
      */
     public function plan(): BelongsTo

@@ -8,6 +8,7 @@ import dashboardEn from '@/lang/en/dashboard.json';
 import navEn from '@/lang/en/nav.json';
 import planesEn from '@/lang/en/planes.json';
 import rolesEn from '@/lang/en/roles.json';
+import sedesEn from '@/lang/en/sedes.json';
 import settingsEn from '@/lang/en/settings.json';
 import tenantsEn from '@/lang/en/tenants.json';
 import usuariosEn from '@/lang/en/usuarios.json';
@@ -17,6 +18,7 @@ import dashboardEs from '@/lang/es/dashboard.json';
 import navEs from '@/lang/es/nav.json';
 import planesEs from '@/lang/es/planes.json';
 import rolesEs from '@/lang/es/roles.json';
+import sedesEs from '@/lang/es/sedes.json';
 import settingsEs from '@/lang/es/settings.json';
 import tenantsEs from '@/lang/es/tenants.json';
 import usuariosEs from '@/lang/es/usuarios.json';
@@ -39,6 +41,7 @@ const namespaces = [
     'usuarios',
     'planes',
     'tenants',
+    'sedes',
 ] as const;
 
 const isBrowser = typeof document !== 'undefined';
@@ -59,6 +62,7 @@ i18n.use(initReactI18next).init({
             usuarios: usuariosEs,
             planes: planesEs,
             tenants: tenantsEs,
+            sedes: sedesEs,
         },
         en: {
             common: commonEn,
@@ -70,6 +74,7 @@ i18n.use(initReactI18next).init({
             usuarios: usuariosEn,
             planes: planesEn,
             tenants: tenantsEn,
+            sedes: sedesEn,
         },
     },
     lng: isBrowser ? undefined : DEFAULT_LOCALE,

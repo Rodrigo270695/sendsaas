@@ -1,0 +1,97 @@
+{
+    "title": "Locations",
+    "description": "Company branches. Each location can have its own address and, later, its own WhatsApp number.",
+    "plan_limit": {
+        "max_sedes": "You reached your plan's location limit. Upgrade your plan to add more."
+    },
+    "actions": {
+        "new": "New location",
+        "new_short": "New",
+        "create_first": "Create first location",
+        "delete_selected": "Delete selected",
+        "export_filtered": "Export matches"
+    },
+    "stats": {
+        "total": "Total",
+        "active": "Active",
+        "inactive": "Inactive",
+        "filters": "Filters",
+        "matches": "Matches"
+    },
+    "search_placeholder": "Search by name, code, address...",
+    "filter_label": "Filter by status",
+    "filters": {
+        "all": "All statuses",
+        "active": "Active",
+        "inactive": "Inactive"
+    },
+    "columns": {
+        "codigo": "Code",
+        "nombre": "Location",
+        "ubicacion": "Address",
+        "telefono": "Phone",
+        "estado": "Status",
+        "acciones": "Actions"
+    },
+    "row": {
+        "no_location": "No location",
+        "copy_code": "Copy code",
+        "actions_for": "Actions for {{name}}",
+        "active": "Active",
+        "inactive": "Inactive"
+    },
+    "empty": {
+        "no_records_title": "No locations yet",
+        "no_records_description": "Create your first branch to place the company and later attach a WhatsApp number.",
+        "no_results_title": "No results",
+        "no_results_description": "No records match the current filters. Try adjusting the search or status."
+    },
+    "aria": {
+        "results_count_one": "{{count}} location found",
+        "results_count_other": "{{count}} locations found"
+    },
+    "form": {
+        "title_create": "New location",
+        "title_edit": "Edit location",
+        "description_create": "Register a company branch.",
+        "description_edit": "Update the selected location.",
+        "submit_create": "Create location",
+        "submit_edit": "Save changes",
+        "section_basic": "Basic information",
+        "section_basic_hint_create": "Details that identify the branch. The code is assigned automatically (SEDE-NNN).",
+        "section_basic_hint_edit": "Location details. The code was assigned when it was created.",
+        "section_location": "Location",
+        "section_location_hint": "Department, province and district (INEI catalog).",
+        "section_status": "Status",
+        "fields": {
+            "nombre": "Name",
+            "nombre_placeholder": "E.g. Lima Centro",
+            "telefono": "Phone",
+            "email": "Email",
+            "direccion": "Street address",
+            "distrito": "District",
+            "provincia": "Province",
+            "departamento": "Department",
+            "activa": "Active location",
+            "activa_hint": "If inactive, it will not appear in selection lists."
+        }
+    },
+    "delete": {
+        "title": "Delete location",
+        "description": "You are about to delete <strong>{{name}}</strong> ({{code}}). This cannot be undone from here.",
+        "confirm": "Yes, delete location",
+        "loading": "Deleting..."
+    },
+    "bulk": {
+        "selected_singular": "location selected",
+        "selected_plural": "locations selected",
+        "delete_title": "Delete {{count}} locations",
+        "delete_description": "You are about to delete {{count}} selected locations.",
+        "delete_confirm_singular": "Yes, delete location",
+        "delete_confirm_plural": "Yes, delete {{count}} locations"
+    },
+    "toast": {
+        "code_copied": "Code copied",
+        "load_error": "Could not load the locations list."
+    }
+}

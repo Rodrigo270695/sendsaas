@@ -111,7 +111,7 @@ Roles:
 
 **PENDIENTE en users:** unique `(COALESCE(tenant_id,'__central__'), lower(email))` como VetSaaS, si se permite el mismo email en dos empresas.
 
-### 2.4 Ubigeo — PENDIENTE
+### 2.4 Ubigeo — YA
 
 Antes de ampliar `tenants` / `sedes` (FK `distrito_id`).
 
@@ -253,7 +253,7 @@ No copiar de VetSaaS: `nubefact_*`, `sunat_configurado` (no hay FEL en OmniDesk)
 
 ---
 
-## 5. Sedes — PENDIENTE (public, no en el schema tenant)
+## 5. Sedes — YA (public, no en el schema tenant)
 
 Igual que VetSaaS. Una empresa puede tener sucursales; cada sede puede terminar con su propio número WhatsApp (limitado por `max_whatsapp_sessions` / `max_sedes`).
 

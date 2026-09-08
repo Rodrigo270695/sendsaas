@@ -2,6 +2,7 @@ const IMPLEMENTED_PREFIXES = [
     '/dashboard',
     '/configuracion/roles',
     '/configuracion/usuarios',
+    '/configuracion/sedes',
     '/plataforma/planes',
     '/plataforma/tenants',
     '/settings',

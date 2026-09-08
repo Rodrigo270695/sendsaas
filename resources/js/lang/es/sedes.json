@@ -1,0 +1,97 @@
+{
+    "title": "Sedes",
+    "description": "Sucursales de la empresa. Cada sede puede tener su propia dirección y, más adelante, su propio número de WhatsApp.",
+    "plan_limit": {
+        "max_sedes": "Alcanzaste el límite de sedes de tu plan. Actualiza el plan para agregar más."
+    },
+    "actions": {
+        "new": "Nueva sede",
+        "new_short": "Nueva",
+        "create_first": "Crear primera sede",
+        "delete_selected": "Eliminar seleccionadas",
+        "export_filtered": "Exportar coincidencias"
+    },
+    "stats": {
+        "total": "Total",
+        "active": "Activas",
+        "inactive": "Inactivas",
+        "filters": "Filtros",
+        "matches": "Coincidencias"
+    },
+    "search_placeholder": "Buscar por nombre, código, dirección...",
+    "filter_label": "Filtrar por estado",
+    "filters": {
+        "all": "Todos los estados",
+        "active": "Activas",
+        "inactive": "Inactivas"
+    },
+    "columns": {
+        "codigo": "Código",
+        "nombre": "Sede",
+        "ubicacion": "Ubicación",
+        "telefono": "Teléfono",
+        "estado": "Estado",
+        "acciones": "Acciones"
+    },
+    "row": {
+        "no_location": "Sin ubicación",
+        "copy_code": "Copiar código",
+        "actions_for": "Acciones para {{name}}",
+        "active": "Activa",
+        "inactive": "Inactiva"
+    },
+    "empty": {
+        "no_records_title": "Aún no hay sedes registradas",
+        "no_records_description": "Crea tu primera sucursal para ubicar la empresa y, más adelante, asociar un WhatsApp.",
+        "no_results_title": "Sin resultados",
+        "no_results_description": "Ningún registro coincide con los filtros actuales. Prueba ajustando la búsqueda o cambiando el estado."
+    },
+    "aria": {
+        "results_count_one": "{{count}} sede encontrada",
+        "results_count_other": "{{count}} sedes encontradas"
+    },
+    "form": {
+        "title_create": "Nueva sede",
+        "title_edit": "Editar sede",
+        "description_create": "Registra una sucursal de la empresa.",
+        "description_edit": "Actualiza la información de la sede seleccionada.",
+        "submit_create": "Crear sede",
+        "submit_edit": "Guardar cambios",
+        "section_basic": "Información básica",
+        "section_basic_hint_create": "Datos que identifican a la sede. El código se asigna automáticamente (SEDE-NNN).",
+        "section_basic_hint_edit": "Datos de la sede. El código se asignó al crearla.",
+        "section_location": "Ubicación",
+        "section_location_hint": "Departamento, provincia y distrito (catálogo INEI).",
+        "section_status": "Estado",
+        "fields": {
+            "nombre": "Nombre",
+            "nombre_placeholder": "Ej. Sede Lima Centro",
+            "telefono": "Teléfono",
+            "email": "Correo electrónico",
+            "direccion": "Dirección",
+            "distrito": "Distrito",
+            "provincia": "Provincia",
+            "departamento": "Departamento",
+            "activa": "Sede activa",
+            "activa_hint": "Si está desactivada, no aparecerá en los listados de selección."
+        }
+    },
+    "delete": {
+        "title": "Eliminar sede",
+        "description": "Vas a eliminar la sede <strong>{{name}}</strong> ({{code}}). Esta acción no se puede deshacer desde aquí.",
+        "confirm": "Sí, eliminar sede",
+        "loading": "Eliminando..."
+    },
+    "bulk": {
+        "selected_singular": "sede seleccionada",
+        "selected_plural": "sedes seleccionadas",
+        "delete_title": "Eliminar {{count}} sedes",
+        "delete_description": "Vas a eliminar {{count}} sedes seleccionadas.",
+        "delete_confirm_singular": "Sí, eliminar sede",
+        "delete_confirm_plural": "Sí, eliminar {{count}} sedes"
+    },
+    "toast": {
+        "code_copied": "Código copiado",
+        "load_error": "No se pudo cargar la lista de sedes."
+    }
+}
