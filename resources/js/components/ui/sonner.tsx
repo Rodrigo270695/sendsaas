@@ -27,16 +27,18 @@ function Toaster({ ...props }: ToasterProps) {
             offset={16}
             gap={10}
             icons={{
-                success: <Check className="size-4" strokeWidth={2.75} />,
-                error: <X className="size-4" strokeWidth={2.75} />,
+                success: <Check className="size-4" strokeWidth={3} />,
+                error: <X className="size-4" strokeWidth={3} />,
                 info: <Info className="size-4" strokeWidth={2.5} />,
                 warning: <AlertTriangle className="size-4" strokeWidth={2.5} />,
                 close: <X className="size-3.5" strokeWidth={2.5} />,
             }}
             toastOptions={{
                 classNames: {
-                    toast: 'group toast pointer-events-auto rounded-xl border border-border/60 bg-card text-foreground shadow-lg shadow-brand-900/8 ring-1 ring-brand-600/10 backdrop-blur-sm',
-                    title: 'text-sm font-semibold',
+                    toast: 'group toast pointer-events-auto !flex !items-start rounded-xl border border-border/60 bg-card text-foreground shadow-lg shadow-brand-900/8 ring-1 ring-brand-600/10 backdrop-blur-sm',
+                    icon: 'mt-0.5 shrink-0',
+                    content: 'min-w-0 flex-1',
+                    title: 'text-sm leading-snug font-semibold',
                     description: 'text-xs text-muted-foreground',
                     actionButton:
                         'rounded-md bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground cursor-pointer hover:bg-primary/90',

@@ -441,49 +441,75 @@
     background-color: rgb(255 255 255 / 0.1) !important;
 }
 
+[data-sonner-toast] {
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    padding: 0.85rem 2.35rem 0.85rem 0.85rem !important;
+}
+
 [data-sonner-toast] [data-icon] {
-    display: flex;
+    display: flex !important;
+    flex-shrink: 0 !important;
     align-items: center;
     justify-content: center;
     width: 1.75rem !important;
     height: 1.75rem !important;
+    margin: 0.1rem 0 0 !important;
     border-radius: 9999px;
 }
 
+[data-sonner-toast] [data-content] {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 0.15rem;
+}
+
 [data-sonner-toast][data-type='success'] [data-icon] {
-    color: var(--brand-600);
-    background: color-mix(in oklab, var(--brand-600) 12%, white);
+    color: #fff;
+    background: var(--brand-600);
 }
 
 [data-sonner-toast][data-type='success'] [data-icon] svg {
-    width: 1rem;
-    height: 1rem;
-    stroke: var(--brand-600);
+    width: 0.95rem;
+    height: 0.95rem;
+    stroke: #fff;
     fill: none;
 }
 
 [data-sonner-toast][data-type='error'] [data-icon] {
-    color: var(--destructive);
-    background: color-mix(in oklab, var(--destructive) 12%, white);
+    color: #fff;
+    background: var(--destructive);
+}
+
+[data-sonner-toast][data-type='error'] [data-icon] svg {
+    stroke: #fff;
+    fill: none;
 }
 
 [data-sonner-toast][data-type='info'] [data-icon] {
-    color: var(--brand-600);
-    background: color-mix(in oklab, var(--brand-600) 10%, white);
+    color: #fff;
+    background: var(--brand-600);
+}
+
+[data-sonner-toast][data-type='info'] [data-icon] svg {
+    stroke: #fff;
+    fill: none;
 }
 
 [data-sonner-toast][data-type='warning'] [data-icon] {
-    color: oklch(0.55 0.16 70);
-    background: oklch(0.98 0.04 80);
+    color: oklch(0.35 0.1 70);
+    background: oklch(0.92 0.1 80);
 }
 
-.dark [data-sonner-toast][data-type='success'] [data-icon] {
-    color: var(--brand-300);
-    background: color-mix(in oklab, var(--brand-400) 22%, transparent);
+.dark [data-sonner-toast][data-type='success'] [data-icon],
+.dark [data-sonner-toast][data-type='info'] [data-icon] {
+    color: #fff;
+    background: var(--brand-600);
 }
 
-.dark [data-sonner-toast][data-type='success'] [data-icon] svg {
-    stroke: var(--brand-300);
+.dark [data-sonner-toast][data-type='success'] [data-icon] svg,
+.dark [data-sonner-toast][data-type='info'] [data-icon] svg {
+    stroke: #fff;
 }
 
 @media (prefers-reduced-motion: reduce) {
