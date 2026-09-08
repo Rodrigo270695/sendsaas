@@ -30,9 +30,7 @@ class TenantSchemaMigrator
         }
 
         if (DB::getDriverName() !== 'pgsql') {
-            $output->writeln('<error>Solo está soportado PostgreSQL para multi-schema tenant.</error>');
-
-            return self::EXIT_FAILURE;
+            return $this->migrateDefaultConnection($output);
         }
 
         $safe = str_replace('"', '', $schema);
@@ -103,6 +101,33 @@ class TenantSchemaMigrator
         }
 
         $output->writeln('<info>Schema listo: '.$safe.'</info>');
+
+        return self::EXIT_SUCCESS;
+    }
+
+    /**
+     * Tests (SQLite): las tablas tenant viven en la conexión default.
+     */
+    private function migrateDefaultConnection(OutputInterface $output): int
+    {
+        $names = $this->tenantMigrationBasenames();
+        if ($names === []) {
+            $output->writeln('<comment>No hay migraciones en database/migrations/tenant.</comment>');
+
+            return self::EXIT_SUCCESS;
+        }
+
+        $exitCode = Artisan::call('migrate', [
+            '--path' => 'database/migrations/tenant',
+            '--force' => true,
+        ]);
+        $output->write(Artisan::output());
+
+        if ($exitCode !== 0) {
+            $output->writeln('<error>migrate tenant (sqlite) terminó con código '.$exitCode.'</error>');
+
+            return self::EXIT_FAILURE;
+        }
 
         return self::EXIT_SUCCESS;
     }

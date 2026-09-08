@@ -1,0 +1,98 @@
+{
+    "title": "Contactos",
+    "description": "Agenda de la empresa. Sube un Excel con teléfono y nombre; las columnas extra quedan como variables para campañas.",
+    "plan_limit": {
+        "max_contacts": "Alcanzaste el límite de contactos de tu plan. Actualiza el plan para agregar más."
+    },
+    "actions": {
+        "new": "Nuevo contacto",
+        "new_short": "Nuevo",
+        "create_first": "Crear primer contacto",
+        "bulk_import": "Importar Excel",
+        "bulk_import_short": "Excel"
+    },
+    "import": {
+        "title": "Importar contactos",
+        "description": "Una fila = un contacto. Si el teléfono ya existe, se actualiza. Las columnas extra (pedido, fecha…) se guardan como variables {{pedido}}.",
+        "template_title": "Plantilla",
+        "template_hint": "Descarga el Excel, completa telefono* y nombre*, y agrega las columnas que necesites.",
+        "sheet_data": "Contactos — telefono* y nombre* obligatorios",
+        "sheet_catalogos": "Guia — reglas de teléfono, sede y variables",
+        "sheet_guide": "La fila de ejemplo se omite sola",
+        "required_hint": "Teléfono: 9 dígitos o con código de país. Etiquetas separadas por coma.",
+        "download_template": "Descargar plantilla .xlsx",
+        "upload_title": "Subir Excel",
+        "upload_hint": "Selecciona el archivo completado. Verás el resultado fila por fila.",
+        "choose_file": "Elegir archivo .xlsx",
+        "upload": "Subir e importar",
+        "uploading": "Importando…",
+        "results_empty": "Aquí aparecerán las filas importadas y los errores.",
+        "summary_ok": "{{count}} importados",
+        "summary_error": "{{count}} con error",
+        "summary_skipped": "{{count}} omitidos",
+        "row_label": "Fila {{row}}: {{nombre}}",
+        "error_generic": "No se pudo importar el archivo. Inténtalo de nuevo."
+    },
+    "stats": {
+        "total": "Total",
+        "variables": "Con variables",
+        "email": "Con correo",
+        "filters": "Filtros",
+        "matches": "Coincidencias"
+    },
+    "search_placeholder": "Buscar por nombre, teléfono o correo...",
+    "columns": {
+        "nombre": "Contacto",
+        "telefono": "Teléfono",
+        "sede": "Sede",
+        "etiquetas": "Etiquetas",
+        "variables": "Variables",
+        "acciones": "Acciones"
+    },
+    "row": {
+        "no_sede": "Sin sede",
+        "no_tags": "Sin etiquetas",
+        "no_vars": "Sin variables",
+        "copy_phone": "Copiar teléfono",
+        "actions_for": "Acciones para {{name}}"
+    },
+    "empty": {
+        "no_records_title": "Aún no hay contactos",
+        "no_records_description": "Crea uno o importa un Excel con teléfono y nombre. Las columnas extra servirán en las campañas.",
+        "no_results_title": "Sin resultados",
+        "no_results_description": "Ningún contacto coincide con la búsqueda."
+    },
+    "aria": {
+        "results_count_one": "{{count}} contacto encontrado",
+        "results_count_other": "{{count}} contactos encontrados"
+    },
+    "form": {
+        "title_create": "Nuevo contacto",
+        "title_edit": "Editar contacto",
+        "description_create": "Registra un número de WhatsApp. Para muchos a la vez usa Importar Excel.",
+        "description_edit": "Actualiza los datos del contacto.",
+        "submit_create": "Crear contacto",
+        "submit_edit": "Guardar cambios",
+        "section_basic": "Datos",
+        "section_basic_hint": "El teléfono se normaliza a formato internacional (51…).",
+        "fields": {
+            "name": "Nombre",
+            "name_placeholder": "Ej. Ana Pérez",
+            "phone": "Teléfono WhatsApp",
+            "email": "Correo (opcional)",
+            "notes": "Notas",
+            "sede": "Sede (opcional)",
+            "sede_none": "Sin sede"
+        }
+    },
+    "delete": {
+        "title": "Eliminar contacto",
+        "description": "Vas a eliminar a <strong>{{name}}</strong>. El cupo del plan se libera. Esta acción no se puede deshacer desde aquí.",
+        "confirm": "Sí, eliminar",
+        "loading": "Eliminando..."
+    },
+    "toast": {
+        "phone_copied": "Teléfono copiado",
+        "load_error": "No se pudo cargar la lista de contactos."
+    }
+}

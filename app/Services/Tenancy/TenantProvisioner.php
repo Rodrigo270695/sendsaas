@@ -75,19 +75,17 @@ class TenantProvisioner
 
     private function ensureSchema(string $schema): void
     {
-        if (DB::getDriverName() !== 'pgsql') {
-            return;
-        }
-
-        if (! preg_match('/^[a-z0-9_]+$/', $schema)) {
-            return;
-        }
-
-        DB::statement('CREATE SCHEMA IF NOT EXISTS "'.$schema.'"');
-
         $tenantMigrations = glob(database_path('migrations/tenant/*.php')) ?: [];
         if ($tenantMigrations === []) {
             return;
+        }
+
+        if (DB::getDriverName() === 'pgsql') {
+            if (! preg_match('/^[a-z0-9_]+$/', $schema)) {
+                return;
+            }
+
+            DB::statement('CREATE SCHEMA IF NOT EXISTS "'.$schema.'"');
         }
 
         app(TenantSchemaMigrator::class)->migrate($schema, new NullOutput);

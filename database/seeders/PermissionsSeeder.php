@@ -44,6 +44,8 @@ class PermissionsSeeder extends Seeder
         'contacts.view',
         'contacts.create',
         'contacts.update',
+        'contacts.delete',
+        'contacts.export',
         'whatsapp.view',
         'whatsapp.connect',
         'whatsapp.update',

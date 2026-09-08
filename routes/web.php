@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GeoController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
@@ -78,6 +79,16 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         Route::middleware('permission:comunicaciones.historial.view')
             ->get('historial', fn () => Inertia::render('comunicaciones/historial/index'))
             ->name('historial.index');
+    });
+
+    Route::prefix('contactos')->name('contactos.')->group(function () {
+        Route::middleware('permission:contacts.view')->get('/', [ContactController::class, 'index'])->name('index');
+        Route::middleware('permission:contacts.export')->get('export', [ContactController::class, 'export'])->name('export');
+        Route::middleware('permission:contacts.create')->get('plantilla', [ContactController::class, 'template'])->name('template');
+        Route::middleware('permission:contacts.create')->post('import', [ContactController::class, 'import'])->name('import');
+        Route::middleware('permission:contacts.create')->post('/', [ContactController::class, 'store'])->name('store');
+        Route::middleware('permission:contacts.update')->put('{contact}', [ContactController::class, 'update'])->name('update');
+        Route::middleware('permission:contacts.delete')->delete('{contact}', [ContactController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('plataforma')->name('plataforma.')->middleware('tenant.central')->group(function () {

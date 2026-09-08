@@ -1,0 +1,98 @@
+{
+    "title": "Contacts",
+    "description": "Company address book. Upload an Excel with phone and name; extra columns become campaign variables.",
+    "plan_limit": {
+        "max_contacts": "You reached your plan's contact limit. Upgrade to add more."
+    },
+    "actions": {
+        "new": "New contact",
+        "new_short": "New",
+        "create_first": "Create first contact",
+        "bulk_import": "Import Excel",
+        "bulk_import_short": "Excel"
+    },
+    "import": {
+        "title": "Import contacts",
+        "description": "One row = one contact. Existing phones are updated. Extra columns (order, date…) become {{order}} variables.",
+        "template_title": "Template",
+        "template_hint": "Download the Excel, fill telefono* and nombre*, then add any extra columns you need.",
+        "sheet_data": "Contactos — telefono* and nombre* required",
+        "sheet_catalogos": "Guia — phone, location and variable rules",
+        "sheet_guide": "The sample row is skipped automatically",
+        "required_hint": "Phone: 9 digits or with country code. Tags comma-separated.",
+        "download_template": "Download .xlsx template",
+        "upload_title": "Upload Excel",
+        "upload_hint": "Pick the completed file. You will see the result row by row.",
+        "choose_file": "Choose .xlsx file",
+        "upload": "Upload and import",
+        "uploading": "Importing…",
+        "results_empty": "Imported rows and errors will appear here.",
+        "summary_ok": "{{count}} imported",
+        "summary_error": "{{count}} with errors",
+        "summary_skipped": "{{count}} skipped",
+        "row_label": "Row {{row}}: {{nombre}}",
+        "error_generic": "Could not import the file. Try again."
+    },
+    "stats": {
+        "total": "Total",
+        "variables": "With variables",
+        "email": "With email",
+        "filters": "Filters",
+        "matches": "Matches"
+    },
+    "search_placeholder": "Search by name, phone or email...",
+    "columns": {
+        "nombre": "Contact",
+        "telefono": "Phone",
+        "sede": "Location",
+        "etiquetas": "Tags",
+        "variables": "Variables",
+        "acciones": "Actions"
+    },
+    "row": {
+        "no_sede": "No location",
+        "no_tags": "No tags",
+        "no_vars": "No variables",
+        "copy_phone": "Copy phone",
+        "actions_for": "Actions for {{name}}"
+    },
+    "empty": {
+        "no_records_title": "No contacts yet",
+        "no_records_description": "Create one or import an Excel with phone and name. Extra columns will be used in campaigns.",
+        "no_results_title": "No results",
+        "no_results_description": "No contact matches the search."
+    },
+    "aria": {
+        "results_count_one": "{{count}} contact found",
+        "results_count_other": "{{count}} contacts found"
+    },
+    "form": {
+        "title_create": "New contact",
+        "title_edit": "Edit contact",
+        "description_create": "Register a WhatsApp number. For many at once use Import Excel.",
+        "description_edit": "Update this contact.",
+        "submit_create": "Create contact",
+        "submit_edit": "Save changes",
+        "section_basic": "Details",
+        "section_basic_hint": "The phone is normalized to international format (51…).",
+        "fields": {
+            "name": "Name",
+            "name_placeholder": "E.g. Ana Perez",
+            "phone": "WhatsApp phone",
+            "email": "Email (optional)",
+            "notes": "Notes",
+            "sede": "Location (optional)",
+            "sede_none": "No location"
+        }
+    },
+    "delete": {
+        "title": "Delete contact",
+        "description": "You are about to delete <strong>{{name}}</strong>. One plan slot will become free. This cannot be undone from here.",
+        "confirm": "Yes, delete",
+        "loading": "Deleting..."
+    },
+    "toast": {
+        "phone_copied": "Phone copied",
+        "load_error": "Could not load the contact list."
+    }
+}

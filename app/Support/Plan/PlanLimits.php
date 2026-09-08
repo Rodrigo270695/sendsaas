@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support\Plan;
 
+use App\Models\Contact;
 use App\Models\Plan;
 use App\Models\Sede;
 use App\Models\Tenant;
@@ -157,6 +158,7 @@ final class PlanLimits
                 'tenant_whatsapp_sessions',
                 fn () => TenantWhatsappSession::query()->where('tenant_id', $tenant->id)->count(),
             ),
+            'max_contacts' => Schema::hasTable('contacts') ? Contact::query()->count() : 0,
             default => 0,
         };
     }
