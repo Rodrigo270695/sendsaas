@@ -1,0 +1,175 @@
+{
+    "title": "Plans",
+    "description": "User, OpenWA session, and message quotas. There is no billing here: this catalog is what the platform uses to cap usage.",
+    "search_placeholder": "Search by code, name, or badge…",
+    "filter_label": "Filter by status",
+    "filters": {
+        "all": "All",
+        "active": "Active",
+        "inactive": "Inactive",
+        "public": "Public",
+        "private": "Private"
+    },
+    "stats": {
+        "total": "Total",
+        "active": "Active",
+        "inactive": "Inactive",
+        "public": "Public",
+        "filters": "Filters",
+        "matches": "Matches"
+    },
+    "actions": {
+        "new": "New plan",
+        "new_short": "New",
+        "create_first": "Create the first plan",
+        "delete_selected": "Delete selected"
+    },
+    "columns": {
+        "plan": "Plan",
+        "limits": "Quotas",
+        "features": "Features",
+        "trial": "Trial",
+        "status": "Status",
+        "acciones": "Actions"
+    },
+    "row": {
+        "actions_for": "Actions for {{name}}",
+        "copy_code": "Copy code",
+        "manage_features": "Manage features",
+        "users": "{{count}} users",
+        "users_unlimited": "Unlimited users",
+        "sessions": "{{count}} OpenWA",
+        "sessions_unlimited": "Unlimited OpenWA",
+        "messages_day": "{{count}} msg/day",
+        "messages_unlimited": "Unlimited messages",
+        "days": "days",
+        "no_trial": "No trial",
+        "active": "Active",
+        "inactive": "Inactive",
+        "public": "Public",
+        "private": "Private"
+    },
+    "form": {
+        "title_create": "New plan",
+        "title_edit": "Edit plan",
+        "description_create": "Define a quota plan. The code cannot change later: Orvae and the worker use it as plan_slug.",
+        "description_edit": "Update name, commercial reference, or visibility. Quotas are edited in Manage features.",
+        "section_identity": "Identity",
+        "section_identity_hint": "Internal code, name, and visual elements (badge, color).",
+        "section_commercial": "Commercial reference",
+        "section_commercial_hint": "Reference amounts for Orvae. SendSaaS does not invoice from here.",
+        "section_visibility": "Visibility and status",
+        "section_visibility_hint": "Controls whether the plan appears in the catalog and can be provisioned.",
+        "fields": {
+            "codigo": "Code",
+            "codigo_hint": "Lowercase, digits, and underscore only. Must start with a letter. Cannot change later.",
+            "nombre": "Name",
+            "nombre_placeholder": "Starter",
+            "descripcion": "Description",
+            "descripcion_hint": "Short text of what the plan includes.",
+            "descripcion_placeholder": "One OpenWA number, 2 users, and 500 messages per day…",
+            "badge": "Badge",
+            "badge_hint": "Small label such as “Most popular”.",
+            "badge_placeholder": "Most popular",
+            "color_hex": "Color",
+            "color_hex_hint": "Plan color in the catalog.",
+            "color_picker_aria": "Color picker",
+            "precio_mensual": "Monthly reference (S/.)",
+            "precio_anual": "Yearly reference (S/.)",
+            "precio_anual_hint": "Optional. SendSaaS does not charge from here.",
+            "precio_anual_placeholder": "0.00",
+            "trial_days": "Trial days",
+            "trial_days_hint": "Free days when provisioning (0 = no trial).",
+            "orden": "Order",
+            "orden_hint": "Catalog position (lower = first).",
+            "es_publico": "Visible in catalog",
+            "es_publico_hint": "If off, the plan is hidden from public listings.",
+            "es_publico_yes": "Visible",
+            "es_publico_no": "Hidden",
+            "activo": "Active plan",
+            "activo_hint": "If off, Orvae cannot provision it.",
+            "activo_yes": "Active",
+            "activo_no": "Inactive"
+        },
+        "submit_create": "Create plan",
+        "submit_edit": "Save changes"
+    },
+    "features_modal": {
+        "title": "Manage features",
+        "description": "OpenWA, message quotas, and modules for this plan",
+        "active_count_one": "1 active feature",
+        "active_count_other": "{{count}} active features",
+        "active_count": "{{count}} active features",
+        "search": "Search feature…",
+        "empty_search": "No feature matches the search.",
+        "saving": "Saving…",
+        "save": "Save features",
+        "enabled": "On",
+        "disabled": "Off",
+        "unlimited": "Mark as unlimited",
+        "clear": "Remove feature",
+        "apply_default": "Apply default value",
+        "types": {
+            "int": "Numeric",
+            "bool": "Yes/No",
+            "str": "Text"
+        },
+        "groups": {
+            "limites": "Quotas",
+            "modulos": "Modules",
+            "envio": "Send window and support"
+        },
+        "descriptions": {
+            "max_usuarios": "Company users who can use the inbox.",
+            "max_whatsapp_sessions": "Connected OpenWA numbers / sessions.",
+            "max_outbound_per_day": "Outbound messages per day (−1 = unlimited).",
+            "max_outbound_per_month": "Outbound messages per month (−1 = unlimited).",
+            "max_contacts": "Contacts in the address book.",
+            "max_campaigns": "Active campaigns.",
+            "max_automations": "Active automations.",
+            "max_sedes": "Company locations.",
+            "multi_sede": "Allows more than one location.",
+            "modulo_recordatorios": "Automatic reminders.",
+            "modulo_automatizaciones": "Automation engine.",
+            "modulo_campanas": "Broadcast campaigns.",
+            "modulo_dashboard": "Metrics and dashboard.",
+            "api_acceso": "API access.",
+            "reportes_avanzados": "Advanced reports.",
+            "send_window_start": "Send window start (HH:MM).",
+            "send_window_end": "Send window end (HH:MM).",
+            "soporte_tipo": "docs / email / whatsapp / whatsapp_prioritario."
+        }
+    },
+    "delete": {
+        "title": "Delete plan",
+        "description": "You are about to delete the plan <strong>{{name}}</strong>. This cannot be undone.",
+        "confirm": "Yes, delete",
+        "loading": "Deleting…"
+    },
+    "bulk": {
+        "selected_singular": "plan selected",
+        "selected_plural": "plans selected",
+        "delete_title_one": "Delete 1 plan",
+        "delete_title_other": "Delete {{count}} plans",
+        "delete_title": "Delete {{count}} plan(s)",
+        "delete_description_one": "1 plan will be removed from the catalog.",
+        "delete_description_other": "{{count}} plans will be removed from the catalog.",
+        "delete_description": "{{count}} plans will be removed from the catalog.",
+        "delete_confirm_singular": "Delete 1 plan",
+        "delete_confirm_plural": "Delete {{count}} plans"
+    },
+    "empty": {
+        "no_records_title": "No plans yet",
+        "no_records_description": "Create the first plan to define OpenWA and message quotas.",
+        "no_results_title": "No results",
+        "no_results_description": "Adjust filters or search to see more plans."
+    },
+    "aria": {
+        "results_count_one": "1 plan matches the current filters.",
+        "results_count_other": "{{count}} plans match the current filters."
+    },
+    "toast": {
+        "load_error": "We could not load plans. Try again in a few seconds.",
+        "code_copied": "Code copied to clipboard"
+    }
+}

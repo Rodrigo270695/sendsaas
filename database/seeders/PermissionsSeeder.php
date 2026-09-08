@@ -50,7 +50,11 @@ class PermissionsSeeder extends Seeder
         'plataforma-tenants.update',
         'plataforma-tenants.suspend',
         'plataforma-planes.view',
+        'plataforma-planes.create',
         'plataforma-planes.update',
+        'plataforma-planes.delete',
+        'plataforma-planes.export',
+        'plataforma-planes.bulk-delete',
         'plataforma-openwa.view',
         'plataforma-openwa.manage',
     ];

@@ -6,6 +6,7 @@ import authEn from '@/lang/en/auth.json';
 import commonEn from '@/lang/en/common.json';
 import dashboardEn from '@/lang/en/dashboard.json';
 import navEn from '@/lang/en/nav.json';
+import planesEn from '@/lang/en/planes.json';
 import rolesEn from '@/lang/en/roles.json';
 import settingsEn from '@/lang/en/settings.json';
 import usuariosEn from '@/lang/en/usuarios.json';
@@ -13,6 +14,7 @@ import authEs from '@/lang/es/auth.json';
 import commonEs from '@/lang/es/common.json';
 import dashboardEs from '@/lang/es/dashboard.json';
 import navEs from '@/lang/es/nav.json';
+import planesEs from '@/lang/es/planes.json';
 import rolesEs from '@/lang/es/roles.json';
 import settingsEs from '@/lang/es/settings.json';
 import usuariosEs from '@/lang/es/usuarios.json';
@@ -33,6 +35,7 @@ const namespaces = [
     'dashboard',
     'roles',
     'usuarios',
+    'planes',
 ] as const;
 
 const isBrowser = typeof document !== 'undefined';
@@ -51,6 +54,7 @@ i18n.use(initReactI18next).init({
             dashboard: dashboardEs,
             roles: rolesEs,
             usuarios: usuariosEs,
+            planes: planesEs,
         },
         en: {
             common: commonEn,
@@ -60,6 +64,7 @@ i18n.use(initReactI18next).init({
             dashboard: dashboardEn,
             roles: rolesEn,
             usuarios: usuariosEn,
+            planes: planesEn,
         },
     },
     lng: isBrowser ? undefined : DEFAULT_LOCALE,

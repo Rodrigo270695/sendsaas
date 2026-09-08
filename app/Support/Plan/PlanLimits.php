@@ -1,0 +1,104 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Support\Plan;
+
+use App\Models\Plan;
+
+/**
+ * Cupos y módulos de un plan. -1 en valor_int = ilimitado.
+ *
+ * Sin facturación ni overrides: el worker de envío y OpenWA leen esto.
+ */
+final class PlanLimits
+{
+    /** @var list<string> */
+    public const INT_LIMIT_FEATURES = [
+        'max_usuarios',
+        'max_whatsapp_sessions',
+        'max_outbound_per_day',
+        'max_outbound_per_month',
+        'max_contacts',
+        'max_campaigns',
+        'max_automations',
+        'max_sedes',
+    ];
+
+    /**
+     * @return int|null null = ilimitado o sin plan
+     */
+    public static function intLimit(?Plan $plan, string $feature): ?int
+    {
+        if ($plan === null) {
+            return null;
+        }
+
+        $value = $plan->resolveFeature($feature);
+
+        if (is_numeric($value)) {
+            $value = (int) $value;
+        }
+
+        if (! is_int($value) || $value < 0) {
+            return null;
+        }
+
+        return $value;
+    }
+
+    public static function moduleEnabled(?Plan $plan, string $feature): bool
+    {
+        if ($plan === null) {
+            return false;
+        }
+
+        $meta = Plan::FEATURE_CATALOG[$feature] ?? null;
+        if (($meta['type'] ?? null) !== 'bool') {
+            return false;
+        }
+
+        return (bool) $plan->resolveFeature($feature);
+    }
+
+    public static function stringValue(?Plan $plan, string $feature): ?string
+    {
+        if ($plan === null) {
+            return null;
+        }
+
+        $value = $plan->resolveFeature($feature);
+
+        return is_string($value) ? $value : null;
+    }
+
+    public static function wouldExceed(
+        ?Plan $plan,
+        string $feature,
+        int $used,
+        int $adding = 1,
+    ): bool {
+        $limit = self::intLimit($plan, $feature);
+
+        if ($limit === null) {
+            return false;
+        }
+
+        return ($used + $adding) > $limit;
+    }
+
+    public static function isReached(?Plan $plan, string $feature, int $used): bool
+    {
+        return self::wouldExceed($plan, $feature, $used, 1);
+    }
+
+    public static function message(?Plan $plan, string $feature, ?int $limit = null): string
+    {
+        $limit ??= self::intLimit($plan, $feature);
+
+        return __('plan.limits.'.$feature, [
+            'limit' => $limit ?? 0,
+            'plan' => $plan?->nombre ?? __('plan.limits.unknown_plan'),
+        ]);
+    }
+}

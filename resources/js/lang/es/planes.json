@@ -1,0 +1,175 @@
+{
+    "title": "Planes",
+    "description": "Cupos de usuarios, sesiones OpenWA y mensajes. No hay cobros aquí: esto es el catálogo que usa la plataforma para limitar el uso.",
+    "search_placeholder": "Buscar por código, nombre o badge…",
+    "filter_label": "Filtrar por estado",
+    "filters": {
+        "all": "Todos",
+        "active": "Activos",
+        "inactive": "Inactivos",
+        "public": "Públicos",
+        "private": "Privados"
+    },
+    "stats": {
+        "total": "Total",
+        "active": "Activos",
+        "inactive": "Inactivos",
+        "public": "Públicos",
+        "filters": "Filtros",
+        "matches": "Coincidencias"
+    },
+    "actions": {
+        "new": "Nuevo plan",
+        "new_short": "Nuevo",
+        "create_first": "Crear el primer plan",
+        "delete_selected": "Eliminar seleccionados"
+    },
+    "columns": {
+        "plan": "Plan",
+        "limits": "Cupos",
+        "features": "Features",
+        "trial": "Prueba",
+        "status": "Estado",
+        "acciones": "Acciones"
+    },
+    "row": {
+        "actions_for": "Acciones para {{name}}",
+        "copy_code": "Copiar código",
+        "manage_features": "Gestionar features",
+        "users": "{{count}} usuarios",
+        "users_unlimited": "Usuarios ilimitados",
+        "sessions": "{{count}} OpenWA",
+        "sessions_unlimited": "OpenWA ilimitado",
+        "messages_day": "{{count}} msg/día",
+        "messages_unlimited": "Mensajes ilimitados",
+        "days": "días",
+        "no_trial": "Sin prueba",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "public": "Público",
+        "private": "Privado"
+    },
+    "form": {
+        "title_create": "Nuevo plan",
+        "title_edit": "Editar plan",
+        "description_create": "Define un plan de cupos. El código no se podrá cambiar: Orvae y el worker lo usan como plan_slug.",
+        "description_edit": "Actualiza nombre, referencia comercial o visibilidad. Los cupos se editan en Gestionar features.",
+        "section_identity": "Identidad",
+        "section_identity_hint": "Código interno, nombre y elementos visuales (badge, color).",
+        "section_commercial": "Referencia comercial",
+        "section_commercial_hint": "Montos de referencia para Orvae. SendSaaS no factura desde aquí.",
+        "section_visibility": "Visibilidad y estado",
+        "section_visibility_hint": "Controla si el plan aparece en el catálogo y si se puede provisionar.",
+        "fields": {
+            "codigo": "Código",
+            "codigo_hint": "Solo minúsculas, dígitos y guion bajo. Debe empezar con letra. No se cambia después.",
+            "nombre": "Nombre",
+            "nombre_placeholder": "Starter",
+            "descripcion": "Descripción",
+            "descripcion_hint": "Texto corto de qué incluye el plan.",
+            "descripcion_placeholder": "Un número OpenWA, 2 usuarios y 500 mensajes al día…",
+            "badge": "Badge",
+            "badge_hint": "Mini etiqueta tipo «Más popular».",
+            "badge_placeholder": "Más popular",
+            "color_hex": "Color",
+            "color_hex_hint": "Color del plan en el catálogo.",
+            "color_picker_aria": "Selector de color",
+            "precio_mensual": "Referencia mensual (S/.)",
+            "precio_anual": "Referencia anual (S/.)",
+            "precio_anual_hint": "Opcional. No se cobra desde SendSaaS.",
+            "precio_anual_placeholder": "0.00",
+            "trial_days": "Días de prueba",
+            "trial_days_hint": "Días gratis al provisionar (0 = sin prueba).",
+            "orden": "Orden",
+            "orden_hint": "Posición en el catálogo (menor = primero).",
+            "es_publico": "Visible en catálogo",
+            "es_publico_hint": "Si está apagado, el plan no aparece en listados públicos.",
+            "es_publico_yes": "Visible",
+            "es_publico_no": "Oculto",
+            "activo": "Plan activo",
+            "activo_hint": "Si está apagado, Orvae no puede provisionarlo.",
+            "activo_yes": "Activo",
+            "activo_no": "Inactivo"
+        },
+        "submit_create": "Crear plan",
+        "submit_edit": "Guardar cambios"
+    },
+    "features_modal": {
+        "title": "Gestionar features",
+        "description": "Cupos de OpenWA, mensajes y módulos de este plan",
+        "active_count_one": "1 feature activa",
+        "active_count_other": "{{count}} features activas",
+        "active_count": "{{count}} features activas",
+        "search": "Buscar feature…",
+        "empty_search": "Ninguna feature coincide con la búsqueda.",
+        "saving": "Guardando…",
+        "save": "Guardar features",
+        "enabled": "Activo",
+        "disabled": "Inactivo",
+        "unlimited": "Marcar como ilimitado",
+        "clear": "Quitar feature",
+        "apply_default": "Aplicar valor por defecto",
+        "types": {
+            "int": "Numérico",
+            "bool": "Sí/No",
+            "str": "Texto"
+        },
+        "groups": {
+            "limites": "Cupos",
+            "modulos": "Módulos",
+            "envio": "Ventana de envío y soporte"
+        },
+        "descriptions": {
+            "max_usuarios": "Usuarios de la empresa que pueden usar la bandeja.",
+            "max_whatsapp_sessions": "Números / sesiones OpenWA conectadas.",
+            "max_outbound_per_day": "Mensajes salientes por día (-1 = ilimitado).",
+            "max_outbound_per_month": "Mensajes salientes por mes (-1 = ilimitado).",
+            "max_contacts": "Contactos en la agenda.",
+            "max_campaigns": "Campañas activas.",
+            "max_automations": "Automatizaciones activas.",
+            "max_sedes": "Sedes de la empresa.",
+            "multi_sede": "Permite más de una sede.",
+            "modulo_recordatorios": "Recordatorios automáticos.",
+            "modulo_automatizaciones": "Motor de automatizaciones.",
+            "modulo_campanas": "Campañas masivas.",
+            "modulo_dashboard": "Métricas y dashboard.",
+            "api_acceso": "Acceso a la API.",
+            "reportes_avanzados": "Reportes avanzados.",
+            "send_window_start": "Hora de inicio de envío (HH:MM).",
+            "send_window_end": "Hora de corte de envío (HH:MM).",
+            "soporte_tipo": "docs / email / whatsapp / whatsapp_prioritario."
+        }
+    },
+    "delete": {
+        "title": "Eliminar plan",
+        "description": "Vas a eliminar el plan <strong>{{name}}</strong>. Esta acción es definitiva.",
+        "confirm": "Sí, eliminar",
+        "loading": "Eliminando…"
+    },
+    "bulk": {
+        "selected_singular": "plan seleccionado",
+        "selected_plural": "planes seleccionados",
+        "delete_title_one": "Eliminar 1 plan",
+        "delete_title_other": "Eliminar {{count}} planes",
+        "delete_title": "Eliminar {{count}} plan(es)",
+        "delete_description_one": "Se eliminará 1 plan del catálogo.",
+        "delete_description_other": "Se eliminarán {{count}} planes del catálogo.",
+        "delete_description": "Se eliminarán {{count}} planes del catálogo.",
+        "delete_confirm_singular": "Eliminar 1 plan",
+        "delete_confirm_plural": "Eliminar {{count}} planes"
+    },
+    "empty": {
+        "no_records_title": "Aún no hay planes",
+        "no_records_description": "Crea el primer plan para definir cupos de OpenWA y mensajes.",
+        "no_results_title": "Sin resultados",
+        "no_results_description": "Ajusta los filtros o la búsqueda para ver más planes."
+    },
+    "aria": {
+        "results_count_one": "1 plan coincide con los filtros actuales.",
+        "results_count_other": "{{count}} planes coinciden con los filtros actuales."
+    },
+    "toast": {
+        "load_error": "No pudimos cargar los planes. Reintenta en unos segundos.",
+        "code_copied": "Código copiado al portapapeles"
+    }
+}
