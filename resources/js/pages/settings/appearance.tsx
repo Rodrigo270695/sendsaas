@@ -1,4 +1,5 @@
-import { Head } from '@inertiajs/react';
+import { Head, resetLayoutProps, setLayoutProps } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppearanceTabs from '@/components/appearance-tabs';
 import Heading from '@/components/heading';
@@ -6,6 +7,21 @@ import { edit as editAppearance } from '@/routes/appearance';
 
 export default function Appearance() {
     const { t } = useTranslation('settings');
+
+    useEffect(() => {
+        setLayoutProps({
+            breadcrumbs: [
+                {
+                    title: t('appearance.head'),
+                    href: editAppearance(),
+                },
+            ],
+        });
+
+        return () => {
+            resetLayoutProps();
+        };
+    }, [t]);
 
     return (
         <>
@@ -24,12 +40,3 @@ export default function Appearance() {
         </>
     );
 }
-
-Appearance.layout = {
-    breadcrumbs: [
-        {
-            title: 'settings:appearance.head',
-            href: editAppearance(),
-        },
-    ],
-};

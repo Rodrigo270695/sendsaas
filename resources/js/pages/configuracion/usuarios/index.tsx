@@ -40,7 +40,6 @@ import usuarios from '@/routes/configuracion/usuarios';
 import type { Auth, Paginated } from '@/types';
 import { UserBulkDeleteDialog } from './components/user-bulk-delete-dialog';
 import { UserDeleteDialog } from './components/user-delete-dialog';
-import { UserDocumentsModal } from './components/user-documents-modal';
 import { UserFormModal } from './components/user-form-modal';
 import { UserRowActions } from './components/user-row-actions';
 import type {
@@ -66,7 +65,6 @@ type ModalState =
     | { type: 'idle' }
     | { type: 'create' }
     | { type: 'edit'; user: User }
-    | { type: 'documents'; user: User }
     | { type: 'delete'; user: User }
     | { type: 'bulk-delete' };
 
@@ -155,12 +153,6 @@ export default function Index({
             return;
         }
         setModal({ type: 'edit', user });
-    }, []);
-    const openDocuments = useCallback((user: User) => {
-        if (user.demo_locked) {
-            return;
-        }
-        setModal({ type: 'documents', user });
     }, []);
     const openDelete = useCallback((user: User) => {
         if (user.demo_locked) {
@@ -378,7 +370,6 @@ export default function Index({
                             user={user}
                             currentUserId={currentUserId}
                             onEdit={openEdit}
-                            onDocuments={openDocuments}
                             onDelete={openDelete}
                             canUpdate={canUpdate}
                             canDelete={canDelete}
@@ -397,7 +388,6 @@ export default function Index({
         canUpdate,
         canDelete,
         openEdit,
-        openDocuments,
         openDelete,
         currentUserId,
     ]);
@@ -568,14 +558,6 @@ export default function Index({
                 }}
                 user={modal.type === 'edit' ? modal.user : null}
                 rolesCatalog={roles_catalog}
-            />
-
-            <UserDocumentsModal
-                open={modal.type === 'documents'}
-                onOpenChange={(open) => {
-                    if (!open) closeModal();
-                }}
-                user={modal.type === 'documents' ? modal.user : null}
             />
 
             <UserDeleteDialog

@@ -26,13 +26,5 @@
         "light": "Claro",
         "dark": "Oscuro",
         "system": "Sistema"
-    },
-    "delete": {
-        "title": "Eliminar cuenta",
-        "description": "Elimina tu cuenta y todos sus recursos",
-        "warning": "Advertencia",
-        "caution": "Procede con cuidado, esta acción no se puede deshacer.",
-        "confirm_title": "¿Seguro que quieres eliminar tu cuenta?",
-        "confirm_body": "Cuando elimines tu cuenta, todos sus recursos y datos se borrarán de forma permanente. Ingresa tu contraseña para confirmar."
     }
 }

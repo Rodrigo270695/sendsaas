@@ -1,8 +1,8 @@
-import { Form, Head, usePage } from '@inertiajs/react';
+import { Form, Head, resetLayoutProps, setLayoutProps, usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import DeleteUser from '@/components/delete-user';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,21 @@ export default function Profile({
 }) {
     const { auth } = usePage<PageProps>().props;
     const { t } = useTranslation(['settings', 'auth', 'common']);
+
+    useEffect(() => {
+        setLayoutProps({
+            breadcrumbs: [
+                {
+                    title: t('profile.head'),
+                    href: edit(),
+                },
+            ],
+        });
+
+        return () => {
+            resetLayoutProps();
+        };
+    }, [t]);
 
     return (
         <>
@@ -122,17 +137,6 @@ export default function Profile({
                     )}
                 </Form>
             </div>
-
-            <DeleteUser />
         </>
     );
 }
-
-Profile.layout = {
-    breadcrumbs: [
-        {
-            title: 'settings:profile.head',
-            href: edit(),
-        },
-    ],
-};

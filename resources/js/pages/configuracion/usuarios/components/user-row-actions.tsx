@@ -1,4 +1,4 @@
-import { Copy, FileStack, Lock, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Copy, Lock, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +16,6 @@ export type UserRowActionsProps = {
     /** ID del usuario autenticado, para mostrar lock en su propia fila. */
     currentUserId: string | null;
     onEdit: (user: User) => void;
-    onDocuments: (user: User) => void;
     onDelete: (user: User) => void;
     canUpdate?: boolean;
     canDelete?: boolean;
@@ -27,13 +26,12 @@ export type UserRowActionsProps = {
  *
  * Opciones:
  *  - "Copiar email" → siempre.
- *  - "Editar" / "Documentos / CV" / "Eliminar" → según permiso.
+ *  - "Editar" / "Eliminar" → según permiso.
  */
 export function UserRowActions({
     user,
     currentUserId,
     onEdit,
-    onDocuments,
     onDelete,
     canUpdate = true,
     canDelete = true,
@@ -92,16 +90,6 @@ export function UserRowActions({
                     >
                         <Pencil className="size-4" strokeWidth={2.25} />
                         {t('common:actions.edit')}
-                    </DropdownMenuItem>
-                )}
-
-                {showEdit && (
-                    <DropdownMenuItem
-                        onSelect={() => onDocuments(user)}
-                        className="cursor-pointer gap-2"
-                    >
-                        <FileStack className="size-4" strokeWidth={2.25} />
-                        {t('usuarios:row.documents')}
                     </DropdownMenuItem>
                 )}
 

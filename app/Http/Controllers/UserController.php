@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Exports\UsersXlsxExport;
 use App\Http\Controllers\Concerns\RespondsToApiPeruConsulta;
-use App\Http\Requests\UserDocumentsRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\User;
@@ -17,8 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -164,32 +161,6 @@ class UserController extends Controller
         });
 
         return back()->with('success', 'Usuario actualizado correctamente.');
-    }
-
-    public function updateDocuments(UserDocumentsRequest $request, User $user): RedirectResponse
-    {
-        $this->abortIfDemoProtectedUser($user);
-
-        AdminScope::assertUserAccessible($user);
-
-        $data = $request->validated();
-        $payload = [
-            'colegiatura' => $data['colegiatura'] ?? $user->colegiatura,
-        ];
-
-        foreach (['cv' => 'cv_path', 'dni_file' => 'dni_file_path', 'firma' => 'firma_path'] as $input => $column) {
-            $file = $request->file($input);
-            if ($file instanceof UploadedFile) {
-                if (filled($user->{$column})) {
-                    Storage::disk('public')->delete((string) $user->{$column});
-                }
-                $payload[$column] = $file->store('users/'.$user->id, 'public');
-            }
-        }
-
-        $user->update($payload);
-
-        return back()->with('success', 'Documentos actualizados correctamente.');
     }
 
     public function destroy(Request $request, User $user): RedirectResponse

@@ -102,8 +102,7 @@ const isFormValid = (data: UserFormData, isEdit: boolean): boolean => {
 
 /**
  * Modal crear/editar usuario (datos de cuenta).
- * Documento arriba + RENIEC auto como propietarios.
- * CV / firma / colegiatura → modal aparte (`UserDocumentsModal`).
+ * Documento de identidad arriba + consulta RENIEC.
  */
 export function UserFormModal({
     open,

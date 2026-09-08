@@ -44,7 +44,6 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         Route::middleware('permission:usuarios.export')->get('usuarios/export', [UserController::class, 'export'])->name('usuarios.export');
         Route::middleware('permission:usuarios.create')->post('usuarios', [UserController::class, 'store'])->name('usuarios.store');
         Route::middleware('permission:usuarios.bulk-delete')->delete('usuarios/bulk', [UserController::class, 'bulkDestroy'])->name('usuarios.bulk-destroy');
-        Route::middleware('permission:usuarios.update')->put('usuarios/{user}/documentos', [UserController::class, 'updateDocuments'])->name('usuarios.update-documents');
         Route::middleware('permission:usuarios.update')->put('usuarios/{user}', [UserController::class, 'update'])->name('usuarios.update');
         Route::middleware('permission:usuarios.delete')->delete('usuarios/{user}', [UserController::class, 'destroy'])->name('usuarios.destroy');
     });

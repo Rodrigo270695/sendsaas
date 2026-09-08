@@ -38,10 +38,6 @@ use Spatie\Permission\Traits\HasRoles;
     'phone',
     'documento_tipo',
     'documento_numero',
-    'colegiatura',
-    'cv_path',
-    'dni_file_path',
-    'firma_path',
     'password',
     'is_active',
     'must_change_password',
@@ -56,9 +52,6 @@ use Spatie\Permission\Traits\HasRoles;
     'two_factor_recovery_codes',
     'remember_token',
     'bootstrap_login_token',
-    'cv_path',
-    'dni_file_path',
-    'firma_path',
 ])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -73,9 +66,6 @@ class User extends Authenticatable implements PasskeyUser
     protected $appends = [
         'first_name',
         'display_name',
-        'cv_url',
-        'dni_file_url',
-        'firma_url',
         'demo_locked',
     ];
 
@@ -109,33 +99,9 @@ class User extends Authenticatable implements PasskeyUser
         return trim((string) ($this->attributes['name'] ?? ''));
     }
 
-    public function getCvUrlAttribute(): ?string
-    {
-        return $this->publicDiskUrl($this->cv_path);
-    }
-
-    public function getDniFileUrlAttribute(): ?string
-    {
-        return $this->publicDiskUrl($this->dni_file_path);
-    }
-
-    public function getFirmaUrlAttribute(): ?string
-    {
-        return $this->publicDiskUrl($this->firma_path);
-    }
-
     public function getDemoLockedAttribute(): bool
     {
         return is_demo_protected_user($this);
-    }
-
-    private function publicDiskUrl(?string $path): ?string
-    {
-        if (! filled($path)) {
-            return null;
-        }
-
-        return asset('storage/'.ltrim((string) $path, '/'));
     }
 
     /**

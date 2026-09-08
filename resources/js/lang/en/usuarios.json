@@ -46,11 +46,10 @@
         "suspended": "Suspended",
         "current_user_badge": "You",
         "copy_email": "Copy email",
-        "documents": "Documents / CV",
         "actions_for": "Actions for {{name}}",
         "self_locked": "You can't edit or delete your own account from here.",
         "superadmin_locked": "Superadmin accounts are managed from the seeder.",
-        "demo_locked": "The demo administrator cannot be edited and cannot upload documents."
+        "demo_locked": "The demo administrator cannot be edited or deleted."
     },
     "empty": {
         "no_records_title": "No users yet",
@@ -73,9 +72,6 @@
         "section_basic_hint": "Contact, role and identity document.",
         "section_identity": "Identity",
         "section_identity_hint": "Document first; a complete DNI triggers RENIEC automatically.",
-        "section_professional": "Professional documents",
-        "section_professional_hint": "License, CV, ID scan and signature. Optional.",
-        "professional_banner": "Fill in the identity document.",
         "section_access": "Access",
         "section_access_hint_create": "Set the initial password for this account.",
         "section_access_hint_edit": "Change the password if needed. Leave empty to keep the current one.",
@@ -84,8 +80,6 @@
         "consultar_error": "Could not look up the DNI. Try again or fill the name manually.",
         "consultar_ok": "Data loaded from RENIEC",
         "consultar_unavailable": "ID lookup is not configured. Enter the name manually.",
-        "file_view_current": "View current file",
-        "file_remove": "Remove",
         "fields": {
             "name": "Full name",
             "name_placeholder": "E.g. Maria Lopez",
@@ -99,29 +93,14 @@
             "password_confirmation": "Confirm password",
             "role": "Role",
             "role_placeholder": "Select a role",
-            "role_professional_hint": "Files (CV, signature) are uploaded from Documents in the row actions menu.",
             "is_active": "Active account",
             "is_active_hint": "If disabled, the user won't be able to sign in.",
             "documento_tipo": "Document type",
             "documento_tipo_placeholder": "Select",
             "documento_numero": "Document number",
             "documento_numero_placeholder": "Number",
-            "documento_numero_dni_hint": "Exactly 8 digits. Use RENIEC to autofill the name.",
-            "colegiatura": "License number",
-            "colegiatura_placeholder": "E.g. CMPV 12345",
-            "colegiatura_hint": "Optional.",
-            "cv": "CV / résumé",
-            "cv_hint": "PDF or image, max 5 MB.",
-            "dni_file": "ID document scan",
-            "dni_file_hint": "PDF or image of the ID, max 5 MB.",
-            "firma": "Digital signature",
-            "firma_hint": "PNG/JPG signature image, max 2 MB."
+            "documento_numero_dni_hint": "Exactly 8 digits. Use RENIEC to autofill the name."
         }
-    },
-    "documents": {
-        "title": "Documents — {{name}}",
-        "description": "License, CV, ID scan and signature. Optional; you can complete them later.",
-        "submit": "Save documents"
     },
     "delete": {
         "title": "Delete user",

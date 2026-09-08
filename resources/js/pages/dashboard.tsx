@@ -1,10 +1,26 @@
-import { Head } from '@inertiajs/react';
+import { Head, resetLayoutProps, setLayoutProps } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import { dashboard } from '@/routes';
 
 export default function Dashboard() {
     const { t } = useTranslation('dashboard');
+
+    useEffect(() => {
+        setLayoutProps({
+            breadcrumbs: [
+                {
+                    title: t('title'),
+                    href: dashboard(),
+                },
+            ],
+        });
+
+        return () => {
+            resetLayoutProps();
+        };
+    }, [t]);
 
     return (
         <>
@@ -28,12 +44,3 @@ export default function Dashboard() {
         </>
     );
 }
-
-Dashboard.layout = {
-    breadcrumbs: [
-        {
-            title: 'dashboard:title',
-            href: dashboard(),
-        },
-    ],
-};

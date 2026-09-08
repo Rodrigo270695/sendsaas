@@ -28,10 +28,6 @@ export type User = {
     phone: string | null;
     documento_tipo?: string | null;
     documento_numero?: string | null;
-    colegiatura?: string | null;
-    cv_url?: string | null;
-    dni_file_url?: string | null;
-    firma_url?: string | null;
     is_active: boolean;
     email_verified_at: string | null;
     last_login_at: string | null;
@@ -41,7 +37,7 @@ export type User = {
     roles: readonly UserRoleRef[];
     /** Usuario que dio de alta a este (puede ser null para el primer superadmin). */
     created_by: UserCreatedByRef | null;
-    /** Admin semilla del tenant demo: no se edita ni se le suben documentos. */
+    /** Admin semilla del tenant demo: no se edita ni se elimina. */
     demo_locked?: boolean;
 };
 

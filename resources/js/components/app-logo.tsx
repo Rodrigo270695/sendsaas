@@ -2,7 +2,11 @@ import { usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
 
 export default function AppLogo() {
-    const { name } = usePage().props;
+    const { name, tenant } = usePage().props;
+    const title =
+        tenant?.nombre_comercial?.trim() ||
+        tenant?.razon_social?.trim() ||
+        name;
 
     return (
         <>
@@ -10,11 +14,8 @@ export default function AppLogo() {
                 <AppLogoIcon className="size-8" />
             </div>
             <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-tight font-semibold tracking-tight">
-                    {name}
-                </span>
-                <span className="truncate text-xs text-muted-foreground">
-                    Bandeja WhatsApp para equipos
+                <span className="truncate leading-tight font-semibold tracking-tight">
+                    {title}
                 </span>
             </div>
         </>

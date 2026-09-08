@@ -115,7 +115,7 @@ test('user without permission cannot lookup dni', function () {
         ->assertForbidden();
 });
 
-test('demo seed user cannot be edited or receive documents', function () {
+test('demo seed user cannot be edited', function () {
     $this->seed(PlansAndFeaturesSeeder::class);
     $this->seed(DemoTenantsSeeder::class);
 
@@ -135,12 +135,6 @@ test('demo seed user cannot be edited or receive documents', function () {
             'email' => $demo->email,
             'is_active' => true,
             'role' => 'admin_empresa',
-        ])
-        ->assertForbidden();
-
-    $this->actingAs($demo)
-        ->put($host.'/configuracion/usuarios/'.$demo->id.'/documentos', [
-            'colegiatura' => '123',
         ])
         ->assertForbidden();
 

@@ -1,5 +1,5 @@
-import { Form, Head } from '@inertiajs/react';
-import { useRef } from 'react';
+import { Form, Head, resetLayoutProps, setLayoutProps } from '@inertiajs/react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
 import Heading from '@/components/heading';
@@ -23,6 +23,21 @@ export default function Security(props: Props) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
     const { t } = useTranslation(['settings', 'auth', 'common']);
+
+    useEffect(() => {
+        setLayoutProps({
+            breadcrumbs: [
+                {
+                    title: t('security.head'),
+                    href: edit(),
+                },
+            ],
+        });
+
+        return () => {
+            resetLayoutProps();
+        };
+    }, [t]);
 
     return (
         <>
@@ -139,12 +154,3 @@ export default function Security(props: Props) {
         </>
     );
 }
-
-Security.layout = {
-    breadcrumbs: [
-        {
-            title: 'settings:security.head',
-            href: edit(),
-        },
-    ],
-};

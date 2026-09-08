@@ -42,9 +42,9 @@ if (! function_exists('is_public_demo_tenant')) {
 
 if (! function_exists('is_demo_protected_user')) {
     /**
-     * Admin semilla de `demo` (`demo@sendsaas.pe`). No se edita ni se le
-     * suben documentos, tampoco desde soporte. Otros usuarios del mismo
-     * tenant y el resto de empresas siguen normales.
+     * Admin semilla de `demo` (`demo@sendsaas.pe`). No se edita ni se
+     * elimina, tampoco desde soporte. Otros usuarios del mismo tenant
+     * y el resto de empresas siguen normales.
      */
     function is_demo_protected_user(?User $user): bool
     {

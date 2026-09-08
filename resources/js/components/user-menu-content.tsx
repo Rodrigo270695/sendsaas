@@ -1,5 +1,5 @@
-import { Link, router } from '@inertiajs/react';
-import { Check, Globe, LogOut, Settings } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { Check, Globe, LogOut, ScreenShare, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
     DropdownMenuGroup,
@@ -18,6 +18,7 @@ import {
     type SupportedLocale,
 } from '@/lib/i18n';
 import { logout } from '@/routes';
+import tenantImpersonation from '@/routes/impersonate';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 
@@ -32,7 +33,11 @@ const LOCALE_LABELS: Record<SupportedLocale, { native: string; flag: string }> =
 
 export function UserMenuContent({ user }: Props) {
     const { t, i18n } = useTranslation(['nav', 'common']);
+    const { tenant_impersonation: imp } = usePage().props;
     const cleanup = useMobileNavigation();
+    const impersonating = Boolean(
+        imp && typeof imp === 'object' && 'tenant_id' in imp,
+    );
 
     const handleLogout = () => {
         cleanup();
@@ -108,6 +113,21 @@ export function UserMenuContent({ user }: Props) {
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
             </DropdownMenuGroup>
+            {impersonating ? (
+                <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                        className="cursor-pointer text-destructive focus:text-destructive"
+                        onSelect={() => {
+                            cleanup();
+                            router.post(tenantImpersonation.leave.url());
+                        }}
+                    >
+                        <ScreenShare className="mr-2" />
+                        {t('common:impersonation.banner_leave')}
+                    </DropdownMenuItem>
+                </>
+            ) : null}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
                 <Link
