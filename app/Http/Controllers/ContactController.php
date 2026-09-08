@@ -131,7 +131,7 @@ class ContactController extends Controller
         abort_unless($request->user()?->can('contacts.create'), 403);
 
         $request->validate([
-            'file' => ['required', 'file', 'mimes:xlsx,xls', 'max:5120'],
+            'file' => ['required', 'file', 'extensions:xlsx,xls', 'max:5120'],
         ]);
 
         /** @var UploadedFile $file */

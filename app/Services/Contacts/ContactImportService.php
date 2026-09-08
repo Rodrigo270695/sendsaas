@@ -12,7 +12,9 @@ use App\Support\WhatsApp\WhatsAppPhone;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Throwable;
+use ZipArchive;
 
 final class ContactImportService
 {
@@ -53,18 +55,17 @@ final class ContactImportService
             return $this->fail('El archivo debe ser .xlsx');
         }
 
-        $path = $file->getRealPath();
-        if ($path === false || ! is_readable($path)) {
+        $source = $file->getRealPath() ?: $file->getPathname();
+        if ($source === '' || ! is_readable($source)) {
             return $this->fail('No se pudo leer el archivo.');
         }
 
-        try {
-            $spreadsheet = IOFactory::load($path);
-        } catch (Throwable $e) {
-            report($e);
-
-            return $this->fail('No se pudo abrir el Excel. Verifica que no esté dañado.');
+        $loaded = $this->loadSpreadsheet($source, $extension);
+        if (is_string($loaded)) {
+            return $this->fail($loaded);
         }
+
+        $spreadsheet = $loaded;
 
         $sheet = $spreadsheet->getSheetByName('Contactos')
             ?? $spreadsheet->getSheetByName('Importacion')
@@ -411,6 +412,54 @@ final class ContactImportService
         $id = request()->user()?->id;
 
         return is_string($id) ? $id : null;
+    }
+
+    /**
+     * @return Spreadsheet|string Spreadsheet o mensaje de error para el usuario.
+     */
+    private function loadSpreadsheet(string $source, string $extension): Spreadsheet|string
+    {
+        $header = (string) @file_get_contents($source, false, null, 0, 256);
+        $trimmed = ltrim($header);
+
+        if ($trimmed === '' || str_starts_with($trimmed, '<') || str_contains(strtolower($trimmed), '<html')) {
+            return 'El archivo no es un Excel (parece una página web). Vuelve a descargar la plantilla .xlsx.';
+        }
+
+        if ($extension !== 'xls' && ! str_starts_with($header, 'PK')) {
+            return 'El archivo no es un Excel válido. Vuelve a descargar la plantilla .xlsx.';
+        }
+
+        if ($extension !== 'xls' && ! class_exists(ZipArchive::class)) {
+            report('ContactImport: falta la extensión PHP zip.');
+
+            return 'No se pudo abrir el Excel. Verifica que no esté dañado.';
+        }
+
+        $dir = storage_path('app/tmp');
+        if (! is_dir($dir) && ! @mkdir($dir, 0755, true) && ! is_dir($dir)) {
+            return 'No se pudo preparar el archivo para importar.';
+        }
+
+        $workPath = $dir.DIRECTORY_SEPARATOR.str_replace('.', '', uniqid('import-', true)).'.'.$extension;
+        if (! @copy($source, $workPath)) {
+            return 'No se pudo leer el archivo.';
+        }
+
+        try {
+            $reader = IOFactory::createReader($extension === 'xls' ? IOFactory::READER_XLS : IOFactory::READER_XLSX);
+            $reader->setReadDataOnly(true);
+
+            return $reader->load($workPath);
+        } catch (Throwable $e) {
+            report($e);
+
+            return 'No se pudo abrir el Excel. Verifica que no esté dañado.';
+        } finally {
+            if (is_file($workPath)) {
+                @unlink($workPath);
+            }
+        }
     }
 
     /**

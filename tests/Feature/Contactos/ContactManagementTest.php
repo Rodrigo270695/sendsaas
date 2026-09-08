@@ -214,6 +214,34 @@ test('committed contact template file is a valid xlsx', function () {
         ->and(substr((string) file_get_contents($path), 0, 2))->toBe('PK');
 });
 
+test('importing the official template skips the example row', function () {
+    $path = resource_path('templates/plantilla-contactos.xlsx');
+    $file = new UploadedFile($path, 'plantilla-contactos.xlsx', null, null, true);
+
+    $this->actingAs(contactosAdmin())
+        ->postJson('http://demo.sendsaas.test/contactos/import', ['file' => $file])
+        ->assertOk()
+        ->assertJson([
+            'ok' => true,
+            'imported' => 0,
+            'skipped' => 1,
+        ]);
+
+    expect(Contact::query()->count())->toBe(0);
+});
+
+test('html disguised as xlsx is rejected', function () {
+    $path = tempnam(sys_get_temp_dir(), 'html').'.xlsx';
+    file_put_contents($path, "<!DOCTYPE html><html><body>error 500</body></html>\n");
+    $file = new UploadedFile($path, 'plantilla-contactos.xlsx', null, null, true);
+
+    $this->actingAs(contactosAdmin())
+        ->postJson('http://demo.sendsaas.test/contactos/import', ['file' => $file])
+        ->assertOk()
+        ->assertJsonPath('ok', false)
+        ->assertJsonPath('error', 'El archivo no es un Excel (parece una página web). Vuelve a descargar la plantilla .xlsx.');
+});
+
 test('tenant admin can download the import template', function () {
     $response = $this->actingAs(contactosAdmin())
         ->get('http://demo.sendsaas.test/contactos/plantilla')
