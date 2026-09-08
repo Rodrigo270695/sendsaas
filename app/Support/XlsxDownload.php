@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support;
 
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -52,6 +53,11 @@ final class XlsxDownload
                 $bytes = is_file($path) ? file_get_contents($path) : false;
             }
         } catch (Throwable $e) {
+            Log::error('[xlsx] generate failed', [
+                'exception' => $e::class,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile().':'.$e->getLine(),
+            ]);
             report($e);
             abort(500, 'No se pudo generar el Excel.');
         } finally {

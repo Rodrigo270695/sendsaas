@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -116,8 +117,17 @@ class ContactController extends Controller
 
         $committed = resource_path('templates/plantilla-contactos.xlsx');
         if (is_readable($committed) && (int) filesize($committed) > 0) {
+            Log::info('[xlsx] plantilla estática', [
+                'path' => $committed,
+                'bytes' => filesize($committed),
+            ]);
+
             return XlsxDownload::existing($committed, 'plantilla-contactos.xlsx');
         }
+
+        Log::warning('[xlsx] plantilla estática ausente; se genera en caliente', [
+            'path' => $committed,
+        ]);
 
         return XlsxDownload::from(
             fn (mixed $output) => (new ContactsImportTemplateXlsx)->streamTo($output),

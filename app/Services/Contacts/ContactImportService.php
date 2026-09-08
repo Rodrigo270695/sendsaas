@@ -11,6 +11,7 @@ use App\Support\Plan\PlanLimits;
 use App\Support\WhatsApp\WhatsAppPhone;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Throwable;
@@ -452,6 +453,12 @@ final class ContactImportService
 
             return $reader->load($workPath);
         } catch (Throwable $e) {
+            Log::error('[xlsx] import open failed', [
+                'exception' => $e::class,
+                'message' => $e->getMessage(),
+                'extension' => $extension,
+                'magic' => bin2hex(substr($header, 0, 8)),
+            ]);
             report($e);
 
             return 'No se pudo abrir el Excel. Verifica que no esté dañado.';
