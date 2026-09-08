@@ -175,7 +175,7 @@ class SedeController extends Controller
         $exporter = new SedesXlsxExport;
 
         return XlsxDownload::from(
-            fn (string $path) => $exporter->streamTo($query, $path),
+            fn (mixed $output) => $exporter->streamTo($query, $output),
             $filename,
         );
     }

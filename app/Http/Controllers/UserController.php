@@ -255,7 +255,7 @@ class UserController extends Controller
         $exporter = new UsersXlsxExport;
 
         return XlsxDownload::from(
-            fn (string $path) => $exporter->streamTo($query, $path),
+            fn (mixed $output) => $exporter->streamTo($query, $output),
             $filename,
         );
     }

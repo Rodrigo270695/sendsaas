@@ -114,8 +114,13 @@ class ContactController extends Controller
     {
         $this->tenantIdOrAbort();
 
+        $committed = resource_path('templates/plantilla-contactos.xlsx');
+        if (is_readable($committed) && (int) filesize($committed) > 0) {
+            return XlsxDownload::existing($committed, 'plantilla-contactos.xlsx');
+        }
+
         return XlsxDownload::from(
-            fn (string $path) => (new ContactsImportTemplateXlsx)->streamTo($path),
+            fn (mixed $output) => (new ContactsImportTemplateXlsx)->streamTo($output),
             'plantilla-contactos.xlsx',
         );
     }
@@ -142,7 +147,7 @@ class ContactController extends Controller
         $query = $this->buildBaseQuery($search)->orderBy('name');
 
         return XlsxDownload::from(
-            fn (string $path) => (new ContactsXlsxExport)->streamTo($query, $path),
+            fn (mixed $output) => (new ContactsXlsxExport)->streamTo($query, $output),
             'contactos-'.now()->format('Ymd-His').'.xlsx',
         );
     }

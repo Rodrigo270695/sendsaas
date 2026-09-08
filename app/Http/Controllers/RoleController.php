@@ -250,7 +250,7 @@ class RoleController extends Controller
         $exporter = new RolesXlsxExport;
 
         return XlsxDownload::from(
-            fn (string $path) => $exporter->streamTo($query, $path),
+            fn (mixed $output) => $exporter->streamTo($query, $output),
             $filename,
         );
     }

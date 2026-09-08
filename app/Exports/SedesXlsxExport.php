@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Sede;
+use App\Support\XlsxDownload;
 use Illuminate\Database\Eloquent\Builder;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -15,7 +16,6 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Table;
 use PhpOffice\PhpSpreadsheet\Worksheet\Table\TableStyle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class SedesXlsxExport
 {
@@ -73,7 +73,7 @@ class SedesXlsxExport
     /**
      * @param  Builder<Sede>  $query
      */
-    public function streamTo(Builder $query, string $output = 'php://output'): void
+    public function streamTo(Builder $query, mixed $output = 'php://output'): void
     {
         $spreadsheet = new Spreadsheet;
         $spreadsheet->getProperties()
@@ -149,9 +149,7 @@ class SedesXlsxExport
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($output);
-        $spreadsheet->disconnectWorksheets();
+        XlsxDownload::saveSpreadsheet($spreadsheet, $output);
         unset($spreadsheet);
     }
 

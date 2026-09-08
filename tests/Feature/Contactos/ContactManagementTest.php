@@ -207,6 +207,13 @@ test('creating over the plan contact limit fails', function () {
         ->assertSessionHasErrors('plan_limit');
 });
 
+test('committed contact template file is a valid xlsx', function () {
+    $path = resource_path('templates/plantilla-contactos.xlsx');
+
+    expect(is_file($path))->toBeTrue()
+        ->and(substr((string) file_get_contents($path), 0, 2))->toBe('PK');
+});
+
 test('tenant admin can download the import template', function () {
     $response = $this->actingAs(contactosAdmin())
         ->get('http://demo.sendsaas.test/contactos/plantilla')

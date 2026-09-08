@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Exports;
 
+use App\Support\XlsxDownload;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 final class ContactsImportTemplateXlsx
 {
-    public function streamTo(string $output = 'php://output'): void
+    /**
+     * Tras cambiar esta plantilla, regenera el xlsx estático:
+     * `php -r "require 'vendor/autoload.php'; (new App\Exports\ContactsImportTemplateXlsx)->streamTo('resources/templates/plantilla-contactos.xlsx');"`
+     */
+    public function streamTo(mixed $output = 'php://output'): void
     {
         $spreadsheet = new Spreadsheet;
         $spreadsheet->getProperties()
@@ -41,8 +45,8 @@ final class ContactsImportTemplateXlsx
             $sheet->setCellValueExplicit($col.'2', $value, DataType::TYPE_STRING);
         }
 
-        foreach (range('A', 'H') as $col) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
+        foreach (range('A', 'H') as $i => $col) {
+            $sheet->getColumnDimension($col)->setWidth([16, 22, 28, 28, 14, 18, 14, 12][$i]);
         }
 
         $guide = $spreadsheet->createSheet();
@@ -59,8 +63,6 @@ final class ContactsImportTemplateXlsx
         $guide->getStyle('A1')->getFont()->setBold(true)->setSize(14);
 
         $spreadsheet->setActiveSheetIndex(0);
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($output);
-        $spreadsheet->disconnectWorksheets();
+        XlsxDownload::saveSpreadsheet($spreadsheet, $output);
     }
 }

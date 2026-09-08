@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Contact;
+use App\Support\XlsxDownload;
 use Illuminate\Database\Eloquent\Builder;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ContactsXlsxExport
 {
     /**
      * @param  Builder<Contact>  $query
      */
-    public function streamTo(Builder $query, string $output = 'php://output'): void
+    public function streamTo(Builder $query, mixed $output = 'php://output'): void
     {
         $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
@@ -68,8 +68,6 @@ class ContactsXlsxExport
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($output);
-        $spreadsheet->disconnectWorksheets();
+        XlsxDownload::saveSpreadsheet($spreadsheet, $output);
     }
 }

@@ -241,7 +241,7 @@ class PlanController extends Controller
         $exporter = new PlansXlsxExport;
 
         return XlsxDownload::from(
-            fn (string $path) => $exporter->streamTo($query, $path),
+            fn (mixed $output) => $exporter->streamTo($query, $output),
             $filename,
         );
     }
