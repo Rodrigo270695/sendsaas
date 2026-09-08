@@ -5,14 +5,6 @@
         "plan_limit": {
             "max_whatsapp_sessions": "You reached your plan's WhatsApp session limit. Upgrade your plan to add more."
         },
-        "quota": {
-            "title": "Plan quota",
-            "used_of": "{{used}} of {{limit}} sessions in use",
-            "unlimited": "Unlimited sessions · {{used}} in use",
-            "remaining_one": "1 slot left",
-            "remaining_other": "{{count}} slots left",
-            "reached": "You cannot create another session until you upgrade the plan or free a slot."
-        },
         "actions": {
             "new": "New session",
             "new_short": "New",

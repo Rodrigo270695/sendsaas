@@ -1,12 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 
 export type GeoOption = {
     id: number;
@@ -24,6 +18,8 @@ type GeoCascadeFieldsProps = {
     value: GeoCascadeValue;
     onChange: (next: GeoCascadeValue) => void;
     errors?: {
+        departamento_id?: string;
+        provincia_id?: string;
         distrito_id?: string;
     };
     disabled?: boolean;
@@ -33,7 +29,19 @@ type GeoCascadeFieldsProps = {
         provincia?: string;
         distrito?: string;
     };
+    placeholders?: {
+        departamento?: string;
+        provincia?: string;
+        distrito?: string;
+    };
 };
+
+function toComboboxOptions(items: readonly GeoOption[]): ComboboxOption[] {
+    return items.map((item) => ({
+        value: String(item.id),
+        label: item.name,
+    }));
+}
 
 export function GeoCascadeFields({
     departamentos,
@@ -43,6 +51,7 @@ export function GeoCascadeFields({
     disabled = false,
     required = false,
     labels,
+    placeholders,
 }: GeoCascadeFieldsProps) {
     const [provincias, setProvincias] = useState<GeoOption[]>([]);
     const [distritos, setDistritos] = useState<GeoOption[]>([]);
@@ -123,6 +132,44 @@ export function GeoCascadeFields({
         return () => controller.abort();
     }, [value.provincia_id]);
 
+    const departamentoOptions = useMemo(
+        () => toComboboxOptions(departamentos),
+        [departamentos],
+    );
+    const provinciaOptions = useMemo(
+        () => toComboboxOptions(provincias),
+        [provincias],
+    );
+    const distritoOptions = useMemo(
+        () => toComboboxOptions(distritos),
+        [distritos],
+    );
+
+    const handleDepartamentoChange = (next: string | null) => {
+        onChange({
+            departamento_id: next ? Number(next) : null,
+            provincia_id: null,
+            distrito_id: null,
+        });
+    };
+
+    const handleProvinciaChange = (next: string | null) => {
+        onChange({
+            ...value,
+            provincia_id: next ? Number(next) : null,
+            distrito_id: null,
+        });
+    };
+
+    const handleDistritoChange = (next: string | null) => {
+        onChange({
+            ...value,
+            distrito_id: next ? Number(next) : null,
+        });
+    };
+
+    const compactComboboxClass = 'px-2 text-xs sm:px-3 sm:text-sm';
+
     return (
         <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="flex min-w-0 flex-col gap-1.5">
@@ -135,32 +182,37 @@ export function GeoCascadeFields({
                         </span>
                     ) : null}
                 </Label>
-                <Select
+                <Combobox
+                    id="departamento_id"
+                    options={departamentoOptions}
                     value={
                         value.departamento_id !== null
                             ? String(value.departamento_id)
+                            : null
+                    }
+                    onChange={handleDepartamentoChange}
+                    placeholder={
+                        placeholders?.departamento ?? 'Selecciona departamento'
+                    }
+                    searchPlaceholder="Buscar departamento..."
+                    emptyMessage="Sin coincidencias."
+                    disabled={disabled}
+                    className={compactComboboxClass}
+                    aria-invalid={Boolean(errors?.departamento_id)}
+                    aria-describedby={
+                        errors?.departamento_id
+                            ? 'departamento_id-error'
                             : undefined
                     }
-                    onValueChange={(next) =>
-                        onChange({
-                            departamento_id: next ? Number(next) : null,
-                            provincia_id: null,
-                            distrito_id: null,
-                        })
-                    }
-                    disabled={disabled}
-                >
-                    <SelectTrigger id="departamento_id" className="w-full">
-                        <SelectValue placeholder="Selecciona" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {departamentos.map((item) => (
-                            <SelectItem key={item.id} value={String(item.id)}>
-                                {item.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                />
+                {errors?.departamento_id ? (
+                    <p
+                        id="departamento_id-error"
+                        className="text-xs text-destructive"
+                    >
+                        {errors.departamento_id}
+                    </p>
+                ) : null}
             </div>
 
             <div className="flex min-w-0 flex-col gap-1.5">
@@ -173,42 +225,41 @@ export function GeoCascadeFields({
                         </span>
                     ) : null}
                 </Label>
-                <Select
+                <Combobox
+                    id="provincia_id"
+                    options={provinciaOptions}
                     value={
                         value.provincia_id !== null
                             ? String(value.provincia_id)
+                            : null
+                    }
+                    onChange={handleProvinciaChange}
+                    placeholder={
+                        value.departamento_id === null
+                            ? 'Primero el departamento'
+                            : (placeholders?.provincia ??
+                              'Selecciona provincia')
+                    }
+                    searchPlaceholder="Buscar provincia..."
+                    emptyMessage="Sin coincidencias."
+                    disabled={disabled || value.departamento_id === null}
+                    loading={loadingProvincias}
+                    className={compactComboboxClass}
+                    aria-invalid={Boolean(errors?.provincia_id)}
+                    aria-describedby={
+                        errors?.provincia_id
+                            ? 'provincia_id-error'
                             : undefined
                     }
-                    onValueChange={(next) =>
-                        onChange({
-                            ...value,
-                            provincia_id: next ? Number(next) : null,
-                            distrito_id: null,
-                        })
-                    }
-                    disabled={
-                        disabled ||
-                        value.departamento_id === null ||
-                        loadingProvincias
-                    }
-                >
-                    <SelectTrigger id="provincia_id" className="w-full">
-                        <SelectValue
-                            placeholder={
-                                value.departamento_id === null
-                                    ? 'Primero el departamento'
-                                    : 'Selecciona'
-                            }
-                        />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {provincias.map((item) => (
-                            <SelectItem key={item.id} value={String(item.id)}>
-                                {item.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                />
+                {errors?.provincia_id ? (
+                    <p
+                        id="provincia_id-error"
+                        className="text-xs text-destructive"
+                    >
+                        {errors.provincia_id}
+                    </p>
+                ) : null}
             </div>
 
             <div className="flex min-w-0 flex-col gap-1.5">
@@ -221,47 +272,32 @@ export function GeoCascadeFields({
                         </span>
                     ) : null}
                 </Label>
-                <Select
+                <Combobox
+                    id="distrito_id"
+                    options={distritoOptions}
                     value={
                         value.distrito_id !== null
                             ? String(value.distrito_id)
-                            : undefined
+                            : null
                     }
-                    onValueChange={(next) =>
-                        onChange({
-                            ...value,
-                            distrito_id: next ? Number(next) : null,
-                        })
+                    onChange={handleDistritoChange}
+                    placeholder={
+                        value.provincia_id === null
+                            ? 'Primero la provincia'
+                            : (placeholders?.distrito ?? 'Selecciona distrito')
                     }
-                    disabled={
-                        disabled ||
-                        value.provincia_id === null ||
-                        loadingDistritos
+                    searchPlaceholder="Buscar distrito..."
+                    emptyMessage="Sin coincidencias."
+                    disabled={disabled || value.provincia_id === null}
+                    loading={loadingDistritos}
+                    className={compactComboboxClass}
+                    aria-invalid={Boolean(errors?.distrito_id)}
+                    aria-describedby={
+                        errors?.distrito_id ? 'distrito_id-error' : undefined
                     }
-                >
-                    <SelectTrigger
-                        id="distrito_id"
-                        className="w-full"
-                        aria-invalid={Boolean(errors?.distrito_id)}
-                    >
-                        <SelectValue
-                            placeholder={
-                                value.provincia_id === null
-                                    ? 'Primero la provincia'
-                                    : 'Selecciona'
-                            }
-                        />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {distritos.map((item) => (
-                            <SelectItem key={item.id} value={String(item.id)}>
-                                {item.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                />
                 {errors?.distrito_id ? (
-                    <p className="text-xs text-destructive">
+                    <p id="distrito_id-error" className="text-xs text-destructive">
                         {errors.distrito_id}
                     </p>
                 ) : null}

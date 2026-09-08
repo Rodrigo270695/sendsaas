@@ -12,9 +12,3 @@ export function usePlanLimitReached(feature: PlanLimitFeature): boolean {
 
     return limits?.[feature]?.reached ?? false;
 }
-
-export function usePlanLimitEntry(feature: PlanLimitFeature) {
-    const limits = usePlanLimits();
-
-    return limits?.[feature] ?? null;
-}

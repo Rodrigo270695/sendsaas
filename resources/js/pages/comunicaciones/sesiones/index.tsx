@@ -25,12 +25,8 @@ import { PlanLimitCreateButton } from '@/components/plan-limit-create-button';
 import { Button } from '@/components/ui/button';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
 import { usePermission } from '@/hooks/use-permission';
-import {
-    usePlanLimitEntry,
-    usePlanLimitReached,
-} from '@/hooks/use-plan-limits';
+import { usePlanLimitReached } from '@/hooks/use-plan-limits';
 import AppLayout from '@/layouts/app-layout';
-import { cn } from '@/lib/utils';
 import type { Paginated } from '@/types';
 import { SessionDeleteDialog } from './components/session-delete-dialog';
 import { SessionFormModal } from './components/session-form-modal';
@@ -86,7 +82,6 @@ export default function Index({
     const canDelete = can('whatsapp.delete');
     const showRowActions = canUpdate || canDelete;
     const limitReached = usePlanLimitReached('max_whatsapp_sessions');
-    const quota = usePlanLimitEntry('max_whatsapp_sessions');
 
     const {
         search,
@@ -246,13 +241,6 @@ export default function Index({
         return base;
     }, [t, showRowActions, canUpdate, canDelete, openEdit, openDelete]);
 
-    const quotaPct =
-        quota && !quota.unlimited && quota.limit && quota.limit > 0
-            ? Math.min(100, (quota.used / quota.limit) * 100)
-            : quota?.unlimited
-              ? 0
-              : 100;
-
     return (
         <>
             <Head title={t('comunicaciones:sesiones.title')} />
@@ -319,61 +307,6 @@ export default function Index({
                         </PlanLimitCreateButton>
                     }
                 />
-
-                {quota ? (
-                    <div
-                        className={cn(
-                            'rounded-xl border px-4 py-3',
-                            limitReached
-                                ? 'border-primary/30 bg-primary/5'
-                                : 'border-border/70 bg-muted/30',
-                        )}
-                    >
-                        <div className="flex flex-wrap items-end justify-between gap-2">
-                            <div>
-                                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                    {t('comunicaciones:sesiones.quota.title')}
-                                </p>
-                                <p className="mt-0.5 text-sm font-semibold">
-                                    {quota.unlimited
-                                        ? t(
-                                              'comunicaciones:sesiones.quota.unlimited',
-                                              { used: quota.used },
-                                          )
-                                        : t(
-                                              'comunicaciones:sesiones.quota.used_of',
-                                              {
-                                                  used: quota.used,
-                                                  limit: quota.limit ?? 0,
-                                              },
-                                          )}
-                                </p>
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                {limitReached
-                                    ? t(
-                                          'comunicaciones:sesiones.quota.reached',
-                                      )
-                                    : quota.unlimited
-                                      ? null
-                                      : t(
-                                            quota.remaining === 1
-                                                ? 'comunicaciones:sesiones.quota.remaining_one'
-                                                : 'comunicaciones:sesiones.quota.remaining_other',
-                                            { count: quota.remaining ?? 0 },
-                                        )}
-                            </p>
-                        </div>
-                        {!quota.unlimited ? (
-                            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-                                <div
-                                    className="h-full rounded-full bg-primary transition-all"
-                                    style={{ width: `${quotaPct}%` }}
-                                />
-                            </div>
-                        ) : null}
-                    </div>
-                ) : null}
 
                 <DataTable
                     columns={columns}

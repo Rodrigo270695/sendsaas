@@ -5,14 +5,6 @@
         "plan_limit": {
             "max_whatsapp_sessions": "Alcanzaste el límite de sesiones de WhatsApp de tu plan. Actualiza el plan para agregar más."
         },
-        "quota": {
-            "title": "Cupo del plan",
-            "used_of": "{{used}} de {{limit}} sesiones en uso",
-            "unlimited": "Sesiones ilimitadas · {{used}} en uso",
-            "remaining_one": "Queda 1 cupo libre",
-            "remaining_other": "Quedan {{count}} cupos libres",
-            "reached": "No puedes crear otra sesión hasta actualizar el plan o liberar un cupo."
-        },
         "actions": {
             "new": "Nueva sesión",
             "new_short": "Nueva",
