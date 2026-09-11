@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\OpenWa;
 
+use App\Support\OpenWa\OpenWaWebhookEvents;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -159,6 +160,97 @@ final class OpenWaClient
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function registerWebhook(string $sessionId, string $url, ?string $secret = null): array
+    {
+        $payload = [
+            'url' => $url,
+            'events' => OpenWaWebhookEvents::inboundMessageSubscriptions(),
+            'active' => true,
+        ];
+
+        if ($secret !== null && $secret !== '') {
+            $payload['secret'] = $secret;
+            $payload['headers'] = [
+                'X-Webhook-Secret' => $secret,
+            ];
+        }
+
+        $response = $this->request('post', '/api/sessions/'.$sessionId.'/webhooks', $payload);
+
+        if (! is_array($response)) {
+            throw new RuntimeException('OpenWA no confirmó el registro del webhook.');
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     * @return array<string, mixed>
+     */
+    public function updateWebhook(string $sessionId, string $webhookId, array $payload): array
+    {
+        $response = $this->request('put', '/api/sessions/'.$sessionId.'/webhooks/'.$webhookId, $payload);
+
+        if (! is_array($response)) {
+            throw new RuntimeException('OpenWA no confirmó la actualización del webhook.');
+        }
+
+        return $response;
+    }
+
+    public function deleteWebhook(string $sessionId, string $webhookId): void
+    {
+        $this->request('delete', '/api/sessions/'.$sessionId.'/webhooks/'.$webhookId);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function listWebhooks(string $sessionId): array
+    {
+        return $this->unwrapWebhookList(
+            $this->request('get', '/api/sessions/'.$sessionId.'/webhooks'),
+        );
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function listAllWebhooks(int $limit = 1000): array
+    {
+        return $this->unwrapWebhookList(
+            $this->request('get', '/api/webhooks?limit='.$limit),
+        );
+    }
+
+    /**
+     * @param  array<string, mixed>|list<array<string, mixed>>|null  $response
+     * @return list<array<string, mixed>>
+     */
+    private function unwrapWebhookList(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        if (isset($response['data']) && is_array($response['data'])) {
+            $response = $response['data'];
+        }
+
+        $out = [];
+        foreach ($response as $hook) {
+            if (is_array($hook)) {
+                $out[] = $hook;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
      * @param  array<string, mixed>|null  $body
      * @return array<string, mixed>|list<array<string, mixed>>|null
      */
@@ -179,6 +271,8 @@ final class OpenWaClient
             $response = match ($method) {
                 'get' => $pending->get($url),
                 'post' => $pending->post($url, $body ?? []),
+                'put' => $pending->put($url, $body ?? []),
+                'delete' => $pending->delete($url),
                 default => throw new RuntimeException('Método HTTP no soportado: '.$method),
             };
         } catch (RequestException $e) {

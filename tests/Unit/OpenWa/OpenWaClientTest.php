@@ -24,6 +24,22 @@ it('is configured only with enabled url and key', function (): void {
     expect($client->isConfigured())->toBeFalse();
 });
 
+it('registra el webhook inbound de una sesion', function (): void {
+    Http::fake([
+        'wa.test/api/sessions/ow-1/webhooks' => Http::response(['id' => 'wh-1'], 201),
+    ]);
+
+    $result = (new OpenWaClient)->registerWebhook('ow-1', 'https://sendsaas.test/api/webhooks/openwa/demo', 'secret');
+
+    expect($result['id'])->toBe('wh-1');
+    Http::assertSent(function ($request): bool {
+        return $request->method() === 'POST'
+            && $request->url() === 'https://wa.test/api/sessions/ow-1/webhooks'
+            && $request['url'] === 'https://sendsaas.test/api/webhooks/openwa/demo'
+            && $request['events'] === ['message.received'];
+    });
+});
+
 it('obtiene el codigo qr de una sesion', function (): void {
     Http::fake([
         'wa.test/api/sessions/ow-1/qr' => Http::response([

@@ -319,6 +319,14 @@ function fakeOpenWaSession(array $session, ?string $qrCode = 'data:image/png;bas
             return Http::response($session);
         }
 
+        if (str_contains($url, '/webhooks')) {
+            if ($method === 'GET') {
+                return Http::response([]);
+            }
+
+            return Http::response(['id' => 'wh-1'], 201);
+        }
+
         return Http::response(['error' => 'unexpected '.$method.' '.$url], 404);
     });
 }

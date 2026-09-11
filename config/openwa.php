@@ -14,4 +14,9 @@ return [
 
     'reconnect_poll_seconds' => (int) env('OPENWA_RECONNECT_POLL_SECONDS', 3),
 
+    'webhook_secret' => env('OPENWA_WEBHOOK_SECRET'),
+
+    // Base sin slug. Default: {APP_URL}/api/webhooks/openwa/{slug}
+    'webhook_base_url' => rtrim((string) env('OPENWA_WEBHOOK_BASE_URL', ''), '/'),
+
 ];

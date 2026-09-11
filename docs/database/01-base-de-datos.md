@@ -419,8 +419,8 @@ Settings de la empresa (RUC, logo, ventana de envío default) pueden ir en `cfg_
 | t020 | `…_t020_create_tags` | `tags` | id uuid, name, color, unique name |
 | t021 | `…_t021_create_contacts` | `contacts` | name, phone unique, email, notes, last_contact_at, sede_id (uuid public.sedes, sin FK cross-schema obligatoria) |
 | t022 | `…_t022_create_contact_tags` | `contact_tags` | contact_id, tag_id |
-| t030 | `…_t030_create_conversations` | `conversations` | contact_id, channel default `whatsapp`, assigned_user_id (public.users), sede_id, status (`OPEN\|PENDING\|RESOLVED\|CLOSED`), priority, last_message_at, unread_count |
-| t031 | `…_t031_create_conversation_messages` | `conversation_messages` | conversation_id, sender_type (`contact\|agent\|system`), sender_id, external_id unique, direction (`in\|out`), message_type, body, media_url, status, sent_at, delivered_at, read_at, failed_at, metadata json |
+| t030 | `…_t030_create_conversations` **YA** | `conversations` | contact_id, channel default `whatsapp`, whatsapp_session_id, wa_chat_id, assigned_user_id (public.users), sede_id, status (`OPEN\|PENDING\|RESOLVED\|CLOSED`), priority, last_message_at, unread_count |
+| t031 | `…_t031_create_conversation_messages` **YA** | `conversation_messages` | conversation_id, sender_type (`contact\|agent\|system`), sender_id, external_id unique, direction (`in\|out`), message_type, body, media_url, status, sent_at, delivered_at, read_at, failed_at, metadata json |
 | t032 | `…_t032_create_conversation_tags` | pivot | |
 | t033 | `…_t033_create_internal_notes` | `conversation_notes` | conversation_id, user_id, body |
 | t040 | `…_t040_create_quick_replies` | `quick_replies` | title, body, shortcut |

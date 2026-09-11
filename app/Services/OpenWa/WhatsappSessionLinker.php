@@ -10,7 +10,10 @@ use RuntimeException;
 
 final class WhatsappSessionLinker
 {
-    public function __construct(private readonly OpenWaClient $client) {}
+    public function __construct(
+        private readonly OpenWaClient $client,
+        private readonly TenantWhatsappWebhookRegistrar $webhooks,
+    ) {}
 
     public function ensureRemote(TenantWhatsappSession $session, bool $wake = true): TenantWhatsappSession
     {
@@ -27,6 +30,7 @@ final class WhatsappSessionLinker
             throw new RuntimeException('OpenWA no devolvió un id de sesión.');
         }
 
+        $wasReady = $session->isReady();
         $status = (string) ($remote['status'] ?? $session->status);
         $lastError = null;
 
@@ -42,7 +46,7 @@ final class WhatsappSessionLinker
 
         $this->applyRemote($session, $remote, $sessionId, $lastError);
 
-        return $session->fresh() ?? $session;
+        return $this->afterRemoteSync($session, $wasReady);
     }
 
     public function refresh(TenantWhatsappSession $session): TenantWhatsappSession
@@ -52,10 +56,11 @@ final class WhatsappSessionLinker
             return $this->ensureRemote($session, wake: false);
         }
 
+        $wasReady = $session->isReady();
         $remote = $this->client->getSession($sessionId);
         $this->applyRemote($session, $remote, $sessionId, null);
 
-        return $session->fresh() ?? $session;
+        return $this->afterRemoteSync($session, $wasReady);
     }
 
     public function disconnect(TenantWhatsappSession $session): TenantWhatsappSession
@@ -107,5 +112,15 @@ final class WhatsappSessionLinker
             'last_synced_at' => now(),
             'last_error' => $lastError,
         ])->save();
+    }
+
+    private function afterRemoteSync(TenantWhatsappSession $session, bool $wasReady): TenantWhatsappSession
+    {
+        $fresh = $session->fresh() ?? $session;
+        if (! $wasReady && $fresh->isReady()) {
+            $this->webhooks->ensureForSession($fresh);
+        }
+
+        return $fresh;
     }
 }
