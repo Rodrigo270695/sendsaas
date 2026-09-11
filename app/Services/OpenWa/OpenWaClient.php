@@ -281,6 +281,33 @@ final class OpenWaClient
     /**
      * @return list<array<string, mixed>>
      */
+    public function listRecentMessages(string $sessionId, int $limit = 40): array
+    {
+        $limit = max(1, min(100, $limit));
+        $response = $this->request('get', '/api/sessions/'.$sessionId.'/messages?limit='.$limit);
+
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $rows = $response['messages'] ?? $response['data'] ?? $response;
+        if (! is_array($rows)) {
+            return [];
+        }
+
+        $out = [];
+        foreach ($rows as $row) {
+            if (is_array($row)) {
+                $out[] = $row;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
     public function listWebhooks(string $sessionId): array
     {
         return $this->unwrapWebhookList(

@@ -12,3 +12,7 @@ Schedule::command('sendsaas:outbound-drip')
     ->everyThirtySeconds()
     ->withoutOverlapping(5)
     ->when(fn () => (bool) config('outbound.drip_enabled', true));
+
+Schedule::command('sendsaas:openwa-sync-inbox --limit=30')
+    ->everyMinute()
+    ->withoutOverlapping(5);

@@ -50,7 +50,8 @@ final class OpenWaWebhookController extends Controller
 
         $payload = OpenWaInboundPayload::fromRequest($request->all());
 
-        if (! OpenWaWebhookEvents::isInboundChat($payload->event)) {
+        $direction = strtolower((string) ($payload->raw['direction'] ?? ''));
+        if (! OpenWaWebhookEvents::isInboundChat($payload->event) && $direction !== 'incoming') {
             return $this->skipped($slug, $payload, 'not_message_event');
         }
 

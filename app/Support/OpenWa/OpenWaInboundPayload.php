@@ -32,7 +32,13 @@ final class OpenWaInboundPayload
     {
         $data = is_array($payload['data'] ?? null) ? $payload['data'] : $payload;
         $event = (string) ($payload['event'] ?? $payload['type'] ?? $data['event'] ?? '');
+        $direction = strtolower(trim((string) ($data['direction'] ?? '')));
         $fromMe = (bool) ($data['fromMe'] ?? $data['from_me'] ?? false);
+        if ($direction === 'incoming') {
+            $fromMe = false;
+        } elseif ($direction === 'outgoing') {
+            $fromMe = true;
+        }
 
         $from = (string) ($data['from'] ?? '');
         $chatId = (string) ($data['chatId'] ?? $data['chat_id'] ?? '');

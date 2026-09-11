@@ -10,6 +10,7 @@ use Database\Seeders\PermissionsSeeder;
 use Database\Seeders\PlansAndFeaturesSeeder;
 use Database\Seeders\SuperadminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 
 uses(RefreshDatabase::class);
 
@@ -174,4 +175,56 @@ test('skips a session that belongs to another tenant', function () {
 
     $response->assertOk()->assertJson(['skipped' => 'tenant_mismatch']);
     expect(ConversationMessage::query()->count())->toBe(0);
+});
+
+test('syncs incoming openwa history into the inbox', function () {
+    config([
+        'openwa.enabled' => true,
+        'openwa.api_url' => 'https://wa.test',
+        'openwa.api_key' => 'test-key',
+    ]);
+
+    $tenant = Tenant::query()->where('slug', DemoTenantsSeeder::SLUG)->firstOrFail();
+    TenantWhatsappSession::factory()->ready()->create([
+        'tenant_id' => $tenant->id,
+        'openwa_session_id' => 'ow-demo-1',
+        'openwa_session_name' => 'ss-demo',
+    ]);
+
+    Http::fake([
+        'wa.test/api/sessions/ow-demo-1/messages*' => Http::response([
+            'messages' => [
+                [
+                    'id' => 'db-1',
+                    'waMessageId' => 'A5HOLA1',
+                    'chatId' => '51976809804@c.us',
+                    'chatName' => 'Orvae',
+                    'from' => '51976809804@c.us',
+                    'to' => '51976709811@c.us',
+                    'body' => 'Hola',
+                    'type' => 'text',
+                    'direction' => 'incoming',
+                ],
+                [
+                    'id' => 'db-2',
+                    'waMessageId' => 'OUT1',
+                    'chatId' => '51999988877@c.us',
+                    'from' => '51976709811@c.us',
+                    'body' => 'hola',
+                    'type' => 'text',
+                    'direction' => 'outgoing',
+                ],
+            ],
+            'total' => 2,
+        ]),
+    ]);
+
+    $this->artisan('sendsaas:openwa-sync-inbox', ['--slug' => 'demo', '--limit' => 10])
+        ->assertSuccessful();
+
+    $contact = Contact::query()->where('phone', '51976809804')->first();
+    expect($contact)->not->toBeNull()
+        ->and($contact->name)->toBe('Orvae');
+    expect(ConversationMessage::query()->where('external_id', 'A5HOLA1')->count())->toBe(1)
+        ->and(ConversationMessage::query()->count())->toBe(1);
 });
