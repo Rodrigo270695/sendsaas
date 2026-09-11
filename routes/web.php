@@ -5,6 +5,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\GeoController;
 use App\Http\Controllers\OutboundQueueController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\QuickReplyController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SedeController;
 use App\Http\Controllers\SubscriptionController;
@@ -89,7 +90,11 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
     Route::prefix('bandeja')->name('bandeja.')->group(function () {
         Route::middleware('permission:conversations.view')->get('conversaciones', [ConversationController::class, 'index'])->name('conversaciones.index');
         Route::middleware('permission:conversations.view')->get('conversaciones/{conversation}', [ConversationController::class, 'show'])->name('conversaciones.show');
+        Route::middleware('permission:conversations.view')->put('conversaciones/{conversation}/asignacion', [ConversationController::class, 'assign'])->name('conversaciones.assign');
+        Route::middleware('permission:conversations.view')->put('conversaciones/{conversation}/etiquetas', [ConversationController::class, 'syncTags'])->name('conversaciones.tags');
         Route::middleware('permission:conversations.reply')->post('conversaciones/{conversation}/mensajes', [ConversationController::class, 'reply'])->name('conversaciones.reply');
+        Route::middleware('permission:conversations.assign')->post('respuestas-rapidas', [QuickReplyController::class, 'store'])->name('respuestas-rapidas.store');
+        Route::middleware('permission:conversations.assign')->delete('respuestas-rapidas/{quickReply}', [QuickReplyController::class, 'destroy'])->name('respuestas-rapidas.destroy');
     });
 
     Route::prefix('contactos')->name('contactos.')->group(function () {

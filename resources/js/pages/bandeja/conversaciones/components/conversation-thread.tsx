@@ -8,14 +8,36 @@ import { Textarea } from '@/components/ui/textarea';
 import { usePermission } from '@/hooks/use-permission';
 import { cn } from '@/lib/utils';
 import { conversationInitials, formatInboxWhen } from '../lib';
-import type { ConversationMessage, ReplyState, SelectedConversation } from '../types';
+import type {
+    InboxCapabilities,
+    InboxTag,
+    InboxUser,
+    ConversationMessage,
+    QuickReply,
+    ReplyState,
+    SelectedConversation,
+} from '../types';
+import { ConversationAssignment } from './conversation-assignment';
+import { ConversationTags } from './conversation-tags';
+import { QuickReplyPicker } from './quick-reply-picker';
 
 type ConversationThreadProps = {
     selected: SelectedConversation | null;
     reply: ReplyState;
+    assignees: InboxUser[];
+    tagCatalog: InboxTag[];
+    quickReplies: QuickReply[];
+    capabilities: InboxCapabilities;
 };
 
-export function ConversationThread({ selected, reply }: ConversationThreadProps) {
+export function ConversationThread({
+    selected,
+    reply,
+    assignees,
+    tagCatalog,
+    quickReplies,
+    capabilities,
+}: ConversationThreadProps) {
     const { t } = useTranslation('bandeja');
     const endRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,9 +76,17 @@ export function ConversationThread({ selected, reply }: ConversationThreadProps)
                         {selected.contact.phone_display}
                     </p>
                 </div>
-                <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-                    {t(`status.${selected.status}`)}
-                </span>
+                <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-1.5">
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                        {t(`status.${selected.status}`)}
+                    </span>
+                    <ConversationAssignment
+                        selected={selected}
+                        assignees={assignees}
+                        capabilities={capabilities}
+                    />
+                    <ConversationTags selected={selected} catalog={tagCatalog} />
+                </div>
             </header>
 
             <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4 md:px-6">
@@ -68,7 +98,13 @@ export function ConversationThread({ selected, reply }: ConversationThreadProps)
                 </div>
             </div>
 
-            <ReplyComposer conversationId={selected.id} reply={reply} />
+            <ReplyComposer
+                conversationId={selected.id}
+                contactName={selected.contact.name}
+                reply={reply}
+                quickReplies={quickReplies}
+                capabilities={capabilities}
+            />
         </div>
     );
 }
@@ -141,20 +177,26 @@ function MessageBubble({ message }: { message: ConversationMessage }) {
 
 function ReplyComposer({
     conversationId,
+    contactName,
     reply,
+    quickReplies,
+    capabilities,
 }: {
     conversationId: string;
+    contactName: string;
     reply: ReplyState;
+    quickReplies: QuickReply[];
+    capabilities: InboxCapabilities;
 }) {
     const { t } = useTranslation('bandeja');
     const { can } = usePermission();
+    const form = useForm({ body: '' });
     const canPermission = can('conversations.reply');
     const enabled = canPermission && reply.can;
 
     if (!canPermission) {
         return null;
     }
-    const form = useForm({ body: '' });
 
     const submit = (event?: FormEvent) => {
         event?.preventDefault();
@@ -182,8 +224,8 @@ function ReplyComposer({
         >
             {!enabled && (
                 <p className="text-xs text-muted-foreground">
-                    {blockedReason
-                        ? t(`thread.reply_blocked.${blockedReason}`)
+                    {reply.reason
+                        ? t(`thread.reply_blocked.${reply.reason}`)
                         : t('thread.reply_blocked.tenant')}
                 </p>
             )}
@@ -193,6 +235,12 @@ function ReplyComposer({
                 </p>
             )}
             <div className="flex items-end gap-2">
+                <QuickReplyPicker
+                    replies={quickReplies}
+                    capabilities={capabilities}
+                    contactName={contactName}
+                    onPick={(body) => form.setData('body', body)}
+                />
                 <Textarea
                     value={form.data.body}
                     onChange={(event) => form.setData('body', event.target.value)}

@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Exceptions\AgentReplyException;
+use App\Http\Requests\ConversationAssignRequest;
 use App\Http\Requests\ConversationReplyRequest;
+use App\Http\Requests\ConversationTagsRequest;
 use App\Models\Conversation;
+use App\Models\QuickReply;
+use App\Models\Tag;
 use App\Models\TenantWhatsappSession;
+use App\Models\User;
 use App\Services\Billing\OutboundDailyQuota;
 use App\Services\Conversations\AgentReplyService;
 use App\Services\OpenWa\OpenWaClient;
@@ -26,6 +31,8 @@ class ConversationController extends Controller
 
     private const STATUS_FILTERS = ['todas', 'OPEN', 'PENDING', 'RESOLVED', 'CLOSED'];
 
+    private const ASSIGNED_FILTERS = ['todas', 'mias', 'sin_asignar'];
+
     public function index(Request $request): Response
     {
         return $this->render($request, null);
@@ -34,12 +41,65 @@ class ConversationController extends Controller
     public function show(Request $request, Conversation $conversation): Response
     {
         $this->tenantIdOrAbort();
+        $this->assertVisible($request, $conversation);
 
         if ($conversation->unread_count > 0) {
             $conversation->forceFill(['unread_count' => 0])->save();
         }
 
-        return $this->render($request, $conversation->fresh(['contact']) ?? $conversation);
+        return $this->render($request, $conversation->fresh(['contact', 'tags', 'assignedUser']) ?? $conversation);
+    }
+
+    public function assign(ConversationAssignRequest $request, Conversation $conversation): RedirectResponse
+    {
+        $tenantId = $this->tenantIdOrAbort();
+        $this->assertVisible($request, $conversation);
+
+        $targetId = $request->validated('assigned_user_id');
+        $targetId = is_string($targetId) && $targetId !== '' ? $targetId : null;
+        $actor = $request->user();
+        abort_if($actor === null, 403);
+
+        $this->authorizeAssignment($actor, $conversation, $targetId);
+
+        if ($targetId !== null) {
+            $exists = User::query()
+                ->whereKey($targetId)
+                ->where('tenant_id', $tenantId)
+                ->where('is_active', true)
+                ->exists();
+            abort_unless($exists, 422, 'El usuario no pertenece a esta empresa.');
+        }
+
+        $conversation->forceFill(['assigned_user_id' => $targetId])->save();
+
+        return back()->with('success', $targetId === null ? 'Conversación sin asignar.' : 'Conversación asignada.');
+    }
+
+    public function syncTags(ConversationTagsRequest $request, Conversation $conversation): RedirectResponse
+    {
+        $this->tenantIdOrAbort();
+        $this->assertVisible($request, $conversation);
+
+        $names = collect($request->validated('names'))
+            ->map(fn (mixed $name): string => mb_strtoupper(trim((string) $name)))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $ids = $names->map(function (string $name): string {
+            $tag = Tag::query()->firstOrCreate(
+                ['name' => $name],
+                ['color' => '#AB3C3D'],
+            );
+
+            return (string) $tag->id;
+        })->all();
+
+        $conversation->tags()->sync($ids);
+        $conversation->contact?->tags()->sync($ids);
+
+        return back()->with('success', 'Etiquetas actualizadas.');
     }
 
     public function reply(
@@ -48,6 +108,7 @@ class ConversationController extends Controller
         AgentReplyService $replies,
     ): RedirectResponse {
         $this->tenantIdOrAbort();
+        $this->assertVisible($request, $conversation);
 
         try {
             $replies->send($conversation, (string) $request->validated('body'), $request->user());
@@ -67,10 +128,14 @@ class ConversationController extends Controller
         if (! in_array($status, self::STATUS_FILTERS, true)) {
             $status = 'todas';
         }
+        $assigned = (string) $request->string('assigned', 'todas');
+        if (! in_array($assigned, self::ASSIGNED_FILTERS, true)) {
+            $assigned = 'todas';
+        }
         $unreadOnly = $request->boolean('unread');
 
-        $query = $this->buildListQuery($search, $status, $unreadOnly)
-            ->with(['contact:id,name,phone', 'latestMessage']);
+        $query = $this->buildListQuery($request, $search, $status, $assigned, $unreadOnly)
+            ->with(['contact:id,name,phone', 'latestMessage', 'assignedUser:id,name', 'tags:id,name,color']);
 
         $conversations = $query
             ->orderByDesc('last_message_at')
@@ -78,7 +143,7 @@ class ConversationController extends Controller
             ->paginate(self::PER_PAGE)
             ->withQueryString();
 
-        $base = Conversation::query();
+        $base = $this->visibleQuery($request);
 
         return Inertia::render('bandeja/conversaciones/index', [
             'conversations' => $conversations->through(fn (Conversation $row): array => $this->mapListItem($row)),
@@ -86,26 +151,48 @@ class ConversationController extends Controller
             'filters' => [
                 'search' => $search,
                 'status' => $status,
+                'assigned' => $assigned,
                 'unread' => $unreadOnly,
             ],
             'stats' => [
                 'total' => (clone $base)->count(),
                 'open' => (clone $base)->where('status', Conversation::STATUS_OPEN)->count(),
                 'unread' => (clone $base)->where('unread_count', '>', 0)->count(),
+                'unassigned' => (clone $base)->whereNull('assigned_user_id')->count(),
             ],
             'reply' => $this->replyState(),
+            'assignees' => $this->assignees(),
+            'tag_catalog' => Tag::query()->orderBy('name')->get(['id', 'name', 'color']),
+            'quick_replies' => QuickReply::query()
+                ->orderBy('title')
+                ->get(['id', 'title', 'shortcut', 'body']),
+            'capabilities' => [
+                'assign' => $request->user()?->can('conversations.assign') ?? false,
+                'manage_replies' => $request->user()?->can('conversations.assign') ?? false,
+            ],
         ]);
     }
 
     /**
      * @return Builder<Conversation>
      */
-    private function buildListQuery(string $search, string $status, bool $unreadOnly): Builder
-    {
-        $query = Conversation::query();
+    private function buildListQuery(
+        Request $request,
+        string $search,
+        string $status,
+        string $assigned,
+        bool $unreadOnly,
+    ): Builder {
+        $query = $this->visibleQuery($request);
 
         if ($status !== 'todas') {
             $query->where('status', $status);
+        }
+
+        if ($assigned === 'mias') {
+            $query->where('assigned_user_id', $request->user()?->id);
+        } elseif ($assigned === 'sin_asignar') {
+            $query->whereNull('assigned_user_id');
         }
 
         if ($unreadOnly) {
@@ -146,6 +233,8 @@ class ConversationController extends Controller
             'last_message_at' => optional($conversation->last_message_at)->toIso8601String(),
             'preview' => $body !== '' ? mb_substr($body, 0, 120) : null,
             'contact' => $this->mapContact($conversation),
+            'assigned_user' => $this->mapAssignee($conversation),
+            'tags' => $this->mapTags($conversation),
         ];
     }
 
@@ -154,7 +243,7 @@ class ConversationController extends Controller
      */
     private function mapSelected(Conversation $conversation): array
     {
-        $conversation->loadMissing('contact:id,name,phone');
+        $conversation->loadMissing(['contact:id,name,phone', 'assignedUser:id,name', 'tags:id,name,color']);
 
         $messages = $conversation->messages()
             ->orderBy('created_at')
@@ -178,6 +267,8 @@ class ConversationController extends Controller
             'unread_count' => $conversation->unread_count,
             'last_message_at' => optional($conversation->last_message_at)->toIso8601String(),
             'contact' => $this->mapContact($conversation),
+            'assigned_user' => $this->mapAssignee($conversation),
+            'tags' => $this->mapTags($conversation),
             'messages' => $messages,
         ];
     }
@@ -238,6 +329,109 @@ class ConversationController extends Controller
         }
 
         return ['can' => true, 'reason' => null, 'remaining' => $remaining];
+    }
+
+    /**
+     * @return array{id: string, name: string}|null
+     */
+    private function mapAssignee(Conversation $conversation): ?array
+    {
+        $user = $conversation->assignedUser;
+        if ($user === null) {
+            return null;
+        }
+
+        return [
+            'id' => (string) $user->id,
+            'name' => $user->display_name !== '' ? $user->display_name : $user->email,
+        ];
+    }
+
+    /**
+     * @return list<array{id: string, name: string, color: string}>
+     */
+    private function mapTags(Conversation $conversation): array
+    {
+        return $conversation->tags
+            ->map(fn (Tag $tag): array => [
+                'id' => (string) $tag->id,
+                'name' => $tag->name,
+                'color' => $tag->color,
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return list<array{id: string, name: string}>
+     */
+    private function assignees(): array
+    {
+        $tenantId = tenant_id();
+        if ($tenantId === null) {
+            return [];
+        }
+
+        return User::query()
+            ->where('tenant_id', $tenantId)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn (User $user): array => [
+                'id' => (string) $user->id,
+                'name' => $user->display_name !== '' ? $user->display_name : $user->email,
+            ])
+            ->all();
+    }
+
+    /**
+     * @return Builder<Conversation>
+     */
+    private function visibleQuery(Request $request): Builder
+    {
+        $query = Conversation::query();
+        $user = $request->user();
+
+        if ($user === null || $user->can('conversations.assign')) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $builder) use ($user): void {
+            $builder->whereNull('assigned_user_id')
+                ->orWhere('assigned_user_id', $user->id);
+        });
+    }
+
+    private function assertVisible(Request $request, Conversation $conversation): void
+    {
+        $user = $request->user();
+        if ($user === null) {
+            abort(403);
+        }
+
+        if ($user->can('conversations.assign')) {
+            return;
+        }
+
+        if ($conversation->assigned_user_id === null || $conversation->assigned_user_id === $user->id) {
+            return;
+        }
+
+        abort(403, 'Esta conversación está asignada a otro agente.');
+    }
+
+    private function authorizeAssignment(User $actor, Conversation $conversation, ?string $targetId): void
+    {
+        if ($actor->can('conversations.assign')) {
+            return;
+        }
+
+        $mine = $conversation->assigned_user_id === $actor->id;
+        $free = $conversation->assigned_user_id === null;
+        $taking = $targetId === $actor->id;
+        $releasing = $targetId === null && $mine;
+
+        abort_unless(($taking && ($free || $mine)) || $releasing, 403);
     }
 
     private function tenantIdOrAbort(): string

@@ -8,7 +8,10 @@
         "PENDING": "Pendientes",
         "RESOLVED": "Resueltas",
         "CLOSED": "Cerradas",
-        "unread": "No leídas"
+        "unread": "No leídas",
+        "assigned_todas": "Todas",
+        "mias": "Mías",
+        "sin_asignar": "Sin asignar"
     },
     "status": {
         "OPEN": "Abierta",
@@ -19,7 +22,8 @@
     "stats": {
         "total": "Total",
         "open": "Abiertas",
-        "unread": "Sin leer"
+        "unread": "Sin leer",
+        "unassigned": "Sin asignar"
     },
     "empty": {
         "no_records_title": "Aún no hay conversaciones",
@@ -46,7 +50,22 @@
         "media_document": "Documento",
         "media_audio": "Audio",
         "media_video": "Video",
-        "media_other": "Adjunto"
+        "media_other": "Adjunto",
+        "assign": "Asignar",
+        "unassigned": "Sin asignar",
+        "take": "Tomar",
+        "release": "Liberar",
+        "tags": "Etiquetas",
+        "add_tag": "Nueva etiqueta",
+        "add_tag_placeholder": "VIP, COTIZACION…",
+        "no_tags": "Sin etiquetas",
+        "quick_replies": "Respuestas rápidas",
+        "quick_empty": "Aún no hay respuestas rápidas.",
+        "quick_add": "Guardar respuesta",
+        "quick_title": "Título",
+        "quick_shortcut": "Atajo",
+        "quick_body": "Mensaje",
+        "quick_delete": "Eliminar"
     },
     "toast": {
         "load_error": "No se pudo cargar la bandeja."

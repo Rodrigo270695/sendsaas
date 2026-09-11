@@ -24,7 +24,16 @@ export function ConversationList({ items, selectedId }: ConversationListProps) {
                             href={`/bandeja/conversaciones/${row.id}`}
                             preserveState
                             preserveScroll
-                            only={['conversations', 'selected', 'filters', 'stats']}
+                            only={[
+                                'conversations',
+                                'selected',
+                                'filters',
+                                'stats',
+                                'assignees',
+                                'tag_catalog',
+                                'quick_replies',
+                                'capabilities',
+                            ]}
                             className={cn(
                                 'flex gap-3 px-3 py-3 transition-colors',
                                 active
@@ -68,6 +77,26 @@ export function ConversationList({ items, selectedId }: ConversationListProps) {
                                         </span>
                                     )}
                                 </span>
+                                {(row.assigned_user || row.tags.length > 0) && (
+                                    <span className="mt-1 flex flex-wrap items-center gap-1">
+                                        {row.assigned_user ? (
+                                            <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                                                {row.assigned_user.name}
+                                            </span>
+                                        ) : null}
+                                        {row.tags.slice(0, 2).map((tag) => (
+                                            <span
+                                                key={tag.id}
+                                                className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-white"
+                                                style={{
+                                                    backgroundColor: tag.color || '#AB3C3D',
+                                                }}
+                                            >
+                                                {tag.name}
+                                            </span>
+                                        ))}
+                                    </span>
+                                )}
                                 <span className="sr-only">
                                     {t(`status.${row.status}`)}
                                 </span>

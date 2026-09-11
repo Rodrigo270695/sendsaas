@@ -9,6 +9,24 @@ export type ConversationContact = {
     phone_display: string;
 };
 
+export type InboxUser = {
+    id: string;
+    name: string;
+};
+
+export type InboxTag = {
+    id: string;
+    name: string;
+    color: string;
+};
+
+export type QuickReply = {
+    id: string;
+    title: string;
+    shortcut: string | null;
+    body: string;
+};
+
 export type ConversationListItem = {
     id: string;
     status: ConversationStatus;
@@ -16,6 +34,8 @@ export type ConversationListItem = {
     last_message_at: string | null;
     preview: string | null;
     contact: ConversationContact;
+    assigned_user: InboxUser | null;
+    tags: InboxTag[];
 };
 
 export type ConversationMessage = {
@@ -35,6 +55,7 @@ export type SelectedConversation = ConversationListItem & {
 export type ConversationFilters = {
     search: string;
     status: 'todas' | ConversationStatus;
+    assigned: 'todas' | 'mias' | 'sin_asignar';
     unread: boolean;
 };
 
@@ -42,6 +63,7 @@ export type ConversationStats = {
     total: number;
     open: number;
     unread: number;
+    unassigned: number;
 };
 
 export type ReplyState = {
@@ -50,10 +72,19 @@ export type ReplyState = {
     remaining: number | null;
 };
 
+export type InboxCapabilities = {
+    assign: boolean;
+    manage_replies: boolean;
+};
+
 export type InboxPageProps = {
     conversations: Paginated<ConversationListItem>;
     selected: SelectedConversation | null;
     filters: ConversationFilters;
     stats: ConversationStats;
     reply: ReplyState;
+    assignees: InboxUser[];
+    tag_catalog: InboxTag[];
+    quick_replies: QuickReply[];
+    capabilities: InboxCapabilities;
 };

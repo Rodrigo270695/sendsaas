@@ -8,7 +8,10 @@
         "PENDING": "Pending",
         "RESOLVED": "Resolved",
         "CLOSED": "Closed",
-        "unread": "Unread"
+        "unread": "Unread",
+        "assigned_todas": "All",
+        "mias": "Mine",
+        "sin_asignar": "Unassigned"
     },
     "status": {
         "OPEN": "Open",
@@ -19,7 +22,8 @@
     "stats": {
         "total": "Total",
         "open": "Open",
-        "unread": "Unread"
+        "unread": "Unread",
+        "unassigned": "Unassigned"
     },
     "empty": {
         "no_records_title": "No conversations yet",
@@ -46,7 +50,22 @@
         "media_document": "Document",
         "media_audio": "Audio",
         "media_video": "Video",
-        "media_other": "Attachment"
+        "media_other": "Attachment",
+        "assign": "Assign",
+        "unassigned": "Unassigned",
+        "take": "Take",
+        "release": "Release",
+        "tags": "Tags",
+        "add_tag": "New tag",
+        "add_tag_placeholder": "VIP, QUOTE…",
+        "no_tags": "No tags",
+        "quick_replies": "Quick replies",
+        "quick_empty": "No quick replies yet.",
+        "quick_add": "Save reply",
+        "quick_title": "Title",
+        "quick_shortcut": "Shortcut",
+        "quick_body": "Message",
+        "quick_delete": "Delete"
     },
     "toast": {
         "load_error": "Could not load the inbox."

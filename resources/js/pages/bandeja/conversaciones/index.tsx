@@ -24,10 +24,18 @@ export default function Index({
     filters,
     stats,
     reply,
+    assignees,
+    tag_catalog,
+    quick_replies,
+    capabilities,
 }: InboxPageProps) {
     const { t } = useTranslation('bandeja');
     const [search, setSearch] = useState(filters.search);
-    const hasFilters = filters.search !== '' || filters.status !== 'todas' || filters.unread;
+    const hasFilters =
+        filters.search !== '' ||
+        filters.status !== 'todas' ||
+        filters.assigned !== 'todas' ||
+        filters.unread;
     const empty = conversations.data.length === 0;
 
     useEffect(() => {
@@ -74,6 +82,10 @@ export default function Index({
                         <span>
                             {t('stats.unread')}:{' '}
                             <strong className="text-foreground">{stats.unread}</strong>
+                        </span>
+                        <span>
+                            {t('stats.unassigned')}:{' '}
+                            <strong className="text-foreground">{stats.unassigned}</strong>
                         </span>
                     </div>
                 </div>
@@ -124,6 +136,36 @@ export default function Index({
                                 >
                                     {t('filters.unread')}
                                 </FilterChip>
+                                <FilterChip
+                                    active={filters.assigned === 'mias'}
+                                    onClick={() =>
+                                        visitInbox({
+                                            ...filters,
+                                            assigned:
+                                                filters.assigned === 'mias'
+                                                    ? 'todas'
+                                                    : 'mias',
+                                            search,
+                                        })
+                                    }
+                                >
+                                    {t('filters.mias')}
+                                </FilterChip>
+                                <FilterChip
+                                    active={filters.assigned === 'sin_asignar'}
+                                    onClick={() =>
+                                        visitInbox({
+                                            ...filters,
+                                            assigned:
+                                                filters.assigned === 'sin_asignar'
+                                                    ? 'todas'
+                                                    : 'sin_asignar',
+                                            search,
+                                        })
+                                    }
+                                >
+                                    {t('filters.sin_asignar')}
+                                </FilterChip>
                             </div>
                         </div>
 
@@ -157,7 +199,14 @@ export default function Index({
                             selected ? 'flex' : 'hidden md:flex',
                         )}
                     >
-                        <ConversationThread selected={selected} reply={reply} />
+                        <ConversationThread
+                            selected={selected}
+                            reply={reply}
+                            assignees={assignees}
+                            tagCatalog={tag_catalog}
+                            quickReplies={quick_replies}
+                            capabilities={capabilities}
+                        />
                     </section>
                 </div>
             </div>
@@ -197,13 +246,23 @@ function visitInbox(next: ConversationFilters): void {
         {
             search: next.search || undefined,
             status: next.status === 'todas' ? undefined : next.status,
+            assigned: next.assigned === 'todas' ? undefined : next.assigned,
             unread: next.unread ? 1 : undefined,
         },
         {
             preserveState: true,
             preserveScroll: true,
             replace: true,
-            only: ['conversations', 'selected', 'filters', 'stats'],
+            only: [
+                'conversations',
+                'selected',
+                'filters',
+                'stats',
+                'assignees',
+                'tag_catalog',
+                'quick_replies',
+                'capabilities',
+            ],
         },
     );
 }

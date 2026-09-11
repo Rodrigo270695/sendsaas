@@ -36,4 +36,12 @@ class Tag extends Model
     {
         return $this->belongsToMany(Contact::class, 'contact_tags')->withTimestamps();
     }
+
+    /**
+     * @return BelongsToMany<Conversation, $this>
+     */
+    public function conversations(): BelongsToMany
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_tags')->withTimestamps();
+    }
 }
