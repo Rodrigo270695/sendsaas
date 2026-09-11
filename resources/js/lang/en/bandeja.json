@@ -1,0 +1,44 @@
+{
+    "title": "Inbox",
+    "description": "Messages that arrive on the connected WhatsApp. Replies from here come in the next step.",
+    "search_placeholder": "Search name, phone or message…",
+    "filters": {
+        "todas": "All",
+        "OPEN": "Open",
+        "PENDING": "Pending",
+        "RESOLVED": "Resolved",
+        "CLOSED": "Closed",
+        "unread": "Unread"
+    },
+    "status": {
+        "OPEN": "Open",
+        "PENDING": "Pending",
+        "RESOLVED": "Resolved",
+        "CLOSED": "Closed"
+    },
+    "stats": {
+        "total": "Total",
+        "open": "Open",
+        "unread": "Unread"
+    },
+    "empty": {
+        "no_records_title": "No conversations yet",
+        "no_records_description": "When someone writes to the company WhatsApp, the thread shows up here.",
+        "no_results_title": "Nothing matches",
+        "no_results_description": "Try another name, phone or clear the filters.",
+        "pick_title": "Pick a conversation",
+        "pick_description": "Select a chat on the left to read the messages."
+    },
+    "thread": {
+        "back": "Back to the list",
+        "reply_soon": "Replies from this inbox come in the next step.",
+        "media_image": "Image",
+        "media_document": "Document",
+        "media_audio": "Audio",
+        "media_video": "Video",
+        "media_other": "Attachment"
+    },
+    "toast": {
+        "load_error": "Could not load the inbox."
+    }
+}

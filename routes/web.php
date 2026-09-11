@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\GeoController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
@@ -79,6 +80,11 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         Route::middleware('permission:comunicaciones.historial.view')
             ->get('historial', fn () => Inertia::render('comunicaciones/historial/index'))
             ->name('historial.index');
+    });
+
+    Route::prefix('bandeja')->name('bandeja.')->group(function () {
+        Route::middleware('permission:conversations.view')->get('conversaciones', [ConversationController::class, 'index'])->name('conversaciones.index');
+        Route::middleware('permission:conversations.view')->get('conversaciones/{conversation}', [ConversationController::class, 'show'])->name('conversaciones.show');
     });
 
     Route::prefix('contactos')->name('contactos.')->group(function () {

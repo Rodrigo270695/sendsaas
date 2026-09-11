@@ -1,0 +1,44 @@
+{
+    "title": "Conversaciones",
+    "description": "Mensajes que llegan al WhatsApp conectado. Responder desde aquí llega en el siguiente paso.",
+    "search_placeholder": "Buscar nombre, teléfono o mensaje…",
+    "filters": {
+        "todas": "Todas",
+        "OPEN": "Abiertas",
+        "PENDING": "Pendientes",
+        "RESOLVED": "Resueltas",
+        "CLOSED": "Cerradas",
+        "unread": "No leídas"
+    },
+    "status": {
+        "OPEN": "Abierta",
+        "PENDING": "Pendiente",
+        "RESOLVED": "Resuelta",
+        "CLOSED": "Cerrada"
+    },
+    "stats": {
+        "total": "Total",
+        "open": "Abiertas",
+        "unread": "Sin leer"
+    },
+    "empty": {
+        "no_records_title": "Aún no hay conversaciones",
+        "no_records_description": "Cuando alguien escriba al WhatsApp de la empresa, el hilo aparece aquí.",
+        "no_results_title": "Nada coincide",
+        "no_results_description": "Prueba otro nombre, teléfono o quita los filtros.",
+        "pick_title": "Elige una conversación",
+        "pick_description": "Selecciona un chat de la izquierda para leer los mensajes."
+    },
+    "thread": {
+        "back": "Volver a la lista",
+        "reply_soon": "Responder desde esta bandeja llega en el siguiente paso.",
+        "media_image": "Imagen",
+        "media_document": "Documento",
+        "media_audio": "Audio",
+        "media_video": "Video",
+        "media_other": "Adjunto"
+    },
+    "toast": {
+        "load_error": "No se pudo cargar la bandeja."
+    }
+}

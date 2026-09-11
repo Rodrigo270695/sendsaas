@@ -6,6 +6,7 @@ const IMPLEMENTED_PREFIXES = [
     '/comunicaciones/sesiones',
     '/comunicaciones/envios',
     '/comunicaciones/historial',
+    '/bandeja',
     '/contactos',
     '/plataforma/planes',
     '/plataforma/tenants',

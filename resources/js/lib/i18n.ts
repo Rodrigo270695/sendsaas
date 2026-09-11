@@ -3,6 +3,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
 import authEn from '@/lang/en/auth.json';
+import bandejaEn from '@/lang/en/bandeja.json';
 import commonEn from '@/lang/en/common.json';
 import comunicacionesEn from '@/lang/en/comunicaciones.json';
 import contactosEn from '@/lang/en/contactos.json';
@@ -15,6 +16,7 @@ import settingsEn from '@/lang/en/settings.json';
 import tenantsEn from '@/lang/en/tenants.json';
 import usuariosEn from '@/lang/en/usuarios.json';
 import authEs from '@/lang/es/auth.json';
+import bandejaEs from '@/lang/es/bandeja.json';
 import commonEs from '@/lang/es/common.json';
 import comunicacionesEs from '@/lang/es/comunicaciones.json';
 import contactosEs from '@/lang/es/contactos.json';
@@ -48,6 +50,7 @@ const namespaces = [
     'sedes',
     'comunicaciones',
     'contactos',
+    'bandeja',
 ] as const;
 
 const isBrowser = typeof document !== 'undefined';
@@ -71,6 +74,7 @@ i18n.use(initReactI18next).init({
             sedes: sedesEs,
             comunicaciones: comunicacionesEs,
             contactos: contactosEs,
+            bandeja: bandejaEs,
         },
         en: {
             common: commonEn,
@@ -85,6 +89,7 @@ i18n.use(initReactI18next).init({
             sedes: sedesEn,
             comunicaciones: comunicacionesEn,
             contactos: contactosEn,
+            bandeja: bandejaEn,
         },
     },
     lng: isBrowser ? undefined : DEFAULT_LOCALE,
