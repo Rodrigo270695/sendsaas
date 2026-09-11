@@ -115,9 +115,51 @@
     },
     "envios": {
         "title": "Scheduled sends",
-        "description": "Outbound WhatsApp queue: campaigns, reminders and delayed messages.",
-        "empty_title": "The send queue arrives in the next block",
-        "empty_description": "Once you connect a session and schedule campaigns, you will see each message status here (queued, sent or failed)."
+        "description": "WhatsApp drip queue. Campaigns and reminders go out across the send window and plan quota; agent replies stay instant.",
+        "empty_title": "The queue is empty",
+        "empty_description": "When you schedule a campaign or reminder, each destination will appear here until the worker sends it.",
+        "search_placeholder": "N/A",
+        "filter_label": "Filter by status",
+        "filters": {
+            "todas": "All",
+            "queued": "Queued",
+            "reserved": "Reserved",
+            "sent": "Sent",
+            "failed": "Failed",
+            "cancelled": "Cancelled"
+        },
+        "stats": {
+            "queued": "Queued",
+            "reserved": "Reserved",
+            "sent": "Sent",
+            "failed": "Failed"
+        },
+        "columns": {
+            "destinatario": "Recipient",
+            "mensaje": "Message",
+            "kind": "Type",
+            "estado": "Status",
+            "cuando": "Scheduled"
+        },
+        "kinds": {
+            "campaign": "Campaign",
+            "reminder": "Reminder",
+            "automation": "Automation",
+            "manual": "Manual"
+        },
+        "status": {
+            "queued": "Queued",
+            "reserved": "Reserved",
+            "sent": "Sent",
+            "failed": "Failed",
+            "cancelled": "Cancelled"
+        },
+        "empty": {
+            "no_records_title": "The queue is empty",
+            "no_records_description": "No drip messages yet. Agent replies do not go through this queue.",
+            "no_results_title": "No results",
+            "no_results_description": "No sends match the current filter."
+        }
     },
     "historial": {
         "title": "Send history",

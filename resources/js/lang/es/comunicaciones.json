@@ -115,9 +115,51 @@
     },
     "envios": {
         "title": "Envíos programados",
-        "description": "Cola de mensajes que salen por WhatsApp: campañas, recordatorios y envíos diferidos.",
-        "empty_title": "La cola de envíos llega en el siguiente bloque",
-        "empty_description": "Cuando conectes una sesión y programes campañas, aquí verás el estado de cada mensaje (en espera, enviado o fallido)."
+        "description": "Cola drip de WhatsApp. Campañas y recordatorios salen repartidos en la ventana y el cupo del plan; el agente responde al instante.",
+        "empty_title": "No hay envíos en la cola",
+        "empty_description": "Cuando programes una campaña o un recordatorio, cada destino aparecerá aquí hasta que el worker lo despache.",
+        "search_placeholder": "No aplica",
+        "filter_label": "Filtrar por estado",
+        "filters": {
+            "todas": "Todos",
+            "queued": "En cola",
+            "reserved": "Reservado",
+            "sent": "Enviados",
+            "failed": "Fallidos",
+            "cancelled": "Cancelados"
+        },
+        "stats": {
+            "queued": "En cola",
+            "reserved": "Reservados",
+            "sent": "Enviados",
+            "failed": "Fallidos"
+        },
+        "columns": {
+            "destinatario": "Destinatario",
+            "mensaje": "Mensaje",
+            "kind": "Tipo",
+            "estado": "Estado",
+            "cuando": "Programado"
+        },
+        "kinds": {
+            "campaign": "Campaña",
+            "reminder": "Recordatorio",
+            "automation": "Automatización",
+            "manual": "Manual"
+        },
+        "status": {
+            "queued": "En cola",
+            "reserved": "Reservado",
+            "sent": "Enviado",
+            "failed": "Fallido",
+            "cancelled": "Cancelado"
+        },
+        "empty": {
+            "no_records_title": "La cola está vacía",
+            "no_records_description": "Aún no hay mensajes drip. Las respuestas del agente no pasan por aquí.",
+            "no_results_title": "Sin resultados",
+            "no_results_description": "Ningún envío coincide con el filtro actual."
+        }
     },
     "historial": {
         "title": "Historial de envíos",

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\GeoController;
+use App\Http\Controllers\OutboundQueueController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SedeController;
@@ -78,7 +79,7 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
         Route::middleware('permission:whatsapp.delete')->delete('sesiones/{whatsappSession}', [WhatsappSessionController::class, 'destroy'])->name('sesiones.destroy');
 
         Route::middleware('permission:comunicaciones.envios.view')
-            ->get('envios', fn () => Inertia::render('comunicaciones/envios/index'))
+            ->get('envios', [OutboundQueueController::class, 'index'])
             ->name('envios.index');
         Route::middleware('permission:comunicaciones.historial.view')
             ->get('historial', fn () => Inertia::render('comunicaciones/historial/index'))
