@@ -3,6 +3,7 @@ const IMPLEMENTED_PREFIXES = [
     '/configuracion/roles',
     '/configuracion/usuarios',
     '/configuracion/sedes',
+    '/configuracion/suscripcion',
     '/comunicaciones/sesiones',
     '/comunicaciones/envios',
     '/comunicaciones/historial',

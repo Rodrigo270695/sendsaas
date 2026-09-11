@@ -1,0 +1,102 @@
+{
+    "title": "Mi suscripción",
+    "description": "Plan contratado, estado del servicio y fechas de renovación de SendSaaS.",
+    "empty_plan": "Sin plan asignado",
+    "sections": {
+        "plan": "Tu plan",
+        "dates": "Fechas importantes",
+        "renew": "Renovar servicio",
+        "outbound": "Envíos de hoy"
+    },
+    "fields": {
+        "plan": "Plan",
+        "estado": "Estado",
+        "ciclo": "Ciclo de facturación",
+        "precio": "Precio pactado",
+        "soporte": "Soporte",
+        "send_window": "Ventana de envío",
+        "period_start": "Alta del servicio",
+        "period_end": "Fin del período",
+        "proximo_cobro": "Próximo cobro",
+        "trial_end": "Fin del período de prueba",
+        "renewal_anchor": "Próximo vencimiento"
+    },
+    "estados": {
+        "trial": "En prueba",
+        "active": "Activa",
+        "grace": "Período de gracia",
+        "suspended": "Suspendida",
+        "cancelled": "Cancelada",
+        "unknown": "Sin información"
+    },
+    "ciclos": {
+        "mensual": "Mensual",
+        "trimestral": "Trimestral",
+        "semestral": "Semestral",
+        "anual": "Anual"
+    },
+    "soporte": {
+        "docs": "Documentación",
+        "email": "Correo",
+        "whatsapp": "WhatsApp",
+        "priority": "Prioritario"
+    },
+    "days_until": {
+        "past": "Venció hace {{count}} día(s)",
+        "today": "Vence hoy",
+        "future": "Faltan {{count}} día(s)"
+    },
+    "alerts": {
+        "ok": "Tu suscripción está al día. Revisa la fecha de próximo cobro para planificar la renovación.",
+        "yellow": "Tu próximo cobro está en los próximos 7 días. Te recomendamos revisar tu plan y renovar a tiempo.",
+        "amber": "Quedan pocos días para el próximo cobro. Renueva pronto para evitar interrupciones.",
+        "red": "Tu suscripción vence muy pronto o ya venció. Renueva cuanto antes para mantener el acceso.",
+        "danger": "Tu suscripción requiere atención inmediata. Contacta soporte o renueva tu plan.",
+        "muted": "Si tienes dudas sobre tu plan o fechas, escríbenos por WhatsApp."
+    },
+    "renew_hint": "El cobro automático aún no está habilitado. Escríbenos por WhatsApp y te renovamos o cambiamos el plan.",
+    "renew_cta": "Renovar o cambiar plan",
+    "no_renewal_url": "Por ahora no hay un canal de renovación configurado. Escríbenos a soporte para actualizar tu plan.",
+    "hero": {
+        "badge": "Suscripción SendSaaS",
+        "days_label": "días para el próximo cobro",
+        "due_today": "El cobro vence hoy"
+    },
+    "stats": {
+        "total": "Pago total"
+    },
+    "outbound": {
+        "title": "Envíos de hoy",
+        "description": "Mensajes salientes del agente frente al cupo diario de tu plan.",
+        "usage": "{{used}} de {{limit}} enviados hoy",
+        "usage_unlimited": "{{used}} enviados hoy (ilimitado)",
+        "remaining": "Quedan {{count}}",
+        "window": "Ventana de envío: {{start}} – {{end}}",
+        "reset_hint": "El contador se reinicia cada día a medianoche ({{timezone}}).",
+        "unlimited_hint": "Sin tope diario en este plan."
+    },
+    "usage": {
+        "title": "Uso de tu plan",
+        "description": "Consumo actual frente a los límites de tu suscripción.",
+        "usage": "{{used}} de {{limit}}",
+        "usage_unlimited": "{{used}} registrados (ilimitado)",
+        "remaining": "Quedan {{count}}",
+        "unlimited_hint": "Sin tope en este plan.",
+        "features": {
+            "max_contacts": "Contactos",
+            "max_usuarios": "Usuarios",
+            "max_whatsapp_sessions": "Sesiones WhatsApp",
+            "max_sedes": "Sedes",
+            "max_campaigns": "Campañas",
+            "max_automations": "Automatizaciones",
+            "max_outbound_per_day": "Envíos por día"
+        },
+        "semaphore": {
+            "unlimited": "Ilimitado",
+            "ok": "Normal",
+            "caution": "Atención",
+            "warning": "Cerca del límite",
+            "over": "Límite alcanzado"
+        }
+    }
+}

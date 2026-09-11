@@ -6,6 +6,7 @@ import authEn from '@/lang/en/auth.json';
 import bandejaEn from '@/lang/en/bandeja.json';
 import commonEn from '@/lang/en/common.json';
 import comunicacionesEn from '@/lang/en/comunicaciones.json';
+import configSuscripcionEn from '@/lang/en/config-suscripcion.json';
 import contactosEn from '@/lang/en/contactos.json';
 import dashboardEn from '@/lang/en/dashboard.json';
 import navEn from '@/lang/en/nav.json';
@@ -19,6 +20,7 @@ import authEs from '@/lang/es/auth.json';
 import bandejaEs from '@/lang/es/bandeja.json';
 import commonEs from '@/lang/es/common.json';
 import comunicacionesEs from '@/lang/es/comunicaciones.json';
+import configSuscripcionEs from '@/lang/es/config-suscripcion.json';
 import contactosEs from '@/lang/es/contactos.json';
 import dashboardEs from '@/lang/es/dashboard.json';
 import navEs from '@/lang/es/nav.json';
@@ -51,6 +53,7 @@ const namespaces = [
     'comunicaciones',
     'contactos',
     'bandeja',
+    'config-suscripcion',
 ] as const;
 
 const isBrowser = typeof document !== 'undefined';
@@ -75,6 +78,7 @@ i18n.use(initReactI18next).init({
             comunicaciones: comunicacionesEs,
             contactos: contactosEs,
             bandeja: bandejaEs,
+            'config-suscripcion': configSuscripcionEs,
         },
         en: {
             common: commonEn,
@@ -90,6 +94,7 @@ i18n.use(initReactI18next).init({
             comunicaciones: comunicacionesEn,
             contactos: contactosEn,
             bandeja: bandejaEn,
+            'config-suscripcion': configSuscripcionEn,
         },
     },
     lng: isBrowser ? undefined : DEFAULT_LOCALE,

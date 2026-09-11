@@ -5,6 +5,7 @@ import {
     Bot,
     Building2,
     Cog,
+    CreditCard,
     History,
     LayoutGrid,
     MessageCircle,
@@ -146,6 +147,13 @@ function useNavConfig(): { singles: NavItem[]; groups: NavGroup[] } {
                     icon: Cog,
                     context: 'both',
                     items: [
+                        {
+                            title: t('items.suscripcion'),
+                            href: '/configuracion/suscripcion',
+                            icon: CreditCard,
+                            permission: 'settings.view',
+                            context: 'tenant',
+                        },
                         {
                             title: t('items.sedes'),
                             href: '/configuracion/sedes',

@@ -6,6 +6,7 @@ use App\Http\Controllers\GeoController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SedeController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantImpersonationController;
 use App\Http\Controllers\UserController;
@@ -35,6 +36,8 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
     Route::get('geo/distritos', [GeoController::class, 'distritos'])->name('geo.distritos');
 
     Route::prefix('configuracion')->name('configuracion.')->group(function () {
+        Route::middleware('permission:settings.view')->get('suscripcion', [SubscriptionController::class, 'show'])->name('suscripcion.show');
+
         Route::middleware('permission:sedes.view')->get('sedes', [SedeController::class, 'index'])->name('sedes.index');
         Route::middleware('permission:sedes.export')->get('sedes/export', [SedeController::class, 'export'])->name('sedes.export');
         Route::middleware('permission:sedes.create')->post('sedes', [SedeController::class, 'store'])->name('sedes.store');

@@ -1,0 +1,102 @@
+{
+    "title": "My subscription",
+    "description": "Plan, service status and renewal dates for SendSaaS.",
+    "empty_plan": "No plan assigned",
+    "sections": {
+        "plan": "Your plan",
+        "dates": "Important dates",
+        "renew": "Renew service",
+        "outbound": "Today's sends"
+    },
+    "fields": {
+        "plan": "Plan",
+        "estado": "Status",
+        "ciclo": "Billing cycle",
+        "precio": "Contracted price",
+        "soporte": "Support",
+        "send_window": "Send window",
+        "period_start": "Service start",
+        "period_end": "Period end",
+        "proximo_cobro": "Next charge",
+        "trial_end": "Trial ends",
+        "renewal_anchor": "Next due date"
+    },
+    "estados": {
+        "trial": "Trial",
+        "active": "Active",
+        "grace": "Grace period",
+        "suspended": "Suspended",
+        "cancelled": "Cancelled",
+        "unknown": "Unknown"
+    },
+    "ciclos": {
+        "mensual": "Monthly",
+        "trimestral": "Quarterly",
+        "semestral": "Semiannual",
+        "anual": "Yearly"
+    },
+    "soporte": {
+        "docs": "Docs",
+        "email": "Email",
+        "whatsapp": "WhatsApp",
+        "priority": "Priority"
+    },
+    "days_until": {
+        "past": "Expired {{count}} day(s) ago",
+        "today": "Due today",
+        "future": "{{count}} day(s) left"
+    },
+    "alerts": {
+        "ok": "Your subscription is up to date. Check the next charge date to plan the renewal.",
+        "yellow": "Your next charge is within 7 days. Review your plan and renew on time.",
+        "amber": "Few days left until the next charge. Renew soon to avoid interruptions.",
+        "red": "Your subscription is due very soon or already expired. Renew now to keep access.",
+        "danger": "Your subscription needs immediate attention. Contact support or renew your plan.",
+        "muted": "If you have questions about your plan or dates, write to us on WhatsApp."
+    },
+    "renew_hint": "Automatic billing is not enabled yet. Write to us on WhatsApp and we will renew or change your plan.",
+    "renew_cta": "Renew or change plan",
+    "no_renewal_url": "There is no renewal channel configured yet. Contact support to update your plan.",
+    "hero": {
+        "badge": "SendSaaS subscription",
+        "days_label": "days until the next charge",
+        "due_today": "The charge is due today"
+    },
+    "stats": {
+        "total": "Total due"
+    },
+    "outbound": {
+        "title": "Today's sends",
+        "description": "Agent outbound messages against your daily plan quota.",
+        "usage": "{{used}} of {{limit}} sent today",
+        "usage_unlimited": "{{used}} sent today (unlimited)",
+        "remaining": "{{count}} left",
+        "window": "Send window: {{start}} – {{end}}",
+        "reset_hint": "The counter resets every day at midnight ({{timezone}}).",
+        "unlimited_hint": "No daily cap on this plan."
+    },
+    "usage": {
+        "title": "Plan usage",
+        "description": "Current usage against your subscription limits.",
+        "usage": "{{used}} of {{limit}}",
+        "usage_unlimited": "{{used}} recorded (unlimited)",
+        "remaining": "{{count}} left",
+        "unlimited_hint": "No cap on this plan.",
+        "features": {
+            "max_contacts": "Contacts",
+            "max_usuarios": "Users",
+            "max_whatsapp_sessions": "WhatsApp sessions",
+            "max_sedes": "Locations",
+            "max_campaigns": "Campaigns",
+            "max_automations": "Automations",
+            "max_outbound_per_day": "Sends per day"
+        },
+        "semaphore": {
+            "unlimited": "Unlimited",
+            "ok": "Normal",
+            "caution": "Attention",
+            "warning": "Near the limit",
+            "over": "Limit reached"
+        }
+    }
+}
