@@ -51,19 +51,19 @@ final class OpenWaWebhookController extends Controller
         $payload = OpenWaInboundPayload::fromRequest($request->all());
 
         if (! OpenWaWebhookEvents::isInboundChat($payload->event)) {
-            return response()->json(['ok' => true, 'skipped' => 'not_message_event']);
+            return $this->skipped($slug, $payload, 'not_message_event');
         }
 
         if ($payload->fromMe) {
-            return response()->json(['ok' => true, 'skipped' => 'from_me']);
+            return $this->skipped($slug, $payload, 'from_me');
         }
 
         if ($payload->isGroup()) {
-            return response()->json(['ok' => true, 'skipped' => 'group']);
+            return $this->skipped($slug, $payload, 'group');
         }
 
         if ($payload->phone === null) {
-            return response()->json(['ok' => true, 'skipped' => 'unresolvable_phone']);
+            return $this->skipped($slug, $payload, 'unresolvable_phone');
         }
 
         $tenant = Tenant::query()->where('slug', $slug)->first();
@@ -73,7 +73,7 @@ final class OpenWaWebhookController extends Controller
 
         $session = $this->resolveSession($payload->sessionId, (string) $tenant->id);
         if ($session === false) {
-            return response()->json(['ok' => true, 'skipped' => 'tenant_mismatch']);
+            return $this->skipped($slug, $payload, 'tenant_mismatch');
         }
 
         try {
@@ -131,11 +131,35 @@ final class OpenWaWebhookController extends Controller
         $signatureToVerify = $signature !== '' ? $signature : $openWaSignature;
 
         if ($signatureToVerify !== '') {
-            $expected = 'sha256='.hash_hmac('sha256', (string) $request->getContent(), $secret);
+            $digest = hash_hmac('sha256', (string) $request->getContent(), $secret);
+            $candidates = [
+                'sha256='.$digest,
+                $digest,
+            ];
 
-            return hash_equals($expected, $signatureToVerify);
+            foreach ($candidates as $expected) {
+                if (hash_equals(strtolower($expected), strtolower($signatureToVerify))) {
+                    return true;
+                }
+            }
+
+            return $legacySecret !== '' && hash_equals($secret, $legacySecret);
         }
 
         return $legacySecret !== '' && hash_equals($secret, $legacySecret);
+    }
+
+    private function skipped(string $slug, OpenWaInboundPayload $payload, string $reason): JsonResponse
+    {
+        Log::info('OpenWA webhook omitido', [
+            'slug' => $slug,
+            'reason' => $reason,
+            'event' => $payload->event,
+            'from_me' => $payload->fromMe,
+            'wa_chat_id' => $payload->waChatId,
+            'phone' => $payload->phone,
+        ]);
+
+        return response()->json(['ok' => true, 'skipped' => $reason]);
     }
 }

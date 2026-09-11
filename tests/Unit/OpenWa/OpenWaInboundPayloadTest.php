@@ -37,5 +37,21 @@ it('skips groups and linked ids without a real phone', function () {
 
     expect($group->isGroup())->toBeTrue()
         ->and($group->phone)->toBeNull()
-        ->and($lid->phone)->toBeNull();
+        ->and($lid->isGroup())->toBeFalse()
+        ->and($lid->phone)->toBe('lid:123456789012345');
+});
+
+it('prefers a real phone when the chat arrives as lid plus senderPn', function () {
+    $payload = OpenWaInboundPayload::fromRequest([
+        'event' => 'message.received',
+        'data' => [
+            'from' => '999888777666555@lid',
+            'senderPn' => '51987654321@c.us',
+            'body' => 'Hola',
+            'id' => 'l2',
+        ],
+    ]);
+
+    expect($payload->phone)->toBe('51987654321')
+        ->and($payload->waChatId)->toBe('999888777666555@lid');
 });

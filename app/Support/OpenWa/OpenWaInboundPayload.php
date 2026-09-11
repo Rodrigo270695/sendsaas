@@ -37,11 +37,7 @@ final class OpenWaInboundPayload
         $from = (string) ($data['from'] ?? '');
         $chatId = (string) ($data['chatId'] ?? $data['chat_id'] ?? '');
         $waChatId = $from !== '' ? $from : $chatId;
-
-        $phone = self::phoneFromChatId($waChatId);
-        if (str_ends_with($waChatId, '@lid') && str_ends_with($chatId, '@c.us')) {
-            $phone = self::phoneFromChatId($chatId) ?? $phone;
-        }
+        $phone = self::extractPhone($data, $waChatId, $chatId);
 
         $externalId = trim((string) ($data['id'] ?? $data['messageId'] ?? $data['message_id'] ?? ''));
         if ($externalId === '') {
@@ -73,6 +69,52 @@ final class OpenWaInboundPayload
         return str_ends_with($this->waChatId, '@g.us');
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private static function extractPhone(array $data, string $waChatId, string $chatId): ?string
+    {
+        $sender = is_array($data['sender'] ?? null) ? $data['sender'] : [];
+        $contact = is_array($data['contact'] ?? null) ? $data['contact'] : [];
+
+        $candidates = [
+            $data['senderPn'] ?? null,
+            $data['fromPn'] ?? null,
+            $data['participantPn'] ?? null,
+            $data['author'] ?? null,
+            $data['participant'] ?? null,
+            $data['remoteJid'] ?? null,
+            $data['remoteJidAlt'] ?? null,
+            $chatId,
+            $data['from'] ?? null,
+            $sender['id'] ?? null,
+            $sender['number'] ?? null,
+            $contact['number'] ?? null,
+            $contact['id'] ?? null,
+            $waChatId,
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (! is_string($candidate) || $candidate === '') {
+                continue;
+            }
+
+            $phone = self::phoneFromChatId($candidate);
+            if ($phone !== null) {
+                return $phone;
+            }
+        }
+
+        foreach ([$chatId, $waChatId, (string) ($data['from'] ?? '')] as $candidate) {
+            $lid = self::phoneFromLid($candidate);
+            if ($lid !== null) {
+                return $lid;
+            }
+        }
+
+        return null;
+    }
+
     private static function phoneFromChatId(string $chatId): ?string
     {
         if ($chatId === '' || str_ends_with($chatId, '@lid') || str_ends_with($chatId, '@g.us')) {
@@ -82,6 +124,20 @@ final class OpenWaInboundPayload
         $digits = preg_replace('/\D+/', '', preg_replace('/@(c\.us|s\.whatsapp\.net)$/', '', $chatId) ?? $chatId) ?? '';
 
         return WhatsAppPhone::normalize($digits);
+    }
+
+    private static function phoneFromLid(string $chatId): ?string
+    {
+        if (! str_ends_with($chatId, '@lid')) {
+            return null;
+        }
+
+        $digits = preg_replace('/\D+/', '', $chatId) ?? '';
+        if ($digits === '') {
+            return null;
+        }
+
+        return 'lid:'.substr($digits, -16);
     }
 
     /**
