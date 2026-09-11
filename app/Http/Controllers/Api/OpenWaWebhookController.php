@@ -38,6 +38,13 @@ final class OpenWaWebhookController extends Controller
         }
 
         if (! $this->verifySecret($request, $secret)) {
+            Log::warning('OpenWA webhook rechazado: firma o secret inválido.', [
+                'slug' => $slug,
+                'has_signature' => $request->header('X-OpenWA-Signature') !== null
+                    || $request->header('X-Webhook-Signature') !== null,
+                'has_legacy_secret' => $request->header('X-Webhook-Secret') !== null,
+            ]);
+
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 

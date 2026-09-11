@@ -36,6 +36,7 @@ class OpenWaRegisterWebhooksCommand extends Command
         }
 
         $dryRun = (bool) $this->option('dry-run');
+        $failed = 0;
 
         foreach ($sessions as $session) {
             $url = $registrar->inboxUrl((string) ($session->tenant?->slug ?? ''));
@@ -46,8 +47,30 @@ class OpenWaRegisterWebhooksCommand extends Command
                 $url,
             ));
 
-            if (! $dryRun) {
-                $registrar->ensureForSession($session);
+            if ($dryRun) {
+                continue;
+            }
+
+            try {
+                $registrar->ensureForSessionOrFail($session);
+                $hooks = $registrar->inboxHooks($session);
+                if ($hooks === []) {
+                    $this->error('  OpenWA no devolvió un webhook de bandeja.');
+                    $failed++;
+
+                    continue;
+                }
+
+                foreach ($hooks as $hook) {
+                    $this->info(sprintf(
+                        '  ok  %s  active=%s',
+                        $hook['url'],
+                        json_encode($hook['active']),
+                    ));
+                }
+            } catch (\Throwable $e) {
+                $this->error('  fallo: '.$e->getMessage());
+                $failed++;
             }
         }
 
@@ -55,6 +78,6 @@ class OpenWaRegisterWebhooksCommand extends Command
             $this->info('Dry-run: no se llamó a OpenWA.');
         }
 
-        return self::SUCCESS;
+        return $failed > 0 ? self::FAILURE : self::SUCCESS;
     }
 }

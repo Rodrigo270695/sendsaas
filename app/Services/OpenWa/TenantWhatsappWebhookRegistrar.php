@@ -19,20 +19,32 @@ final class TenantWhatsappWebhookRegistrar
         private readonly OpenWaClient $client,
     ) {}
 
-    public function ensureForSession(TenantWhatsappSession $session): void
+    public function ensureForSession(TenantWhatsappSession $session, bool $throw = false): void
     {
         if (! $this->client->isConfigured() || ! $session->isReady()) {
+            if ($throw) {
+                throw new \RuntimeException('OpenWA no está configurado o la sesión no está lista.');
+            }
+
             return;
         }
 
         $session->loadMissing('tenant');
         $url = $this->inboxUrl((string) ($session->tenant?->slug ?? ''));
         if ($url === '') {
+            if ($throw) {
+                throw new \RuntimeException('No se pudo armar la URL del webhook de bandeja.');
+            }
+
             return;
         }
 
         $sessionId = (string) $session->openwa_session_id;
         if ($sessionId === '') {
+            if ($throw) {
+                throw new \RuntimeException('La sesión no tiene openwa_session_id.');
+            }
+
             return;
         }
 
@@ -46,7 +58,44 @@ final class TenantWhatsappWebhookRegistrar
                 'tenant_id' => $session->tenant_id,
                 'error' => $e->getMessage(),
             ]);
+
+            if ($throw) {
+                throw $e;
+            }
         }
+    }
+
+    public function ensureForSessionOrFail(TenantWhatsappSession $session): void
+    {
+        $this->ensureForSession($session, throw: true);
+    }
+
+    /**
+     * @return list<array{id: string, url: string, events: mixed, active: mixed}>
+     */
+    public function inboxHooks(TenantWhatsappSession $session): array
+    {
+        $sessionId = (string) $session->openwa_session_id;
+        if ($sessionId === '') {
+            return [];
+        }
+
+        $out = [];
+        foreach ($this->webhooksForSession($sessionId) as $hook) {
+            $url = (string) ($hook['url'] ?? '');
+            if (! $this->isInboxUrl($url)) {
+                continue;
+            }
+
+            $out[] = [
+                'id' => (string) ($hook['id'] ?? ''),
+                'url' => $url,
+                'events' => $hook['events'] ?? null,
+                'active' => $hook['active'] ?? $hook['enabled'] ?? null,
+            ];
+        }
+
+        return $out;
     }
 
     public function inboxUrl(string $slug): string
