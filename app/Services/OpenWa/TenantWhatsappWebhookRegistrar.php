@@ -248,9 +248,6 @@ final class TenantWhatsappWebhookRegistrar
         ];
         if ($secret !== '') {
             $payload['secret'] = $secret;
-            $payload['headers'] = [
-                'X-Webhook-Secret' => $secret,
-            ];
         }
 
         return $payload;

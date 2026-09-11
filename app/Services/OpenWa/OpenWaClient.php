@@ -243,14 +243,10 @@ final class OpenWaClient
         $payload = [
             'url' => $url,
             'events' => OpenWaWebhookEvents::inboundMessageSubscriptions(),
-            'active' => true,
         ];
 
         if ($secret !== null && $secret !== '') {
             $payload['secret'] = $secret;
-            $payload['headers'] = [
-                'X-Webhook-Secret' => $secret,
-            ];
         }
 
         $response = $this->request('post', '/api/sessions/'.$sessionId.'/webhooks', $payload);

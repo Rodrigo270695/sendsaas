@@ -49,7 +49,10 @@ it('registra el webhook inbound de una sesion', function (): void {
         return $request->method() === 'POST'
             && $request->url() === 'https://wa.test/api/sessions/ow-1/webhooks'
             && $request['url'] === 'https://sendsaas.test/api/webhooks/openwa/demo'
-            && $request['events'] === ['message.received'];
+            && $request['events'] === ['message.received']
+            && $request['secret'] === 'secret'
+            && ! array_key_exists('active', $request->data())
+            && ! array_key_exists('headers', $request->data());
     });
 });
 
