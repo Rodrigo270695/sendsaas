@@ -10,6 +10,7 @@ use App\Models\Sede;
 use App\Models\Tenant;
 use App\Models\TenantWhatsappSession;
 use App\Models\User;
+use App\Services\Billing\OutboundDailyQuota;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
@@ -159,6 +160,9 @@ final class PlanLimits
                 fn () => TenantWhatsappSession::query()->where('tenant_id', $tenant->id)->count(),
             ),
             'max_contacts' => Schema::hasTable('contacts') ? Contact::query()->count() : 0,
+            'max_outbound_per_day' => self::publicTableExists('usage_records')
+                ? app(OutboundDailyQuota::class)->usedToday($tenant)
+                : 0,
             default => 0,
         };
     }

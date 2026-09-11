@@ -85,6 +85,7 @@ Route::middleware(['auth', 'verified', 'tenant.match-user'])->group(function () 
     Route::prefix('bandeja')->name('bandeja.')->group(function () {
         Route::middleware('permission:conversations.view')->get('conversaciones', [ConversationController::class, 'index'])->name('conversaciones.index');
         Route::middleware('permission:conversations.view')->get('conversaciones/{conversation}', [ConversationController::class, 'show'])->name('conversaciones.show');
+        Route::middleware('permission:conversations.reply')->post('conversaciones/{conversation}/mensajes', [ConversationController::class, 'reply'])->name('conversaciones.reply');
     });
 
     Route::prefix('contactos')->name('contactos.')->group(function () {

@@ -44,9 +44,16 @@ export type ConversationStats = {
     unread: number;
 };
 
+export type ReplyState = {
+    can: boolean;
+    reason: 'tenant' | 'openwa' | 'cooldown' | 'session' | 'quota' | null;
+    remaining: number | null;
+};
+
 export type InboxPageProps = {
     conversations: Paginated<ConversationListItem>;
     selected: SelectedConversation | null;
     filters: ConversationFilters;
     stats: ConversationStats;
+    reply: ReplyState;
 };

@@ -62,6 +62,7 @@ test('tenant admin can open an empty inbox', function () {
             ->where('selected', null)
             ->where('stats.total', 0)
             ->where('stats.unread', 0)
+            ->has('reply')
         );
 });
 

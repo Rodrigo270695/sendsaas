@@ -24,6 +24,19 @@ it('is configured only with enabled url and key', function (): void {
     expect($client->isConfigured())->toBeFalse();
 });
 
+it('envia texto a un chat', function (): void {
+    Http::fake([
+        'wa.test/api/sessions/ow-1/messages/send-text' => Http::response(['messageId' => 'mid-1']),
+    ]);
+
+    $result = (new OpenWaClient)->sendText('ow-1', '51999988877@c.us', 'Hola');
+
+    expect($result['messageId'])->toBe('mid-1');
+    Http::assertSent(fn ($request) => $request->method() === 'POST'
+        && $request['chatId'] === '51999988877@c.us'
+        && $request['text'] === 'Hola');
+});
+
 it('registra el webhook inbound de una sesion', function (): void {
     Http::fake([
         'wa.test/api/sessions/ow-1/webhooks' => Http::response(['id' => 'wh-1'], 201),

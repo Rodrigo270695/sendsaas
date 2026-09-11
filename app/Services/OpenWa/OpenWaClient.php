@@ -7,6 +7,7 @@ namespace App\Services\OpenWa;
 use App\Support\OpenWa\OpenWaWebhookEvents;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 final class OpenWaClient
@@ -157,6 +158,81 @@ final class OpenWaClient
         }
 
         return $remote;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function sendText(string $sessionId, string $chatId, string $text): array
+    {
+        $response = $this->request('post', '/api/sessions/'.$sessionId.'/messages/send-text', [
+            'chatId' => $chatId,
+            'text' => $text,
+        ]);
+
+        if (! is_array($response)) {
+            throw new RuntimeException('OpenWA no confirmó el envío del mensaje.');
+        }
+
+        return $response;
+    }
+
+    /**
+     * Timeout sin bytes = no se asume envío. 5xx tardío = se asume entregado.
+     *
+     * @return array<string, mixed>
+     */
+    public function sendTextWithDeliveryFallback(string $sessionId, string $chatId, string $text): array
+    {
+        try {
+            return $this->sendText($sessionId, $chatId, $text);
+        } catch (\Throwable $error) {
+            if ($this->isNoResponseTimeout($error)) {
+                Log::warning('OpenWA send-text: timeout sin respuesta; no se asume envío', [
+                    'error' => $error->getMessage(),
+                    'chat_id' => $chatId,
+                    'session_id' => $sessionId,
+                ]);
+
+                throw $error;
+            }
+
+            if ($this->isAmbiguousDeliveryError($error)) {
+                Log::warning('OpenWA send-text: respuesta ambigua; se asume envío OK', [
+                    'error' => $error->getMessage(),
+                    'chat_id' => $chatId,
+                ]);
+
+                return ['messageId' => null, 'assumed_delivery' => true];
+            }
+
+            throw $error;
+        }
+    }
+
+    public function isNoResponseTimeout(\Throwable $error): bool
+    {
+        $message = $error->getMessage();
+
+        return str_contains($message, '0 bytes received')
+            || (str_contains($message, 'cURL error 28')
+                && (str_contains($message, '0 bytes') || str_contains($message, 'Operation timed out')));
+    }
+
+    public function isAmbiguousDeliveryError(\Throwable $error): bool
+    {
+        $message = $error->getMessage();
+        if ($message === '' || $this->isNoResponseTimeout($error)) {
+            return false;
+        }
+
+        if (str_contains($message, 'Error de red con OpenWA')
+            || str_contains($message, 'Internal server error')
+            || str_contains($message, '"statusCode":500')) {
+            return true;
+        }
+
+        return (bool) preg_match('/OpenWA HTTP 5\d{2}/', $message);
     }
 
     /**

@@ -14,6 +14,8 @@ return [
 
     'reconnect_poll_seconds' => (int) env('OPENWA_RECONNECT_POLL_SECONDS', 3),
 
+    'cooldown_seconds' => (int) env('OPENWA_COOLDOWN_SECONDS', 240),
+
     'webhook_secret' => env('OPENWA_WEBHOOK_SECRET'),
 
     // Base sin slug. Default: {APP_URL}/api/webhooks/openwa/{slug}

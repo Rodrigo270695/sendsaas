@@ -1,6 +1,6 @@
 {
     "title": "Conversaciones",
-    "description": "Mensajes que llegan al WhatsApp conectado. Responder desde aquí llega en el siguiente paso.",
+    "description": "Mensajes del WhatsApp conectado. Responde desde el hilo; cada envío cuenta en la cuota del plan.",
     "search_placeholder": "Buscar nombre, teléfono o mensaje…",
     "filters": {
         "todas": "Todas",
@@ -31,7 +31,17 @@
     },
     "thread": {
         "back": "Volver a la lista",
-        "reply_soon": "Responder desde esta bandeja llega en el siguiente paso.",
+        "reply_placeholder": "Escribe un mensaje…",
+        "reply_send": "Enviar",
+        "reply_sending": "Enviando…",
+        "reply_remaining": "Quedan {{count}} envíos hoy",
+        "reply_blocked": {
+            "openwa": "WhatsApp no está configurado en el servidor.",
+            "cooldown": "WhatsApp está en pausa. Reintenta en unos minutos.",
+            "session": "No hay un WhatsApp conectado. Vincula una sesión para responder.",
+            "quota": "Llegaste al límite diario de envíos. Se reanuda mañana.",
+            "tenant": "No se puede responder desde este contexto."
+        },
         "media_image": "Imagen",
         "media_document": "Documento",
         "media_audio": "Audio",

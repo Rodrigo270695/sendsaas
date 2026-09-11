@@ -291,7 +291,7 @@ Más adelante: `tenant_whatsapp_sessions.sede_id` nullable (1 número por sede e
 | 19 | `2026_09_09_100080_create_subscription_payments_table` | `subscription_payments` |
 | 20 | `2026_09_09_100090_create_subscription_renewal_reminders_table` | reminders |
 | 21 | `2026_09_09_100100_create_tenant_plan_overrides_table` | overrides |
-| 22 | `2026_09_09_100110_create_usage_records_table` | cupo diario outbound |
+| 22 | `2026_09_09_100110_create_usage_records_table` **YA** | cupo diario outbound |
 
 ### `subscriptions`
 

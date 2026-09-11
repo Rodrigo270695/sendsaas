@@ -23,6 +23,7 @@ export default function Index({
     selected,
     filters,
     stats,
+    reply,
 }: InboxPageProps) {
     const { t } = useTranslation('bandeja');
     const [search, setSearch] = useState(filters.search);
@@ -156,7 +157,7 @@ export default function Index({
                             selected ? 'flex' : 'hidden md:flex',
                         )}
                     >
-                        <ConversationThread selected={selected} />
+                        <ConversationThread selected={selected} reply={reply} />
                     </section>
                 </div>
             </div>
@@ -178,7 +179,7 @@ function FilterChip({
             type="button"
             onClick={onClick}
             className={cn(
-                'rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors',
+                'cursor-pointer rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors',
                 active
                     ? 'bg-brand-600 text-white'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground',

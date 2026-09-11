@@ -1,18 +1,21 @@
-import { Link } from '@inertiajs/react';
-import { ArrowLeft, Image, Paperclip } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, Image, Paperclip, Send } from 'lucide-react';
+import { useEffect, useRef, type FormEvent, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EmptyState } from '@/components/data-page';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { usePermission } from '@/hooks/use-permission';
 import { cn } from '@/lib/utils';
 import { conversationInitials, formatInboxWhen } from '../lib';
-import type { ConversationMessage, SelectedConversation } from '../types';
+import type { ConversationMessage, ReplyState, SelectedConversation } from '../types';
 
 type ConversationThreadProps = {
     selected: SelectedConversation | null;
+    reply: ReplyState;
 };
 
-export function ConversationThread({ selected }: ConversationThreadProps) {
+export function ConversationThread({ selected, reply }: ConversationThreadProps) {
     const { t } = useTranslation('bandeja');
     const endRef = useRef<HTMLDivElement | null>(null);
 
@@ -65,9 +68,7 @@ export function ConversationThread({ selected }: ConversationThreadProps) {
                 </div>
             </div>
 
-            <footer className="border-t border-border/60 px-4 py-3 text-center text-xs text-muted-foreground">
-                {t('thread.reply_soon')}
-            </footer>
+            <ReplyComposer conversationId={selected.id} reply={reply} />
         </div>
     );
 }
@@ -135,6 +136,84 @@ function MessageBubble({ message }: { message: ConversationMessage }) {
                 </p>
             </div>
         </div>
+    );
+}
+
+function ReplyComposer({
+    conversationId,
+    reply,
+}: {
+    conversationId: string;
+    reply: ReplyState;
+}) {
+    const { t } = useTranslation('bandeja');
+    const { can } = usePermission();
+    const canPermission = can('conversations.reply');
+    const enabled = canPermission && reply.can;
+
+    if (!canPermission) {
+        return null;
+    }
+    const form = useForm({ body: '' });
+
+    const submit = (event?: FormEvent) => {
+        event?.preventDefault();
+        if (!enabled || form.processing || form.data.body.trim() === '') {
+            return;
+        }
+
+        form.post(`/bandeja/conversaciones/${conversationId}/mensajes`, {
+            preserveScroll: true,
+            onSuccess: () => form.reset('body'),
+        });
+    };
+
+    const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            submit();
+        }
+    };
+
+    return (
+        <form
+            onSubmit={submit}
+            className="space-y-2 border-t border-border/60 px-3 py-3 md:px-5"
+        >
+            {!enabled && (
+                <p className="text-xs text-muted-foreground">
+                    {blockedReason
+                        ? t(`thread.reply_blocked.${blockedReason}`)
+                        : t('thread.reply_blocked.tenant')}
+                </p>
+            )}
+            {enabled && reply.remaining !== null && (
+                <p className="text-xs text-muted-foreground">
+                    {t('thread.reply_remaining', { count: reply.remaining })}
+                </p>
+            )}
+            <div className="flex items-end gap-2">
+                <Textarea
+                    value={form.data.body}
+                    onChange={(event) => form.setData('body', event.target.value)}
+                    onKeyDown={onKeyDown}
+                    placeholder={t('thread.reply_placeholder')}
+                    disabled={!enabled || form.processing}
+                    autoGrow
+                    rows={1}
+                    className="min-h-11 max-h-36"
+                    aria-label={t('thread.reply_placeholder')}
+                />
+                <Button
+                    type="submit"
+                    disabled={!enabled || form.processing || form.data.body.trim() === ''}
+                    className="cursor-pointer"
+                >
+                    <Send className="size-4" />
+                    {form.processing ? t('thread.reply_sending') : t('thread.reply_send')}
+                </Button>
+            </div>
+        </form>
     );
 }
 

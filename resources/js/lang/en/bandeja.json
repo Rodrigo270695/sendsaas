@@ -1,6 +1,6 @@
 {
     "title": "Inbox",
-    "description": "Messages that arrive on the connected WhatsApp. Replies from here come in the next step.",
+    "description": "Messages from the connected WhatsApp. Reply in the thread; each send counts toward the plan quota.",
     "search_placeholder": "Search name, phone or message…",
     "filters": {
         "todas": "All",
@@ -31,7 +31,17 @@
     },
     "thread": {
         "back": "Back to the list",
-        "reply_soon": "Replies from this inbox come in the next step.",
+        "reply_placeholder": "Write a message…",
+        "reply_send": "Send",
+        "reply_sending": "Sending…",
+        "reply_remaining": "{{count}} sends left today",
+        "reply_blocked": {
+            "openwa": "WhatsApp is not configured on the server.",
+            "cooldown": "WhatsApp is paused. Try again in a few minutes.",
+            "session": "No WhatsApp is connected. Link a session to reply.",
+            "quota": "You hit today’s send limit. It resets tomorrow.",
+            "tenant": "You cannot reply in this context."
+        },
         "media_image": "Image",
         "media_document": "Document",
         "media_audio": "Audio",
