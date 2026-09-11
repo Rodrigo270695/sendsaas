@@ -1,13 +1,17 @@
 import { Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Image, Paperclip, Send } from 'lucide-react';
-import { useEffect, useRef, type FormEvent, type KeyboardEvent } from 'react';
+import { ArrowLeft, Check, Image, Paperclip, SendHorizontal } from 'lucide-react';
+import { useEffect, useMemo, useRef, type FormEvent, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EmptyState } from '@/components/data-page';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { usePermission } from '@/hooks/use-permission';
 import { cn } from '@/lib/utils';
-import { conversationInitials, formatInboxWhen } from '../lib';
+import {
+    buildInboxThreadItems,
+    conversationInitials,
+    formatThreadClock,
+} from '../lib';
 import type {
     InboxCapabilities,
     InboxTag,
@@ -40,6 +44,16 @@ export function ConversationThread({
 }: ConversationThreadProps) {
     const { t } = useTranslation('bandeja');
     const endRef = useRef<HTMLDivElement | null>(null);
+    const items = useMemo(
+        () =>
+            selected
+                ? buildInboxThreadItems(selected.messages, {
+                      today: t('dates.today'),
+                      yesterday: t('dates.yesterday'),
+                  })
+                : [],
+        [selected, t],
+    );
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ block: 'end' });
@@ -47,7 +61,7 @@ export function ConversationThread({
 
     if (selected === null) {
         return (
-            <div className="hidden h-full items-center justify-center md:flex">
+            <div className="hidden h-full flex-1 items-center justify-center md:flex">
                 <EmptyState
                     title={t('empty.pick_title')}
                     description={t('empty.pick_description')}
@@ -57,15 +71,15 @@ export function ConversationThread({
     }
 
     return (
-        <div className="flex h-full min-h-0 flex-col">
-            <header className="flex items-center gap-3 border-b border-border/60 px-3 py-3 md:px-5">
+        <div className="flex h-full min-h-0 w-full flex-col">
+            <header className="flex items-center gap-3 border-b border-border/60 bg-card/90 px-2 py-2.5 backdrop-blur-md sm:px-4 sm:py-3">
                 <Button variant="ghost" size="icon" className="md:hidden" asChild>
                     <Link href="/bandeja/conversaciones" preserveState>
                         <ArrowLeft className="size-4" />
                         <span className="sr-only">{t('thread.back')}</span>
                     </Link>
                 </Button>
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border/50 bg-brand-100 text-xs font-semibold text-brand-800 shadow-sm sm:size-10 dark:bg-brand-950/60 dark:text-brand-100">
                     {conversationInitials(selected.contact.name)}
                 </span>
                 <div className="min-w-0">
@@ -89,11 +103,22 @@ export function ConversationThread({
                 </div>
             </header>
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4 md:px-6">
-                <div className="mx-auto flex max-w-2xl flex-col gap-2">
-                    {selected.messages.map((message) => (
-                        <MessageBubble key={message.id} message={message} />
-                    ))}
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4 sm:px-4">
+                <div className="mx-auto flex min-h-full max-w-2xl flex-col justify-end gap-2.5">
+                    {items.map((item) =>
+                        item.kind === 'sep' ? (
+                            <div
+                                key={item.key}
+                                className="flex items-center justify-center py-1"
+                            >
+                                <span className="rounded-full bg-muted/80 px-3 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                    {item.label}
+                                </span>
+                            </div>
+                        ) : (
+                            <MessageBubble key={item.key} message={item.message} />
+                        ),
+                    )}
                     <div ref={endRef} />
                 </div>
             </div>
@@ -127,9 +152,9 @@ function MessageBubble({ message }: { message: ConversationMessage }) {
         <div className={cn('flex', inbound ? 'justify-start' : 'justify-end')}>
             <div
                 className={cn(
-                    'max-w-[80%] rounded-2xl px-3 py-2 text-sm shadow-sm',
+                    'relative max-w-[min(80%,30rem)] overflow-hidden rounded-2xl px-3 py-2 text-sm shadow-sm',
                     inbound
-                        ? 'rounded-bl-md bg-muted text-foreground'
+                        ? 'rounded-bl-md border border-border/60 bg-card text-foreground'
                         : 'rounded-br-md bg-brand-600 text-white',
                 )}
             >
@@ -164,11 +189,12 @@ function MessageBubble({ message }: { message: ConversationMessage }) {
                 )}
                 <p
                     className={cn(
-                        'mt-1 text-right text-[10px]',
-                        inbound ? 'text-muted-foreground' : 'text-white/70',
+                        'mt-1 flex items-center justify-end gap-1 text-[10px]',
+                        inbound ? 'text-muted-foreground' : 'text-brand-100/90',
                     )}
                 >
-                    {formatInboxWhen(message.sent_at)}
+                    {formatThreadClock(message.sent_at)}
+                    {!inbound && <Check className="size-3 shrink-0 opacity-80" />}
                 </p>
             </div>
         </div>
@@ -220,7 +246,7 @@ function ReplyComposer({
     return (
         <form
             onSubmit={submit}
-            className="space-y-2 border-t border-border/60 px-3 py-3 md:px-5"
+            className="space-y-2 border-t border-border/60 bg-card/95 px-3 py-3 backdrop-blur-md md:px-4"
         >
             {!enabled && (
                 <p className="text-xs text-muted-foreground">
@@ -234,7 +260,7 @@ function ReplyComposer({
                     {t('thread.reply_remaining', { count: reply.remaining })}
                 </p>
             )}
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-1.5">
                 <QuickReplyPicker
                     replies={quickReplies}
                     capabilities={capabilities}
@@ -249,16 +275,19 @@ function ReplyComposer({
                     disabled={!enabled || form.processing}
                     autoGrow
                     rows={1}
-                    className="min-h-11 max-h-36"
+                    className="min-h-10 max-h-28 flex-1 resize-none bg-background/70"
                     aria-label={t('thread.reply_placeholder')}
                 />
                 <Button
                     type="submit"
+                    size="icon"
                     disabled={!enabled || form.processing || form.data.body.trim() === ''}
-                    className="cursor-pointer"
+                    className="size-10 shrink-0 cursor-pointer bg-brand-600 hover:bg-brand-700"
                 >
-                    <Send className="size-4" />
-                    {form.processing ? t('thread.reply_sending') : t('thread.reply_send')}
+                    <SendHorizontal className="size-4" />
+                    <span className="sr-only">
+                        {form.processing ? t('thread.reply_sending') : t('thread.reply_send')}
+                    </span>
                 </Button>
             </div>
         </form>

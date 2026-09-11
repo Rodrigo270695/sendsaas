@@ -41,8 +41,8 @@ export function QuickReplyPicker({
                 <Button
                     type="button"
                     size="icon"
-                    variant="outline"
-                    className="size-11 shrink-0 cursor-pointer"
+                    variant="ghost"
+                    className="size-10 shrink-0 cursor-pointer"
                     title={t('thread.quick_replies')}
                 >
                     <Zap className="size-4" />

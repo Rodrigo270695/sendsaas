@@ -13,7 +13,7 @@ export function ConversationList({ items, selectedId }: ConversationListProps) {
     const { t } = useTranslation('bandeja');
 
     return (
-        <ul className="divide-y divide-border/60">
+        <ul>
             {items.map((row) => {
                 const active = row.id === selectedId;
                 const unread = row.unread_count > 0;
@@ -35,18 +35,18 @@ export function ConversationList({ items, selectedId }: ConversationListProps) {
                                 'capabilities',
                             ]}
                             className={cn(
-                                'flex gap-3 px-3 py-3 transition-colors',
+                                'flex gap-3 border-l-2 px-3 py-3.5 transition-colors lg:py-3',
                                 active
-                                    ? 'bg-brand-50 dark:bg-brand-950/40'
-                                    : 'hover:bg-muted/50',
+                                    ? 'border-l-brand-600 bg-brand-50/80 dark:bg-brand-950/35'
+                                    : 'border-l-transparent hover:bg-background/80',
                             )}
                         >
                             <span
                                 className={cn(
-                                    'flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
+                                    'flex size-11 shrink-0 items-center justify-center rounded-full border border-border/50 text-xs font-semibold shadow-sm lg:size-10',
                                     unread
                                         ? 'bg-brand-600 text-white'
-                                        : 'bg-muted text-muted-foreground',
+                                        : 'bg-brand-100 text-brand-800 dark:bg-brand-950/60 dark:text-brand-100',
                                 )}
                             >
                                 {conversationInitials(row.contact.name)}
@@ -63,7 +63,7 @@ export function ConversationList({ items, selectedId }: ConversationListProps) {
                                     >
                                         {row.contact.name}
                                     </span>
-                                    <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">
+                                    <span className="ml-auto shrink-0 text-[10px] text-muted-foreground">
                                         {formatInboxWhen(row.last_message_at)}
                                     </span>
                                 </span>

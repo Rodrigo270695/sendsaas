@@ -59,16 +59,26 @@ export default function Index({
             <Head title={t('title')} />
             <div
                 data-fixed-viewport=""
-                className="flex h-full min-h-0 flex-col gap-3 p-3 md:p-4"
+                className="flex h-full min-h-0 flex-1 flex-col overflow-hidden"
             >
-                <div className="flex flex-wrap items-end justify-between gap-3">
-                    <div>
-                        <h1 className="text-lg font-semibold tracking-tight">
-                            {t('title')}
-                        </h1>
-                        <p className="text-xs text-muted-foreground md:text-sm">
-                            {t('description')}
-                        </p>
+                <div
+                    className={cn(
+                        'flex flex-wrap items-end justify-between gap-3 px-3 pt-3 md:px-4 md:pt-4',
+                        selected && 'max-md:hidden',
+                    )}
+                >
+                    <div className="flex items-center gap-3">
+                        <span className="flex size-9 items-center justify-center rounded-xl bg-brand-600 text-white shadow-sm">
+                            <MessageCircle className="size-4" />
+                        </span>
+                        <div>
+                            <h1 className="text-lg font-semibold tracking-tight">
+                                {t('title')}
+                            </h1>
+                            <p className="text-xs text-muted-foreground md:text-sm">
+                                {t('description')}
+                            </p>
+                        </div>
                     </div>
                     <div className="flex gap-3 text-xs text-muted-foreground">
                         <span>
@@ -90,21 +100,21 @@ export default function Index({
                     </div>
                 </div>
 
-                <div className="flex min-h-0 flex-1 overflow-hidden rounded-xl border border-border/70 bg-card">
+                <div className="flex min-h-0 flex-1 overflow-hidden bg-card max-md:mt-3 md:m-3 md:rounded-2xl md:border md:border-border/60 md:shadow-sm">
                     <aside
                         className={cn(
-                            'flex w-full min-h-0 flex-col border-r border-border/60 md:w-88 lg:w-104',
+                            'flex min-h-0 w-full flex-col border-r border-border/60 bg-muted/20 md:w-84 lg:w-88',
                             selected ? 'hidden md:flex' : 'flex',
                         )}
                     >
-                        <div className="space-y-2 border-b border-border/60 p-3">
+                        <div className="space-y-2 border-b border-border/60 bg-card/80 p-3 backdrop-blur-md">
                             <div className="relative">
                                 <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                     value={search}
                                     onChange={(event) => setSearch(event.target.value)}
                                     placeholder={t('search_placeholder')}
-                                    className="h-9 pl-8"
+                                    className="h-9 bg-background/80 pl-8"
                                 />
                             </div>
                             <div className="flex flex-wrap gap-1.5">
@@ -195,7 +205,7 @@ export default function Index({
 
                     <section
                         className={cn(
-                            'min-h-0 min-w-0 flex-1',
+                            'min-h-0 min-w-0 flex-1 bg-card bg-[radial-gradient(ellipse_at_top,rgba(171,60,61,0.07),transparent_55%)]',
                             selected ? 'flex' : 'hidden md:flex',
                         )}
                     >

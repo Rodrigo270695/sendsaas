@@ -33,8 +33,13 @@
         "pick_title": "Elige una conversación",
         "pick_description": "Selecciona un chat de la izquierda para leer los mensajes."
     },
+    "dates": {
+        "today": "Hoy",
+        "yesterday": "Ayer"
+    },
     "thread": {
         "back": "Volver a la lista",
+        "you": "Tú",
         "reply_placeholder": "Escribe un mensaje…",
         "reply_send": "Enviar",
         "reply_sending": "Enviando…",

@@ -33,8 +33,13 @@
         "pick_title": "Pick a conversation",
         "pick_description": "Select a chat on the left to read the messages."
     },
+    "dates": {
+        "today": "Today",
+        "yesterday": "Yesterday"
+    },
     "thread": {
         "back": "Back to the list",
+        "you": "You",
         "reply_placeholder": "Write a message…",
         "reply_send": "Send",
         "reply_sending": "Sending…",
